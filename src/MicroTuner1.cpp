@@ -1,6 +1,5 @@
 #include "Ahornberg.hpp"
 
-
 struct MicroTuner1 : Module {
 	enum ParamIds {
 		FINE_PARAM,
@@ -15,7 +14,7 @@ struct MicroTuner1 : Module {
 		PITCH_33ED4_OUTPUT,
 		NUM_OUTPUTS
 	};
-
+	float lastTuned;
 
 	MicroTuner1() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS) {}
 	void step() override;
@@ -28,13 +27,14 @@ struct MicroTuner1 : Module {
 
 
 void MicroTuner1::step() {
-
-	// Compute 12edo tretched or compressed
 	float tuned = inputs[PITCH_INPUT].value * params[FINE_PARAM].value;
-	outputs[PITCH_OUTPUT].value = tuned;
-	// Compute the Equivocal Tuning http://xenharmonic.wikispaces.com/33ed4
-	outputs[PITCH_33ED4_OUTPUT].value = tuned * 8.0 / 11.0;
-
+	if (tuned != lastTuned) {
+		// Compute 12edo tretched or compressed
+		outputs[PITCH_OUTPUT].value = tuned;
+		// Compute the Equivocal Tuning http://xenharmonic.wikispaces.com/33ed4
+		outputs[PITCH_33ED4_OUTPUT].value = tuned * 8.0 / 11.0;
+		lastTuned = tuned;
+	}
 }
 
 
