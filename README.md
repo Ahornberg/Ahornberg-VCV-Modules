@@ -1,8 +1,8 @@
 # Ahornberg-Microtonal
 
 ## EqualDivision
-Module for VCV-Rack to convert Note CV in Standard Western Tuning (1 step equals 100 cents) to several Equal Division Tunings.
 ![EqualDivision](manual-pics/EqualDivision.png)
+Module for VCV-Rack to convert Note CV in Standard Western Tuning (1 step equals 100 cents) to several Equal Division Tunings.
 ### Fine Tune
 Makes it possible to compress or stretch a tuning in a range from -3 to +3 percent.
 ### Display
@@ -34,4 +34,5 @@ Nine vertically orientated pairs of Note CV inputs and outputs provide the a bil
 http://xenharmonic.wikispaces.com/Equal-step+Tuning 
 
 Happy tuning!
+
 Ahornberg
