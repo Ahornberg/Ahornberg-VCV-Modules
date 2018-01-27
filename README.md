@@ -1,6 +1,6 @@
 # Ahornberg-Microtonal
 
-Module for VCV-Rack convert Note VC in Standard Western Tuning to several Equal Division Tunings.
+Module for VCV-Rack to convert Note CV in Standard Western Tuning to several Equal Division Tunings.
 
 
 
