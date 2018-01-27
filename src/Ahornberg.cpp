@@ -16,7 +16,6 @@ void init(rack::Plugin *p) {
 	p->manual = "https://github.com/VCVRack/Ahornberg/blob/master/README.md";
 
 	// For each module, specify the ModuleWidget subclass, manufacturer slug (for saving in patches), manufacturer human-readable name, module slug, and module name
-	p->addModel(createModel<MicroTuner1Widget>("Ahornberg", "MicroTuner", "MicroTuner", TUNER_TAG));
 	p->addModel(createModel<EqualDivisionWidget>("Ahornberg", "EqualDivision", "EqualDivision", TUNER_TAG));
 
 	// Any other plugin initialization may go here.
