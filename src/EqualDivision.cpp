@@ -159,7 +159,6 @@ EqualDivisionWidget::EqualDivisionWidget() {
 	EqualDivision *module = new EqualDivision();
 	int initStep = 33;
 	int initInterval = 9;
-	setModule(module);
 	box.size = Vec(6 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
 
 	{
@@ -177,13 +176,14 @@ EqualDivisionWidget::EqualDivisionWidget() {
 		module->intervalDisplay->interval = initInterval;
 		addChild(module->intervalDisplay);
 	}
+	setModule(module);
 	
 	addChild(createScrew<ScrewSilver>(Vec(0, 0)));
 	//addChild(createScrew<ScrewSilver>(Vec(box.size.x - RACK_GRID_WIDTH, 0)));
 	//addChild(createScrew<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 	addChild(createScrew<ScrewSilver>(Vec(box.size.x - RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
-	addParam(createParam<Davies1900hBlackKnob>(Vec(46.5, 47), module, EqualDivision::FINE_PARAM, 0.97, 1.03, 1.0));//28
+	addParam(createParam<Davies1900hBlackKnob>(Vec(46.5, 47), module, EqualDivision::FINE_PARAM, 0.97, 1.03, 1.0));
 	addParam(createParam<SnapKnob>(Vec(10, 124), module, EqualDivision::STEPS_PARAM, 1, 99, initStep));
 	addParam(createParam<SnapKnob>(Vec(box.size.x - 37, 124), module, EqualDivision::INTERVAL_PARAM, 0, 13, initInterval));
 
