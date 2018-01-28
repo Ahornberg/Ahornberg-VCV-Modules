@@ -1,6 +1,6 @@
 # Ahornberg-Microtonal
 
-If you like it, feel free to [support](https://www.paypal.me/Ahornberg/10) futher development.
+If you like it, feel free to [support](https://www.paypal.me/Ahornberg/10) further development.
 
 ## EqualDivision
 
@@ -41,4 +41,4 @@ Happy tuning!
 
 Ahornberg
 
-If you like it, feel free to [support](https://www.paypal.me/Ahornberg/10) futher development.
+If you like it, feel free to [support](https://www.paypal.me/Ahornberg/10) further development.
