@@ -1,5 +1,7 @@
 # Ahornberg-Microtonal
 
+If you like it, feel free to support futher development https://www.paypal.me/Ahornberg/10
+
 ## EqualDivision
 
 Module for VCV-Rack to convert Note CV in Standard Western Tuning (1 step equals 100 cents) to several Equal Division Tunings.
