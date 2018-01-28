@@ -12,8 +12,8 @@ void init(rack::Plugin *p) {
 	// The ZIP package must only contain one folder, with the name equal to the plugin's slug.
 	p->slug = "Ahornberg-Microtonal";
 	p->version = TOSTRING(VERSION);
-	p->website = "https://github.com/VCVRack/Ahornberg";
-	p->manual = "https://github.com/VCVRack/Ahornberg/blob/master/README.md";
+	p->website = "https://github.com/Ahornberg/Ahornberg-Microtonal";
+	p->manual = "https://github.com/Ahornberg/Ahornberg-Microtonal";
 
 	// For each module, specify the ModuleWidget subclass, manufacturer slug (for saving in patches), manufacturer human-readable name, module slug, and module name
 	p->addModel(createModel<EqualDivisionWidget>("Ahornberg", "EqualDivision", "EqualDivision", TUNER_TAG));
