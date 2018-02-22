@@ -35,8 +35,8 @@ struct Display : TransparentWidget {
 	NVGcolor textColor;
 	NVGcolor smallTextColor;
 
-	Display() {
-		font = Font::load(assetPlugin(plugin, "res/hdad-segment14-1.002/Segment14.ttf"));
+	Display() {							// (pluginSLUG,
+		font = Font::load(assetPlugin(pluginAhornberg, "res/hdad-segment14-1.002/Segment14.ttf"));
 		backgroundColor = nvgRGB(0x28, 0x28, 0x28);
 		borderColor = nvgRGB(0x00, 0x00, 0x00);
 		textColor = nvgRGB(0xe8, 0xe8, 0x2c);
@@ -133,23 +133,23 @@ struct EqualDivision : Module {
 void EqualDivision::step() {
 	float multiplier = intervals[(int) params[INTERVAL_PARAM].value] / params[STEPS_PARAM].value * params[FINE_PARAM].value;
 	if (outputs[PITCH_OUTPUT_1].active)
-		outputs[PITCH_OUTPUT_1].value = clampf(inputs[PITCH_INPUT_1].value * multiplier, -5.0, 5.0);
+		outputs[PITCH_OUTPUT_1].value = clamp(inputs[PITCH_INPUT_1].value * multiplier, -5.0, 5.0);
 	if (outputs[PITCH_OUTPUT_2].active)
-		outputs[PITCH_OUTPUT_2].value = clampf(inputs[PITCH_INPUT_2].value * multiplier, -5.0, 5.0);
+		outputs[PITCH_OUTPUT_2].value = clamp(inputs[PITCH_INPUT_2].value * multiplier, -5.0, 5.0);
 	if (outputs[PITCH_OUTPUT_3].active)
-		outputs[PITCH_OUTPUT_3].value = clampf(inputs[PITCH_INPUT_3].value * multiplier, -5.0, 5.0);
+		outputs[PITCH_OUTPUT_3].value = clamp(inputs[PITCH_INPUT_3].value * multiplier, -5.0, 5.0);
 	if (outputs[PITCH_OUTPUT_4].active)
-		outputs[PITCH_OUTPUT_4].value = clampf(inputs[PITCH_INPUT_4].value * multiplier, -5.0, 5.0);
+		outputs[PITCH_OUTPUT_4].value = clamp(inputs[PITCH_INPUT_4].value * multiplier, -5.0, 5.0);
 	if (outputs[PITCH_OUTPUT_5].active)
-		outputs[PITCH_OUTPUT_5].value = clampf(inputs[PITCH_INPUT_5].value * multiplier, -5.0, 5.0);
+		outputs[PITCH_OUTPUT_5].value = clamp(inputs[PITCH_INPUT_5].value * multiplier, -5.0, 5.0);
 	if (outputs[PITCH_OUTPUT_6].active)
-		outputs[PITCH_OUTPUT_6].value = clampf(inputs[PITCH_INPUT_6].value * multiplier, -5.0, 5.0);
+		outputs[PITCH_OUTPUT_6].value = clamp(inputs[PITCH_INPUT_6].value * multiplier, -5.0, 5.0);
 	if (outputs[PITCH_OUTPUT_7].active)
-		outputs[PITCH_OUTPUT_7].value = clampf(inputs[PITCH_INPUT_7].value * multiplier, -5.0, 5.0);
+		outputs[PITCH_OUTPUT_7].value = clamp(inputs[PITCH_INPUT_7].value * multiplier, -5.0, 5.0);
 	if (outputs[PITCH_OUTPUT_8].active)
-		outputs[PITCH_OUTPUT_8].value = clampf(inputs[PITCH_INPUT_8].value * multiplier, -5.0, 5.0);
+		outputs[PITCH_OUTPUT_8].value = clamp(inputs[PITCH_INPUT_8].value * multiplier, -5.0, 5.0);
 	if (outputs[PITCH_OUTPUT_9].active)
-		outputs[PITCH_OUTPUT_9].value = clampf(inputs[PITCH_INPUT_9].value * multiplier, -5.0, 5.0);
+		outputs[PITCH_OUTPUT_9].value = clamp(inputs[PITCH_INPUT_9].value * multiplier, -5.0, 5.0);
 	intervalDisplay->step = (int) params[STEPS_PARAM].value;
 	intervalDisplay->interval = (int) params[INTERVAL_PARAM].value;
 }
@@ -164,18 +164,19 @@ void EqualDivision::step() {
 
 //	>0.6.0dev onwards
 struct EqualDivisionWidget : ModuleWidget {
-	EqualDivisionWidget(EqualDivision *module)
+	EqualDivisionWidget(EqualDivision *module);
 };
 
-EqualDivisionWidget::EqualDivisionWidget(EqualDivision *module) : ModuleWidget(Module) {
-	//int initStep = 33;
-	//int initInterval = 9;
+EqualDivisionWidget::EqualDivisionWidget(EqualDivision *module) : ModuleWidget(module) {
+	int initStep = 33;
+	int initInterval = 9;
 	box.size = Vec(90, 380);
 
 	{
 		SVGPanel *panel = new SVGPanel();
 		panel->box.size = box.size;
-		panel->setBackground(SVG::load(assetPlugin(plugin, "res/EqualDivision.svg")));
+											//	   pluginSLUG,
+		panel->setBackground(SVG::load(assetPlugin(pluginAhornberg, "res/EqualDivision.svg")));
 		addChild(panel);
 	}
 
@@ -187,7 +188,7 @@ EqualDivisionWidget::EqualDivisionWidget(EqualDivision *module) : ModuleWidget(M
 		module->intervalDisplay->interval = initInterval;
 		addChild(module->intervalDisplay);
 	}
-	setModule(module);
+	//setModule(module);
 	//----
 	//	Widget::create 			= Screw
 	//	ParamWidget::create 		= Knob
@@ -202,15 +203,14 @@ EqualDivisionWidget::EqualDivisionWidget(EqualDivision *module) : ModuleWidget(M
 	addParam(ParamWidget::create<Davies1900hBlackKnob>(Vec(46.5, 47), module, EqualDivision::FINE_PARAM, 0.97, 1.03, 1.0));
 	addParam(ParamWidget::create<SnapKnob>(Vec(10, 124), module, EqualDivision::STEPS_PARAM, 1, 99, initStep));
 	addParam(ParamWidget::create<SnapKnob>(Vec(box.size.x - 37, 124), module, EqualDivision::INTERVAL_PARAM, 0, 13, initInterval));
-//addInput(Port::create<PJ301MPort>(Vec(40.5, 40), Port::INPUT, module, Distribute4::DIST1_IN));
-//addOutput(Port::create<PJ301MPort>(Vec(3, 65), Port::OUTPUT, module, Distribute4::DIST1_OUT1));	
+	
 	addInput(Port::create<PJ301MPort>(Vec( 4, 167), Port::INPUT, module, EqualDivision::PITCH_INPUT_1));
 	addInput(Port::create<PJ301MPort>(Vec(33, 167), Port::INPUT, module, EqualDivision::PITCH_INPUT_2));
 	addInput(Port::create<PJ301MPort>(Vec(62, 167), Port::INPUT, module, EqualDivision::PITCH_INPUT_3));
 	addInput(Port::create<PJ301MPort>(Vec( 4, 226 + 7.5), Port::INPUT, module, EqualDivision::PITCH_INPUT_4));
 	addInput(Port::create<PJ301MPort>(Vec(33, 226 + 3.75), Port::INPUT, module, EqualDivision::PITCH_INPUT_5));
-	addInput(Port::create<PJ301MPort>(Vec(62, 226), module, Port::INPUT, EqualDivision::PITCH_INPUT_6));
-	addInput(Port::create<PJ301MPort>(Vec( 4, 300), module, Port::INPUT, EqualDivision::PITCH_INPUT_7));
+	addInput(Port::create<PJ301MPort>(Vec(62, 226), Port::INPUT, module, EqualDivision::PITCH_INPUT_6));
+	addInput(Port::create<PJ301MPort>(Vec( 4, 300), Port::INPUT, module, EqualDivision::PITCH_INPUT_7));
 	addInput(Port::create<PJ301MPort>(Vec(33, 292.5), Port::INPUT, module, EqualDivision::PITCH_INPUT_8));
 	addInput(Port::create<PJ301MPort>(Vec(62, 285), Port::INPUT, module, EqualDivision::PITCH_INPUT_9));
 	
@@ -225,4 +225,4 @@ EqualDivisionWidget::EqualDivisionWidget(EqualDivision *module) : ModuleWidget(M
 	addOutput(Port::create<PJ301MPort>(Vec(62, 312), Port::OUTPUT, module, EqualDivision::PITCH_OUTPUT_9));
 }
 
-model *modelEqualDivisionModule = Model::create<EqualDivision, EqualDivisionWidget>("Ahornberg", "EqualDivision", "EqualDivision", TUNER_TAG);
+Model *modelEqualDivisionModule = Model::create<EqualDivision, EqualDivisionWidget>("Ahornberg", "EqualDivision", "EqualDivision", TUNER_TAG);
