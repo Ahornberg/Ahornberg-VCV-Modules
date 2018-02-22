@@ -33,6 +33,6 @@ void init(rack::Plugin *p) {
 	p->slug = TOSTRING(SLUG);
 	p->version = TOSTRING(VERSION);
 
-	//p->addModule(model NAME_OF Module);
+	//p->addModule(model-NAME_OF-Module);
 	p->addModel(modelEqualDivisionModule);
 }
