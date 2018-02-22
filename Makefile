@@ -1,5 +1,5 @@
 SLUG = Ahornberg
-VERSION = 0.6.1dev
+VERSION = 0.6.0dev
 
 SOURCES += $(wildcard src/*.cpp)
 
