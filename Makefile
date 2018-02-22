@@ -1,7 +1,14 @@
 SLUG = Ahornberg
-VERSION = 0.5.1
+VERSION = 0.6.1dev
 
-# FLAGS will be passed to both the C and C++ compiler
+SOURCES += $(wildcard src/*.cpp)
+
+DISTRIBUTABLES += $(wildcard LICENSE*) res
+
+RACK_DIR ?= ../..
+include $(RACK_DIR)/plugin.mk
+
+/*# FLAGS will be passed to both the C and C++ compiler
 FLAGS +=
 CFLAGS +=
 CXXFLAGS +=
@@ -18,4 +25,4 @@ SOURCES += $(wildcard src/*.cpp)
 DISTRIBUTABLES += $(wildcard LICENSE*) res
 
 # Include the VCV plugin Makefile framework
-include ../../plugin.mk
+include ../../plugin.mk*/
