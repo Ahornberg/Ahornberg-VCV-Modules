@@ -154,12 +154,23 @@ void EqualDivision::step() {
 	intervalDisplay->interval = (int) params[INTERVAL_PARAM].value;
 }
 
-
-EqualDivisionWidget::EqualDivisionWidget() {
+//	<0.6.0---
+/*EqualDivisionWidget::EqualDivisionWidget() {
 	EqualDivision *module = new EqualDivision();
 	int initStep = 33;
 	int initInterval = 9;
 	box.size = Vec(6 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
+*/
+
+//	>0.6.0dev onwards
+struct EqualDivisionWidget : ModuleWidget {
+	EqualDivisionWidget(EqualDivision *module)
+};
+
+EqualDivisionWidget::EqualDivisionWidget(EqualDivision *module) : ModuleWidget(Module) {
+	//int initStep = 33;
+	//int initInterval = 9;
+	box.size = Vec(90, 380);
 
 	{
 		SVGPanel *panel = new SVGPanel();
@@ -177,32 +188,41 @@ EqualDivisionWidget::EqualDivisionWidget() {
 		addChild(module->intervalDisplay);
 	}
 	setModule(module);
-	
-	addChild(createScrew<ScrewSilver>(Vec(0, 0)));
+	//----
+	//	Widget::create 			= Screw
+	//	ParamWidget::create 		= Knob
+	//	Port::create			= Port	
+	//	    ""		<COMPONENT>(Vec(0, 0), (for port) = , Port::INPUT, or ,Port::OUTPUT, module, NAME::ENUM));
+	//----
+	addChild(Widget::create<ScrewSilver>(Vec(0, 0)));
 	//addChild(createScrew<ScrewSilver>(Vec(box.size.x - RACK_GRID_WIDTH, 0)));
 	//addChild(createScrew<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
-	addChild(createScrew<ScrewSilver>(Vec(box.size.x - RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+	addChild(Widget::create<ScrewSilver>(Vec(box.size.x - RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
-	addParam(createParam<Davies1900hBlackKnob>(Vec(46.5, 47), module, EqualDivision::FINE_PARAM, 0.97, 1.03, 1.0));
-	addParam(createParam<SnapKnob>(Vec(10, 124), module, EqualDivision::STEPS_PARAM, 1, 99, initStep));
-	addParam(createParam<SnapKnob>(Vec(box.size.x - 37, 124), module, EqualDivision::INTERVAL_PARAM, 0, 13, initInterval));
-
-	addInput(createInput<PJ301MPort>(Vec( 4, 167), module, EqualDivision::PITCH_INPUT_1));
-	addInput(createInput<PJ301MPort>(Vec(33, 167), module, EqualDivision::PITCH_INPUT_2));
-	addInput(createInput<PJ301MPort>(Vec(62, 167), module, EqualDivision::PITCH_INPUT_3));
-	addInput(createInput<PJ301MPort>(Vec( 4, 226 + 7.5), module, EqualDivision::PITCH_INPUT_4));
-	addInput(createInput<PJ301MPort>(Vec(33, 226 + 3.75), module, EqualDivision::PITCH_INPUT_5));
-	addInput(createInput<PJ301MPort>(Vec(62, 226), module, EqualDivision::PITCH_INPUT_6));
-	addInput(createInput<PJ301MPort>(Vec( 4, 300), module, EqualDivision::PITCH_INPUT_7));
-	addInput(createInput<PJ301MPort>(Vec(33, 292.5), module, EqualDivision::PITCH_INPUT_8));
-	addInput(createInput<PJ301MPort>(Vec(62, 285), module, EqualDivision::PITCH_INPUT_9));
-	addOutput(createOutput<PJ301MPort>(Vec( 4, 194), module, EqualDivision::PITCH_OUTPUT_1));
-	addOutput(createOutput<PJ301MPort>(Vec(33, 194), module, EqualDivision::PITCH_OUTPUT_2));
-	addOutput(createOutput<PJ301MPort>(Vec(62, 194), module, EqualDivision::PITCH_OUTPUT_3));
-	addOutput(createOutput<PJ301MPort>(Vec( 4, 253 + 7.5), module, EqualDivision::PITCH_OUTPUT_4));
-	addOutput(createOutput<PJ301MPort>(Vec(33, 253 + 3.75), module, EqualDivision::PITCH_OUTPUT_5));
-	addOutput(createOutput<PJ301MPort>(Vec(62, 253), module, EqualDivision::PITCH_OUTPUT_6));
-	addOutput(createOutput<PJ301MPort>(Vec( 4, 327), module, EqualDivision::PITCH_OUTPUT_7));
-	addOutput(createOutput<PJ301MPort>(Vec(33, 319.5), module, EqualDivision::PITCH_OUTPUT_8));
-	addOutput(createOutput<PJ301MPort>(Vec(62, 312), module, EqualDivision::PITCH_OUTPUT_9));
+	addParam(ParamWidget::create<Davies1900hBlackKnob>(Vec(46.5, 47), module, EqualDivision::FINE_PARAM, 0.97, 1.03, 1.0));
+	addParam(ParamWidget::create<SnapKnob>(Vec(10, 124), module, EqualDivision::STEPS_PARAM, 1, 99, initStep));
+	addParam(ParamWidget::create<SnapKnob>(Vec(box.size.x - 37, 124), module, EqualDivision::INTERVAL_PARAM, 0, 13, initInterval));
+//addInput(Port::create<PJ301MPort>(Vec(40.5, 40), Port::INPUT, module, Distribute4::DIST1_IN));
+//addOutput(Port::create<PJ301MPort>(Vec(3, 65), Port::OUTPUT, module, Distribute4::DIST1_OUT1));	
+	addInput(Port::create<PJ301MPort>(Vec( 4, 167), Port::INPUT, module, EqualDivision::PITCH_INPUT_1));
+	addInput(Port::create<PJ301MPort>(Vec(33, 167), Port::INPUT, module, EqualDivision::PITCH_INPUT_2));
+	addInput(Port::create<PJ301MPort>(Vec(62, 167), Port::INPUT, module, EqualDivision::PITCH_INPUT_3));
+	addInput(Port::create<PJ301MPort>(Vec( 4, 226 + 7.5), Port::INPUT, module, EqualDivision::PITCH_INPUT_4));
+	addInput(Port::create<PJ301MPort>(Vec(33, 226 + 3.75), Port::INPUT, module, EqualDivision::PITCH_INPUT_5));
+	addInput(Port::create<PJ301MPort>(Vec(62, 226), module, Port::INPUT, EqualDivision::PITCH_INPUT_6));
+	addInput(Port::create<PJ301MPort>(Vec( 4, 300), module, Port::INPUT, EqualDivision::PITCH_INPUT_7));
+	addInput(Port::create<PJ301MPort>(Vec(33, 292.5), Port::INPUT, module, EqualDivision::PITCH_INPUT_8));
+	addInput(Port::create<PJ301MPort>(Vec(62, 285), Port::INPUT, module, EqualDivision::PITCH_INPUT_9));
+	
+	addOutput(Port::create<PJ301MPort>(Vec( 4, 194), Port::OUTPUT, module, EqualDivision::PITCH_OUTPUT_1));
+	addOutput(Port::create<PJ301MPort>(Vec(33, 194), Port::OUTPUT, module, EqualDivision::PITCH_OUTPUT_2));
+	addOutput(Port::create<PJ301MPort>(Vec(62, 194), Port::OUTPUT, module, EqualDivision::PITCH_OUTPUT_3));
+	addOutput(Port::create<PJ301MPort>(Vec( 4, 253 + 7.5), Port::OUTPUT, module, EqualDivision::PITCH_OUTPUT_4));
+	addOutput(Port::create<PJ301MPort>(Vec(33, 253 + 3.75), Port::OUTPUT, module, EqualDivision::PITCH_OUTPUT_5));
+	addOutput(Port::create<PJ301MPort>(Vec(62, 253), Port::OUTPUT, module, EqualDivision::PITCH_OUTPUT_6));
+	addOutput(Port::create<PJ301MPort>(Vec( 4, 327), Port::OUTPUT, module, EqualDivision::PITCH_OUTPUT_7));
+	addOutput(Port::create<PJ301MPort>(Vec(33, 319.5), Port::OUTPUT, module, EqualDivision::PITCH_OUTPUT_8));
+	addOutput(Port::create<PJ301MPort>(Vec(62, 312), Port::OUTPUT, module, EqualDivision::PITCH_OUTPUT_9));
 }
+
+model *modelEqualDivisionModule = Model::create<EqualDivision, EqualDivisionWidget>("Ahornberg", "EqualDivision", "EqualDivision", TUNER_TAG);
