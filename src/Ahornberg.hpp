@@ -3,13 +3,18 @@
 
 using namespace rack;
 
-
-extern Plugin *plugin;
+extern Plugin *pluginAhornberg;
 
 ////////////////////
 // module widgets
-////////////////////
+/////------------
 
-struct EqualDivisionWidget : ModuleWidget {
+/*struct EqualDivisionWidget : ModuleWidget {
 	EqualDivisionWidget();
-};
+};*/							//OLD
+
+//NEW----
+
+extern Model *modelEqualDivisionModule;
+
+
