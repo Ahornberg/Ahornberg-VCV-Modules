@@ -1,11 +1,43 @@
 #include "Ahornberg.hpp"
 
-struct SnapKnob : Davies1900hBlackKnob {
-	SnapKnob() {
-		// minAngle = -1.83*M_PI;
-		// maxAngle = 1.83*M_PI;
+int initStep = 33;
+int initInterval = 9;
+
+struct CoirtInPort : app::SvgPort {
+	CoirtInPort() {
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Coirt_InPort.svg")));
+		shadow->box.pos = Vec(0, sw->box.size.y * 0.05f);
+
+	}
+};
+
+struct CoirtOutPort : app::SvgPort {
+	CoirtOutPort() {
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Coirt_OutPort.svg")));
+		shadow->box.pos = Vec(0, sw->box.size.y * 0.05f);
+
+	}
+};
+
+
+struct CoirtKnob28 : app::SvgKnob {
+	CoirtKnob28() {
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Coirt_BlackKnob28.svg")));
+		minAngle = -.8f * M_PI;
+		maxAngle = .8f * M_PI;
 		snap = true;
-		box.size = Vec(28, 28);
+		shadow->box.pos = Vec(0, sw->box.size.y * 0.05f);
+		//speed = 0.5f;
+	}
+};
+
+struct CoirtKnob36 : app::SvgKnob {
+	CoirtKnob36() {
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Coirt_BlackKnob36.svg")));
+		minAngle = -.8f * M_PI;
+		maxAngle = .8f * M_PI;
+		shadow->box.pos = Vec(0, sw->box.size.y * 0.05f);
+		speed = 0.7f;
 	}
 };
 
@@ -35,41 +67,49 @@ struct Display : TransparentWidget {
 	NVGcolor textColor;
 	NVGcolor smallTextColor;
 
-	Display() {							// (pluginSLUG,
-		font = Font::load(assetPlugin(pluginAhornberg, "res/hdad-segment14-1.002/Segment14.ttf"));
+	Display() {
+		font = APP->window->loadFont(asset::plugin(pluginInstance, "res/hdad-segment14-1.002/Segment14.ttf"));
 		backgroundColor = nvgRGB(0x28, 0x28, 0x28);
 		borderColor = nvgRGB(0x00, 0x00, 0x00);
 		textColor = nvgRGB(0xe8, 0xe8, 0x2c);
 		smallTextColor = nvgRGB(0xaf, 0xe2, 0x2c);
+		
 	}
 
-	void draw(NVGcontext *vg) override {
+	void draw(const DrawArgs &disp) override {
 		// Background
-		nvgBeginPath(vg);
-		nvgRoundedRect(vg, 0.0, 0.0, box.size.x, box.size.y, 2.0);
-		nvgFillColor(vg, backgroundColor);
-		nvgFill(vg);
-		nvgStrokeWidth(vg, 1.0);
-		nvgStrokeColor(vg, borderColor);
-		nvgStroke(vg);
+		nvgBeginPath(disp.vg);
+		nvgRoundedRect(disp.vg, 0.0, 0.0, box.size.x, box.size.y, 2.0);
+		nvgFillColor(disp.vg, backgroundColor);
+		nvgFill(disp.vg);
+		nvgStrokeWidth(disp.vg, 1.0);
+		nvgStrokeColor(disp.vg, borderColor);
+		nvgStroke(disp.vg);
 
-		nvgFontSize(vg, 10);
-		nvgFontFaceId(vg, font->handle);
-		nvgTextLetterSpacing(vg, 1);
+		nvgFontSize(disp.vg, 10);
+		nvgFontFaceId(disp.vg, font->handle);
+		nvgTextLetterSpacing(disp.vg, 1);
 
 		Vec textPos = Vec(4, 14);
-		nvgFillColor(vg, textColor);
+		nvgFillColor(disp.vg, textColor);
 		if (step < 10) {
-			nvgText(vg, textPos.x, textPos.y, (" " + std::to_string(step)).c_str(), NULL);
+			nvgText(disp.vg, textPos.x, textPos.y, (" " + std::to_string(step)).c_str(), NULL);
 		} else {
-			nvgText(vg, textPos.x, textPos.y, (std::to_string(step)).c_str(), NULL);
+			nvgText(disp.vg, textPos.x, textPos.y, (std::to_string(step)).c_str(), NULL);
 		}
-		nvgFillColor(vg, smallTextColor);
-		nvgFontSize(vg, 8);
-		nvgText(vg, textPos.x + 21, textPos.y, "ed", NULL);
-		nvgFillColor(vg, textColor);
-		nvgFontSize(vg, 10);
-		nvgText(vg, textPos.x + 40, textPos.y, intervalValues[interval], NULL);
+		nvgFillColor(disp.vg, smallTextColor);
+		nvgFontSize(disp.vg, 8);
+		nvgText(disp.vg, textPos.x + 21, textPos.y, "ed", NULL);
+		nvgFillColor(disp.vg, textColor);
+		nvgFontSize(disp.vg, 10);
+		nvgText(disp.vg, textPos.x + 40, textPos.y, intervalValues[interval], NULL);
+		//---------Gradient Screen
+		NVGcolor gradStartCol = nvgRGBA(255, 255, 244, 27);
+		NVGcolor gradEndCol = nvgRGBA(0, 0, 0, 25);
+		nvgRoundedRect(disp.vg, 0.f, 0.f, box.size.x, box.size.y, .75f);
+		float gradHeight = 13.673f;
+		nvgFillPaint(disp.vg, nvgLinearGradient(disp.vg, 71.5f, gradHeight - 4.98f, 70.61f, gradHeight - 10.11f, gradStartCol, gradEndCol));
+		nvgFill(disp.vg);
 	}
 };
 
@@ -81,148 +121,121 @@ struct EqualDivision : Module {
 		NUM_PARAMS
 	};
 	enum InputIds {
-		PITCH_INPUT_1,
-		PITCH_INPUT_2,
-		PITCH_INPUT_3,
-		PITCH_INPUT_4,
-		PITCH_INPUT_5,
-		PITCH_INPUT_6,
-		PITCH_INPUT_7,
-		PITCH_INPUT_8,
-		PITCH_INPUT_9,
+		ENUMS(PITCH_INPUT, 9),
 		NUM_INPUTS
 	};
 	enum OutputIds {
-		PITCH_OUTPUT_1,
-		PITCH_OUTPUT_2,
-		PITCH_OUTPUT_3,
-		PITCH_OUTPUT_4,
-		PITCH_OUTPUT_5,
-		PITCH_OUTPUT_6,
-		PITCH_OUTPUT_7,
-		PITCH_OUTPUT_8,
-		PITCH_OUTPUT_9,
+		ENUMS(PITCH_OUTPUT, 9),
 		NUM_OUTPUTS
 	};
-	EqualDivision() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS) {}
-	float intervals[14] = {
-		log2f(9.0/8.0) * 12,
-		log2f(8.0/7.0) * 12,
-		log2f(7.0/6.0) * 12,
-		log2f(6.0/5.0) * 12,
-		log2f(5.0/4.0) * 12,
-		log2f(4.0/3.0) * 12,
-		log2f(3.0/2.0) * 12,
-		log2f(2.0) * 12,
-		log2f(3.0) * 12,
-		log2f(4.0) * 12,
-		log2f(5.0) * 12,
-		log2f(6.0) * 12,
-		log2f(7.0) * 12,
-		log2f(8.0) * 12
+	enum LightIds {
+		NUM_LIGHTS
 	};
+
+	EqualDivision() { 
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+		configParam(FINE_PARAM, .97f, 1.03f, 1.f, "Fine", "%", 0.f, 100.f, -100.f);
+		configParam(STEPS_PARAM, 1, 99, initStep, "Steps");
+		configParam(INTERVAL_PARAM, 0, 13, initInterval, "Interval");
+
+	}
+	
+	void process(const ProcessArgs &args) override {
+		float multiplier = intervals[(int)params[INTERVAL_PARAM].getValue()];
+		multiplier /= params[STEPS_PARAM].getValue() * params[FINE_PARAM].getValue();
+
+		for (int i = 0; i < 9; i++) {
+			if (outputs[PITCH_OUTPUT + i].isConnected()) {
+				outputs[PITCH_OUTPUT + i].setVoltage(simd::clamp(inputs[PITCH_INPUT + i].getVoltage() * multiplier, -5.0, 5.0));
+			}
+		}
+		/*
+		if (outputs[PITCH_OUTPUT_1].active)
+			outputs[PITCH_OUTPUT_1].value = clamp(inputs[PITCH_INPUT_1].value * multiplier, -5.0, 5.0);
+		if (outputs[PITCH_OUTPUT_2].active)
+			outputs[PITCH_OUTPUT_2].value = clamp(inputs[PITCH_INPUT_2].value * multiplier, -5.0, 5.0);
+		if (outputs[PITCH_OUTPUT_3].active)
+			outputs[PITCH_OUTPUT_3].value = clamp(inputs[PITCH_INPUT_3].value * multiplier, -5.0, 5.0);
+		if (outputs[PITCH_OUTPUT_4].active)
+			outputs[PITCH_OUTPUT_4].value = clamp(inputs[PITCH_INPUT_4].value * multiplier, -5.0, 5.0);
+		if (outputs[PITCH_OUTPUT_5].active)
+			outputs[PITCH_OUTPUT_5].value = clamp(inputs[PITCH_INPUT_5].value * multiplier, -5.0, 5.0);
+		if (outputs[PITCH_OUTPUT_6].active)
+			outputs[PITCH_OUTPUT_6].value = clamp(inputs[PITCH_INPUT_6].value * multiplier, -5.0, 5.0);
+		if (outputs[PITCH_OUTPUT_7].active)
+			outputs[PITCH_OUTPUT_7].value = clamp(inputs[PITCH_INPUT_7].value * multiplier, -5.0, 5.0);
+		if (outputs[PITCH_OUTPUT_8].active)
+			outputs[PITCH_OUTPUT_8].value = clamp(inputs[PITCH_INPUT_8].value * multiplier, -5.0, 5.0);
+		if (outputs[PITCH_OUTPUT_9].active)
+			outputs[PITCH_OUTPUT_9].value = clamp(inputs[PITCH_INPUT_9].value * multiplier, -5.0, 5.0);
+		*/
+		intervalDisplay->step = (int)params[STEPS_PARAM].getValue();
+		intervalDisplay->interval = (int)params[INTERVAL_PARAM].getValue();
+	}
+
+	float intervals[14] = {
+		log2f(9.f / 8.f) * 12,
+		log2f(8.f / 7.f) * 12,
+		log2f(7.f / 6.f) * 12,
+		log2f(6.f / 5.f) * 12,
+		log2f(5.f / 4.f) * 12,
+		log2f(4.f / 3.f) * 12,
+		log2f(3.f / 2.f) * 12,
+		log2f(2.f) * 12,
+		log2f(3.f) * 12,
+		log2f(4.f) * 12,
+		log2f(5.f) * 12,
+		log2f(6.f) * 12,
+		log2f(7.f) * 12,
+		log2f(8.f) * 12
+	};
+
 	Display *intervalDisplay;
-	void step() override;
 
-	// For more advanced Module features, read Rack's engine.hpp header file
-	// - toJson, fromJson: serialization of internal data
-	// - onSampleRateChange: event triggered by a change of sample rate
-	// - onReset, onRandomize, onCreate, onDelete: implements special behavior when user clicks these from the context menu
 };
 
-void EqualDivision::step() {
-	float multiplier = intervals[(int) params[INTERVAL_PARAM].value] / params[STEPS_PARAM].value * params[FINE_PARAM].value;
-	if (outputs[PITCH_OUTPUT_1].active)
-		outputs[PITCH_OUTPUT_1].value = clamp(inputs[PITCH_INPUT_1].value * multiplier, -5.0, 5.0);
-	if (outputs[PITCH_OUTPUT_2].active)
-		outputs[PITCH_OUTPUT_2].value = clamp(inputs[PITCH_INPUT_2].value * multiplier, -5.0, 5.0);
-	if (outputs[PITCH_OUTPUT_3].active)
-		outputs[PITCH_OUTPUT_3].value = clamp(inputs[PITCH_INPUT_3].value * multiplier, -5.0, 5.0);
-	if (outputs[PITCH_OUTPUT_4].active)
-		outputs[PITCH_OUTPUT_4].value = clamp(inputs[PITCH_INPUT_4].value * multiplier, -5.0, 5.0);
-	if (outputs[PITCH_OUTPUT_5].active)
-		outputs[PITCH_OUTPUT_5].value = clamp(inputs[PITCH_INPUT_5].value * multiplier, -5.0, 5.0);
-	if (outputs[PITCH_OUTPUT_6].active)
-		outputs[PITCH_OUTPUT_6].value = clamp(inputs[PITCH_INPUT_6].value * multiplier, -5.0, 5.0);
-	if (outputs[PITCH_OUTPUT_7].active)
-		outputs[PITCH_OUTPUT_7].value = clamp(inputs[PITCH_INPUT_7].value * multiplier, -5.0, 5.0);
-	if (outputs[PITCH_OUTPUT_8].active)
-		outputs[PITCH_OUTPUT_8].value = clamp(inputs[PITCH_INPUT_8].value * multiplier, -5.0, 5.0);
-	if (outputs[PITCH_OUTPUT_9].active)
-		outputs[PITCH_OUTPUT_9].value = clamp(inputs[PITCH_INPUT_9].value * multiplier, -5.0, 5.0);
-	intervalDisplay->step = (int) params[STEPS_PARAM].value;
-	intervalDisplay->interval = (int) params[INTERVAL_PARAM].value;
-}
-
-//	<0.6.0---
-/*EqualDivisionWidget::EqualDivisionWidget() {
-	EqualDivision *module = new EqualDivision();
-	int initStep = 33;
-	int initInterval = 9;
-	box.size = Vec(6 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
-*/
-
-//	>0.6.0dev onwards
 struct EqualDivisionWidget : ModuleWidget {
-	EqualDivisionWidget(EqualDivision *module);
+	EqualDivisionWidget(EqualDivision *module) {
+		setModule(module);
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/EqualDivision.svg")));
+		box.size = Vec(90, 380);
+
+		addChild(createWidget<ScrewSilver>(Vec(0, 0)));
+		addChild(createWidget<ScrewSilver>(Vec(box.size.x - RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+
+		addParam(createParam<CoirtKnob36>(Vec(46.5, 47), module, EqualDivision::FINE_PARAM));
+		addParam(createParam<CoirtKnob28>(Vec(10, 124), module, EqualDivision::STEPS_PARAM));
+		addParam(createParam<CoirtKnob28>(Vec(box.size.x - 37, 124), module, EqualDivision::INTERVAL_PARAM));
+	
+		addInput(createInput<CoirtInPort>(Vec(4, 167), module, EqualDivision::PITCH_INPUT + 0));
+		addInput(createInput<CoirtInPort>(Vec(33, 167), module, EqualDivision::PITCH_INPUT + 1));
+		addInput(createInput<CoirtInPort>(Vec(62, 167), module, EqualDivision::PITCH_INPUT + 2));
+		addInput(createInput<CoirtInPort>(Vec(4, 226 + 7.5), module, EqualDivision::PITCH_INPUT + 3));
+		addInput(createInput<CoirtInPort>(Vec(33, 226 + 3.75), module, EqualDivision::PITCH_INPUT + 4));
+		addInput(createInput<CoirtInPort>(Vec(62, 226), module, EqualDivision::PITCH_INPUT + 5));
+		addInput(createInput<CoirtInPort>(Vec(4, 300), module, EqualDivision::PITCH_INPUT + 6));
+		addInput(createInput<CoirtInPort>(Vec(33, 292.5), module, EqualDivision::PITCH_INPUT + 7));
+		addInput(createInput<CoirtInPort>(Vec(62, 285), module, EqualDivision::PITCH_INPUT + 8));
+	
+		addOutput(createOutput<CoirtOutPort>(Vec(4, 194), module, EqualDivision::PITCH_OUTPUT + 0));
+		addOutput(createOutput<CoirtOutPort>(Vec(33, 194), module, EqualDivision::PITCH_OUTPUT + 1));
+		addOutput(createOutput<CoirtOutPort>(Vec(62, 194), module, EqualDivision::PITCH_OUTPUT + 2));
+		addOutput(createOutput<CoirtOutPort>(Vec(4, 253 + 7.5), module, EqualDivision::PITCH_OUTPUT + 3));
+		addOutput(createOutput<CoirtOutPort>(Vec(33, 253 + 3.75), module, EqualDivision::PITCH_OUTPUT + 4));
+		addOutput(createOutput<CoirtOutPort>(Vec(62, 253), module, EqualDivision::PITCH_OUTPUT + 5));
+		addOutput(createOutput<CoirtOutPort>(Vec(4, 327), module, EqualDivision::PITCH_OUTPUT + 6));
+		addOutput(createOutput<CoirtOutPort>(Vec(33, 319.5), module, EqualDivision::PITCH_OUTPUT + 7));
+		addOutput(createOutput<CoirtOutPort>(Vec(62, 312), module, EqualDivision::PITCH_OUTPUT + 8));
+
+		if (module) {
+			module->intervalDisplay = new Display();
+			module->intervalDisplay->box.pos = Vec(8.5, 98);
+			module->intervalDisplay->box.size = Vec(74, 18);
+			module->intervalDisplay->step = initStep;
+			module->intervalDisplay->interval = initInterval;
+			addChild(module->intervalDisplay);
+		}
+	}
 };
 
-EqualDivisionWidget::EqualDivisionWidget(EqualDivision *module) : ModuleWidget(module) {
-	int initStep = 33;
-	int initInterval = 9;
-	box.size = Vec(90, 380);
-
-	{
-		SVGPanel *panel = new SVGPanel();
-		panel->box.size = box.size;
-											//	   pluginSLUG,
-		panel->setBackground(SVG::load(assetPlugin(pluginAhornberg, "res/EqualDivision.svg")));
-		addChild(panel);
-	}
-
-	{
-		module->intervalDisplay = new Display();
-		module->intervalDisplay->box.pos = Vec(8.5, 98);
-		module->intervalDisplay->box.size = Vec(74, 18);
-		module->intervalDisplay->step = initStep;
-		module->intervalDisplay->interval = initInterval;
-		addChild(module->intervalDisplay);
-	}
-	//setModule(module);
-	//----
-	//	Widget::create 			= Screw
-	//	ParamWidget::create 		= Knob
-	//	Port::create			= Port	
-	//	    ""		<COMPONENT>(Vec(0, 0), (for port) = , Port::INPUT, or ,Port::OUTPUT, module, NAME::ENUM));
-	//----
-	addChild(Widget::create<ScrewSilver>(Vec(0, 0)));
-	//addChild(createScrew<ScrewSilver>(Vec(box.size.x - RACK_GRID_WIDTH, 0)));
-	//addChild(createScrew<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
-	addChild(Widget::create<ScrewSilver>(Vec(box.size.x - RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
-
-	addParam(ParamWidget::create<Davies1900hBlackKnob>(Vec(46.5, 47), module, EqualDivision::FINE_PARAM, 0.97, 1.03, 1.0));
-	addParam(ParamWidget::create<SnapKnob>(Vec(10, 124), module, EqualDivision::STEPS_PARAM, 1, 99, initStep));
-	addParam(ParamWidget::create<SnapKnob>(Vec(box.size.x - 37, 124), module, EqualDivision::INTERVAL_PARAM, 0, 13, initInterval));
-	
-	addInput(Port::create<PJ301MPort>(Vec( 4, 167), Port::INPUT, module, EqualDivision::PITCH_INPUT_1));
-	addInput(Port::create<PJ301MPort>(Vec(33, 167), Port::INPUT, module, EqualDivision::PITCH_INPUT_2));
-	addInput(Port::create<PJ301MPort>(Vec(62, 167), Port::INPUT, module, EqualDivision::PITCH_INPUT_3));
-	addInput(Port::create<PJ301MPort>(Vec( 4, 226 + 7.5), Port::INPUT, module, EqualDivision::PITCH_INPUT_4));
-	addInput(Port::create<PJ301MPort>(Vec(33, 226 + 3.75), Port::INPUT, module, EqualDivision::PITCH_INPUT_5));
-	addInput(Port::create<PJ301MPort>(Vec(62, 226), Port::INPUT, module, EqualDivision::PITCH_INPUT_6));
-	addInput(Port::create<PJ301MPort>(Vec( 4, 300), Port::INPUT, module, EqualDivision::PITCH_INPUT_7));
-	addInput(Port::create<PJ301MPort>(Vec(33, 292.5), Port::INPUT, module, EqualDivision::PITCH_INPUT_8));
-	addInput(Port::create<PJ301MPort>(Vec(62, 285), Port::INPUT, module, EqualDivision::PITCH_INPUT_9));
-	
-	addOutput(Port::create<PJ301MPort>(Vec( 4, 194), Port::OUTPUT, module, EqualDivision::PITCH_OUTPUT_1));
-	addOutput(Port::create<PJ301MPort>(Vec(33, 194), Port::OUTPUT, module, EqualDivision::PITCH_OUTPUT_2));
-	addOutput(Port::create<PJ301MPort>(Vec(62, 194), Port::OUTPUT, module, EqualDivision::PITCH_OUTPUT_3));
-	addOutput(Port::create<PJ301MPort>(Vec( 4, 253 + 7.5), Port::OUTPUT, module, EqualDivision::PITCH_OUTPUT_4));
-	addOutput(Port::create<PJ301MPort>(Vec(33, 253 + 3.75), Port::OUTPUT, module, EqualDivision::PITCH_OUTPUT_5));
-	addOutput(Port::create<PJ301MPort>(Vec(62, 253), Port::OUTPUT, module, EqualDivision::PITCH_OUTPUT_6));
-	addOutput(Port::create<PJ301MPort>(Vec( 4, 327), Port::OUTPUT, module, EqualDivision::PITCH_OUTPUT_7));
-	addOutput(Port::create<PJ301MPort>(Vec(33, 319.5), Port::OUTPUT, module, EqualDivision::PITCH_OUTPUT_8));
-	addOutput(Port::create<PJ301MPort>(Vec(62, 312), Port::OUTPUT, module, EqualDivision::PITCH_OUTPUT_9));
-}
-
-Model *modelEqualDivisionModule = Model::create<EqualDivision, EqualDivisionWidget>("Ahornberg", "EqualDivision", "EqualDivision", TUNER_TAG);
+Model *modelEqualDivision = createModel<EqualDivision, EqualDivisionWidget>("EqualDivision");
