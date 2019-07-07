@@ -16,7 +16,7 @@
     {
       "slug": "EqualDivision",
       "name": "Micro-Tonal",
-      "description": "compress or stretch a tuning in a range from -3% to +3%\n",
+      "description": "Compress or stretch a tuning in a range from -3% to +3%\nConverts v/oct to several Equal Division Tunings.\n1 step equals 100 cents\nSee manual for more details...\n",
       "tags": [ "Tuner" ]
     }
   ]
