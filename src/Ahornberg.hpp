@@ -1,20 +1,5 @@
 #include "rack.hpp"
-
-
 using namespace rack;
+extern Plugin *pluginInstance;
 
-extern Plugin *pluginAhornberg;
-
-////////////////////
-// module widgets
-/////------------
-
-/*struct EqualDivisionWidget : ModuleWidget {
-	EqualDivisionWidget();
-};*/							//OLD
-
-//NEW----
-
-extern Model *modelEqualDivisionModule;
-
-
+extern Model *modelEqualDivision;
