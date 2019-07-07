@@ -149,26 +149,7 @@ struct EqualDivision : Module {
 				outputs[PITCH_OUTPUT + i].setVoltage(simd::clamp(inputs[PITCH_INPUT + i].getVoltage() * multiplier, -5.0, 5.0));
 			}
 		}
-		/*
-		if (outputs[PITCH_OUTPUT_1].active)
-			outputs[PITCH_OUTPUT_1].value = clamp(inputs[PITCH_INPUT_1].value * multiplier, -5.0, 5.0);
-		if (outputs[PITCH_OUTPUT_2].active)
-			outputs[PITCH_OUTPUT_2].value = clamp(inputs[PITCH_INPUT_2].value * multiplier, -5.0, 5.0);
-		if (outputs[PITCH_OUTPUT_3].active)
-			outputs[PITCH_OUTPUT_3].value = clamp(inputs[PITCH_INPUT_3].value * multiplier, -5.0, 5.0);
-		if (outputs[PITCH_OUTPUT_4].active)
-			outputs[PITCH_OUTPUT_4].value = clamp(inputs[PITCH_INPUT_4].value * multiplier, -5.0, 5.0);
-		if (outputs[PITCH_OUTPUT_5].active)
-			outputs[PITCH_OUTPUT_5].value = clamp(inputs[PITCH_INPUT_5].value * multiplier, -5.0, 5.0);
-		if (outputs[PITCH_OUTPUT_6].active)
-			outputs[PITCH_OUTPUT_6].value = clamp(inputs[PITCH_INPUT_6].value * multiplier, -5.0, 5.0);
-		if (outputs[PITCH_OUTPUT_7].active)
-			outputs[PITCH_OUTPUT_7].value = clamp(inputs[PITCH_INPUT_7].value * multiplier, -5.0, 5.0);
-		if (outputs[PITCH_OUTPUT_8].active)
-			outputs[PITCH_OUTPUT_8].value = clamp(inputs[PITCH_INPUT_8].value * multiplier, -5.0, 5.0);
-		if (outputs[PITCH_OUTPUT_9].active)
-			outputs[PITCH_OUTPUT_9].value = clamp(inputs[PITCH_INPUT_9].value * multiplier, -5.0, 5.0);
-		*/
+		
 		intervalDisplay->step = (int)params[STEPS_PARAM].getValue();
 		intervalDisplay->interval = (int)params[INTERVAL_PARAM].getValue();
 	}
