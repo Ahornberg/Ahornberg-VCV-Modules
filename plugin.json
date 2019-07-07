@@ -1,0 +1,23 @@
+{
+  "slug": "Ahornberg",
+  "version": "1.0.0",
+  "license": "CC0",
+  "name": "Ahornberg",
+  "brand": "Ahornberg",
+  "author": "Ahornberg",
+  "authorEmail": "",
+  "authorUrl": "https://github.com/Ahornberg/Ahornberg-Microtonal",
+  "pluginUrl": "https://github.com/Ahornberg/Ahornberg-Microtonal",
+  "manualUrl": "https://github.com/Ahornberg/Ahornberg-Microtonal/blob/master/README.md",
+  "sourceUrl": "https://github.com/Ahornberg/Ahornberg-Microtonal",
+  "changelogUrl": "",
+  "donateUrl": "https://www.paypal.me/Ahornberg/",
+  "modules": [
+    {
+      "slug": "EqualDivision",
+      "name": "Micro-Tonal",
+      "description": "compress or stretch a tuning in a range from -3% to +3%\n",
+      "tags": [ "Tuner" ]
+    }
+  ]
+}
