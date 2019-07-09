@@ -113,6 +113,25 @@ struct Display : TransparentWidget {
 	}
 };
 
+struct tpInterval : ParamQuantity {
+	std::string getDisplayValueString() override {
+		if (getValue() == 0.f) { return "Major 2nd"; } 
+		else if (getValue() == 1.f) { return "Dim 3rd"; } 
+		else if (getValue() == 2.f) { return "Aug 2nd"; } 
+		else if (getValue() == 3.f) { return "Minor 3rd"; } 
+		else if (getValue() == 4.f) { return "Major 3rd"; } 
+		else if (getValue() == 5.f) { return "Perfect 4th"; } 
+		else if (getValue() == 6.f) { return "Perfect 5th"; } 
+		else if (getValue() == 7.f) { return "1/oct"; } 
+		else if (getValue() == 8.f) { return "Tritave"; } 
+		else if (getValue() == 9.f) { return "2/oct"; } 
+		else if (getValue() == 10.f) { return "JI Major 3rd"; } 
+		else if (getValue() == 11.f) { return "2/oct JI Perfect 5th"; } 
+		else if (getValue() == 12.f) { return "7th Natural"; } 
+		else return  "3/oct";
+	}
+};
+
 struct EqualDivision : Module {
 	enum ParamIds {
 		FINE_PARAM,
@@ -136,7 +155,7 @@ struct EqualDivision : Module {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		configParam(FINE_PARAM, .97f, 1.03f, 1.f, "Fine", "%", 0.f, 100.f, -100.f);
 		configParam(STEPS_PARAM, 1, 99, initStep, "Steps");
-		configParam(INTERVAL_PARAM, 0, 13, initInterval, "Interval");
+		configParam<tpInterval>(INTERVAL_PARAM, 0, 13, initInterval, "Division");
 
 	}
 	
