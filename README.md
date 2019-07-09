@@ -35,6 +35,8 @@ The yellow digits on the left side display the number of equal steps the interva
 ### 9 x Note In/Out
 Nine vertically orientated pairs of Note CV inputs and outputs provide the a bility to tune 9 different signals simultaneously using only one module. The outputs are hard limited to -5/+5 Volts.
 ## Further Readings
+https://en.xen.wiki/w/33ed4
+
 http://xenharmonic.wikispaces.com/Equal-step+Tuning 
 
 Happy tuning!
