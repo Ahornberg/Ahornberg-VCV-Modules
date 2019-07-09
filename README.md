@@ -42,6 +42,6 @@ http://xenharmonic.wikispaces.com/Equal-step+Tuning
 
 Happy tuning!
 
-Ahornberg
+Music by Ahornberg available here: https://soundcloud.com/ahornberg/sets/equivocal-tuning-33ed4
 
 If you like it, feel free to [support](https://www.paypal.me/Ahornberg/10) further development.
