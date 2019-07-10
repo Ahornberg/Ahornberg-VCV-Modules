@@ -1,7 +1,7 @@
 {
   "slug": "Ahornberg",
   "version": "1.0.1",
-  "license": "CC0",
+  "license": "CC0-1.0",
   "name": "Ahornberg",
   "brand": "Ahornberg",
   "author": "Ahornberg",
@@ -16,7 +16,7 @@
     {
       "slug": "EqualDivision",
       "name": "Micro-Tonal",
-      "description": "Compress or stretch a tuning in the range of -3% to +3%\nConverts v/oct to several Equal Division Tunings.\n1 step equals 100 cents\nSee manual for more details...\n",
+      "description": "Compress or stretch a tuning in the range\nof -3% to +3%. Converts v/oct to several\nEqual Division Tunings. 1 step equals\n100 cents.\nSee manual for more details...\n",
       "tags": [ "Tuner" ]
     }
   ]
