@@ -33,12 +33,15 @@ The green letters ED stand for Equal Division.
 #### Number Of Equal Steps
 The yellow digits on the left side display the number of equal steps the interval is divided in.
 ### 9 x Note In/Out
-Nine vertically orientated pairs of Note CV inputs and outputs provide the a bility to tune 9 different signals simultaneously using only one module. The outputs are hard limited to -5/+5 Volts.
+Nine vertically orientated pairs of Note CV inputs and outputs provide the a bility to tune 9 different signals simultaneously using
+only one module. The outputs are hard limited to -4/+6 Volts C0-C10 (16.35Hz - 16744.09Hz).
 ## Further Readings
+https://en.xen.wiki/w/33ed4
+
 http://xenharmonic.wikispaces.com/Equal-step+Tuning 
 
 Happy tuning!
 
-Ahornberg
+Music by Ahornberg available here: https://soundcloud.com/ahornberg/sets/equivocal-tuning-33ed4
 
 If you like it, feel free to [support](https://www.paypal.me/Ahornberg/10) further development.
