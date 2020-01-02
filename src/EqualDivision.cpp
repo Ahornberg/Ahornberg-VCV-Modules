@@ -1,5 +1,7 @@
 #include "Ahornberg.hpp"
 
+using simd::float_4;
+
 int initStep = 33;
 int initInterval = 9;
 
@@ -164,7 +166,12 @@ struct EqualDivision : Module {
 
 		for (int i = 0; i < 9; i++) {
 			if (outputs[PITCH_OUTPUT + i].isConnected()) {
-				outputs[PITCH_OUTPUT + i].setVoltage(simd::clamp(inputs[PITCH_INPUT + i].getVoltage() * multiplier, -5.0, 5.0));
+				int channels = inputs[PITCH_INPUT + i].getChannels();
+				outputs[PITCH_OUTPUT + i].setChannels(channels);
+				
+				for (int c = 0; c < channels; c += 4) {
+					outputs[PITCH_OUTPUT + i].setVoltageSimd(inputs[PITCH_INPUT + i].getPolyVoltageSimd<float_4>(c) * multiplier, c);
+				}
 			}
 		}
 		
