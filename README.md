@@ -1,10 +1,8 @@
 # Ahornberg-Microtonal
 
-If you like it, feel free to [support](https://www.paypal.me/Ahornberg/10) further development.
+## Equal Division
 
-## EqualDivision
-
-Module for VCV-Rack to convert Note CV in Standard Western Tuning (1 step equals 100 cents) to several Equal Division Tunings.
+Module for VCV-Rack to convert Note CV in Standard Western Tuning (12ed2 = 1 step equals 100 cents) to several Equal Division Tunings.
 
 ![EqualDivision](manual-pics/EqualDivision.png)
 ### Fine Tune
@@ -33,15 +31,11 @@ The green letters ED stand for Equal Division.
 #### Number Of Equal Steps
 The yellow digits on the left side display the number of equal steps the interval is divided in.
 ### 9 x Note In/Out
-Nine vertically orientated pairs of Note CV inputs and outputs provide the a bility to tune 9 different signals simultaneously using
-only one module. The outputs are hard limited to -4/+6 Volts C0-C10 (16.35Hz - 16744.09Hz).
+Nine vertically orientated pairs of Note CV inputs and outputs provide the a bility to tune 9 different polyphonic signals simultaneously using only one module.
 ## Further Readings
+http://https://en.xen.wiki/w/Equal-step_tuning 
 https://en.xen.wiki/w/33ed4
-
-http://xenharmonic.wikispaces.com/Equal-step+Tuning 
 
 Happy tuning!
 
 Music by Ahornberg available here: https://soundcloud.com/ahornberg/sets/equivocal-tuning-33ed4
-
-If you like it, feel free to [support](https://www.paypal.me/Ahornberg/10) further development.
