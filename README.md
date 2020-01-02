@@ -33,7 +33,8 @@ The yellow digits on the left side display the number of equal steps the interva
 ### 9 x Note In/Out
 Nine vertically orientated pairs of Note CV inputs and outputs provide the a bility to tune 9 different polyphonic signals simultaneously using only one module.
 ## Further Readings
-http://https://en.xen.wiki/w/Equal-step_tuning 
+http://https://en.xen.wiki/w/Equal-step_tuning
+
 https://en.xen.wiki/w/33ed4
 
 Happy tuning!
