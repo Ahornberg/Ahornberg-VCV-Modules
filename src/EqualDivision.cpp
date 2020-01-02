@@ -117,20 +117,21 @@ struct Display : TransparentWidget {
 
 struct tpInterval : ParamQuantity {
 	std::string getDisplayValueString() override {
-		if (getValue() == 0.f) { return "Major 2nd"; } 
-		else if (getValue() == 1.f) { return "Dim 3rd"; } 
-		else if (getValue() == 2.f) { return "Aug 2nd"; } 
-		else if (getValue() == 3.f) { return "Minor 3rd"; } 
-		else if (getValue() == 4.f) { return "Major 3rd"; } 
-		else if (getValue() == 5.f) { return "Perfect 4th"; } 
-		else if (getValue() == 6.f) { return "Perfect 5th"; } 
-		else if (getValue() == 7.f) { return "1/oct"; } 
-		else if (getValue() == 8.f) { return "Tritave"; } 
-		else if (getValue() == 9.f) { return "2/oct"; } 
-		else if (getValue() == 10.f) { return "JI Major 3rd"; } 
-		else if (getValue() == 11.f) { return "2/oct JI Perfect 5th"; } 
-		else if (getValue() == 12.f) { return "7th Natural"; } 
-		else return  "3/oct";
+		//return intervalValues[(int) getValue()];
+		if (getValue() == 0.f) { return "Major Second"; } 
+		else if (getValue() == 1.f) { return "Supermajor Second"; } 
+		else if (getValue() == 2.f) { return "Subminor Third"; } 
+		else if (getValue() == 3.f) { return "Minor Third"; } 
+		else if (getValue() == 4.f) { return "Major Third"; } 
+		else if (getValue() == 5.f) { return "Perfect Fourth"; } 
+		else if (getValue() == 6.f) { return "Perfect Fifth"; } 
+		else if (getValue() == 7.f) { return "Octave"; } 
+		else if (getValue() == 8.f) { return "Tritave (Octave + Perfect Fifth)"; } 
+		else if (getValue() == 9.f) { return "2 Octaves"; } 
+		else if (getValue() == 10.f) { return "2 Octaves + Major Third"; } 
+		else if (getValue() == 11.f) { return "2 Octaves + Perfect Fifth"; } 
+		else if (getValue() == 12.f) { return "2 Octaves + Subminor Seventh"; } 
+		else return  "3 Octaves";
 	}
 };
 
