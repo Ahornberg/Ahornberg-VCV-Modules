@@ -160,8 +160,7 @@ struct EqualDivision : Module {
 	}
 	
 	void process(const ProcessArgs &args) override {
-		float multiplier = intervals[(int)params[INTERVAL_PARAM].getValue()];
-		multiplier /= params[STEPS_PARAM].getValue() * params[FINE_PARAM].getValue();
+		float multiplier = intervals[(int)params[INTERVAL_PARAM].getValue()] / params[STEPS_PARAM].getValue() * params[FINE_PARAM].getValue();
 
 		for (int i = 0; i < 9; i++) {
 			if (outputs[PITCH_OUTPUT + i].isConnected()) {
