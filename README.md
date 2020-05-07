@@ -1,4 +1,4 @@
-# Ahornberg-Microtonal
+# Ahornberg VCV modules
 
 Thanks to Phil Golden https://github.com/Coirt for porting this module to VCV Rack V1.0.
 
