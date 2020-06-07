@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="23"
+   height="18"
+   viewBox="0 0 6.0854165 4.7625001"
+   version="1.1"
+   id="svg56722"
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
+   sodipodi:docname="PlayBackwards_off.svg">
+  <defs
+     id="defs56716" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="34.124141"
+     inkscape:cx="-15.462575"
+     inkscape:cy="12.588268"
+     inkscape:document-units="mm"
+     inkscape:current-layer="g832"
+     showgrid="true"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:window-width="2560"
+     inkscape:window-height="1422"
+     inkscape:window-x="-12"
+     inkscape:window-y="124"
+     inkscape:window-maximized="0"
+     units="px">
+    <inkscape:grid
+       type="xygrid"
+       id="grid812"
+       spacingx="0.13229167"
+       spacingy="0.13229167" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata56719">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-35.423779,-64.038)">
+    <g
+       id="g832"
+       transform="translate(0.13229145,-0.13229874)">
+      <rect
+         style="opacity:1;fill:#000000;fill-opacity:1;stroke:#666666;stroke-width:0.2339841;stroke-opacity:1"
+         id="rect942"
+         width="5.8514323"
+         height="4.5285158"
+         x="35.408478"
+         y="64.287292"
+         ry="0.41168138" />
+      <path
+         style="opacity:1;fill:#eeffee;fill-opacity:1;stroke:none;stroke-width:0.31722382;stroke-opacity:1"
+         d="m 38.334197,64.897901 1.5875,3.04271 h -2e-6 -3.174997 -2e-6 z"
+         id="rect948-0"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="cccccc" />
+    </g>
+  </g>
+</svg>
