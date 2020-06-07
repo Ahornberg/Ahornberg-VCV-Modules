@@ -6,7 +6,7 @@ A virtual rebuild of a vintage electronic metronome.
 
 ![Metronome](manual-pics/Metronome.png)
 
-![Metronome Manual](https://youtu.be/NcPUyekx2pQ)
+[![Metronome Manual](https://img.youtube.com/vi/NcPUyekx2pQ/0.jpg)](https://www.youtube.com/watch?v=NcPUyekx2pQ)
 
 ## Equal Division
 
