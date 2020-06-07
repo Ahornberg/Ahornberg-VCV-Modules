@@ -1,6 +1,10 @@
-# Ahornberg-Microtonal
+# Ahornberg-VCV-Modules
 
-Thanks to Phil Golden https://github.com/Coirt for porting this module to VCV Rack V1.0.
+## Metronome
+
+A virtual rebuild of a vintage electronic metronome.
+
+https://youtu.be/NcPUyekx2pQ
 
 ## Equal Division
 
