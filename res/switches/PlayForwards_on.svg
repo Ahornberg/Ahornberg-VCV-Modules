@@ -10,8 +10,8 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="23"
-   height="21"
-   viewBox="0 0 6.0854165 5.5562501"
+   height="22"
+   viewBox="0 0 6.0854165 5.8208334"
    version="1.1"
    id="svg56722"
    inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
@@ -26,7 +26,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="50.956522"
-     inkscape:cx="8.5795675"
+     inkscape:cx="2.0838337"
      inkscape:cy="11.5"
      inkscape:document-units="mm"
      inkscape:current-layer="g832"
@@ -63,22 +63,22 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-35.423779,-63.244249)">
+     transform="translate(-35.423779,-62.979666)">
     <g
        id="g832"
        transform="translate(0.13229145,-0.13229874)">
       <rect
-         style="display:inline;opacity:1;fill:#ffff99;fill-opacity:1;stroke:#666666;stroke-width:0.25280625;stroke-opacity:1"
+         style="display:inline;opacity:1;fill:#ffff99;fill-opacity:1;stroke:#666666;stroke-width:0.25876471;stroke-opacity:1"
          id="rect942-6"
-         width="5.8326106"
-         height="5.3034439"
-         x="35.417892"
-         y="-68.806396"
-         ry="0.4821291"
+         width="5.8266521"
+         height="5.5620685"
+         x="35.420872"
+         y="-68.803421"
+         ry="0.50564033"
          transform="scale(1,-1)" />
       <path
          style="display:inline;opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.37124193;stroke-opacity:1"
-         d="m 38.334197,68.006756 1.852083,-3.571875 h -2e-6 -3.704163 -2e-6 z"
+         d="M 38.334197,67.874465 40.18628,64.30259 h -2e-6 -3.704163 -2e-6 z"
          id="rect948-0"
          inkscape:connector-curvature="0"
          sodipodi:nodetypes="cccccc" />

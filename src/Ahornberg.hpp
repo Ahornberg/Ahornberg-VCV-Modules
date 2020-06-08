@@ -10,7 +10,7 @@ using simd::float_4;
 extern Plugin *pluginInstance;
 
 extern Model* modelEqualDivision;
-// extern Model* modelTapeRecorder;
+extern Model* modelTapeRecorder;
 extern Model* modelMetronome;
 
 #include "util/Ports.hpp"
