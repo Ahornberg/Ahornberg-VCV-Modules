@@ -12,6 +12,7 @@ extern Plugin *pluginInstance;
 extern Model* modelEqualDivision;
 extern Model* modelTapeRecorder;
 extern Model* modelMetronome;
+extern Model* modelHarmonizer;
 
 #include "util/Ports.hpp"
 #include "util/Knobs.hpp"

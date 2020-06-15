@@ -17,9 +17,20 @@ struct KnobScrew : BasicKnob {
 	}
 };
 
+struct KnobTiny : BasicKnob {
+	KnobTiny() {
+		BasicKnob::setSvg("res/knobs/Tiny.svg");
+	}
+};
+
 struct KnobSmall : BasicKnob {
 	KnobSmall() {
 		BasicKnob::setSvg("res/knobs/Small.svg");
+	}
+};
+
+struct KnobSmallSnap : KnobSmall {
+	KnobSmallSnap() {
 		snap = true;
 	}
 };

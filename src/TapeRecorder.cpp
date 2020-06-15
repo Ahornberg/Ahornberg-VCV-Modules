@@ -159,14 +159,16 @@ struct TapeRecorder : Module {
 	}
 	
 	void processTempoOutput(const ProcessArgs &args) {
-		float beat = 0;
-		if (beatsPulse.process(args.sampleTime)) {
-			beat = 5;
+		if (outputs[TEMPO_OUTPUT].isConnected() && playStatus) {
+			float beat = 0;
+			if (beatsPulse.process(args.sampleTime)) {
+				beat = 5;
+			}
+			if (barsPulse.process(args.sampleTime)) {
+				beat += 5;
+			}
+			outputs[TEMPO_OUTPUT].setVoltage(beat);
 		}
-		if (barsPulse.process(args.sampleTime)) {
-			beat += 5;
-		}
-		outputs[TEMPO_OUTPUT].setVoltage(beat);
 	}
 	
 	void processSpeedInput(const ProcessArgs &args) {
@@ -236,10 +238,10 @@ struct TapeRecorder : Module {
 		return rescale(inputs[port].getVoltage(channel), 2, 0.1, 0, 1);
 	}
 	
-	void processTriggerInputs() {
+	void processTransportInput() {
 		// TODO loop input
 		if (inputs[TRANSPORT_INPUT].isConnected()) {
-			if (pauseInputTrigger.process(rescaleInput(TRANSPORT_INPUT, 4))) {
+			if (pauseInputTrigger.process(rescaleInput(TRANSPORT_INPUT, 2))) {
 				// pause is independend from all other transport keys
 				toggleParamValue(PAUSE_PARAM);
 			}
@@ -250,42 +252,34 @@ struct TapeRecorder : Module {
 					params[PLAY_FORWARDS_PARAM].setValue(0);
 				}
 			}
-			if (playForwardsInputTrigger.process(rescaleInput(TRANSPORT_INPUT, 0))) {
+			if (playForwardsInputTrigger.process(rescaleInput(TRANSPORT_INPUT, 3))) {
 				toggleParamValue(PLAY_FORWARDS_PARAM);
 				if (params[PLAY_FORWARDS_PARAM].getValue()) {
 					// only one play direction active at a time
 					params[PLAY_BACKWARDS_PARAM].setValue(0);
 				}
 			}
-			if (cueBackwardsInputTrigger.process(rescaleInput(TRANSPORT_INPUT, 3))) {
-				// if (isTransportCueSwitchMomentary()) {
-					// params[CUE_BACKWARDS_PARAM].setValue(1);
-				// } else {
-					toggleParamValue(CUE_BACKWARDS_PARAM);
-				// }
+			if (cueBackwardsInputTrigger.process(rescaleInput(TRANSPORT_INPUT, 0))) {
+				toggleParamValue(CUE_BACKWARDS_PARAM);
 				if (params[CUE_BACKWARDS_PARAM].getValue()) {
 					// only one cue direction active at a time
 					params[CUE_FORWARDS_PARAM].setValue(0);
 				}
 			}
-			if (cueBackwardsMomentaryInputTrigger.process(rescaleInverseInput(TRANSPORT_INPUT, 3))) {
+			if (cueBackwardsMomentaryInputTrigger.process(rescaleInverseInput(TRANSPORT_INPUT, 0))) {
 				if (isTransportCueSwitchMomentary()) {
 					params[CUE_BACKWARDS_PARAM].setValue(0);
 				}
 			}
 
-			if (cueForwardsInputTrigger.process(rescaleInput(TRANSPORT_INPUT, 2))) {
-				// if (isTransportCueSwitchMomentary()) {
-					// params[CUE_FORWARDS_PARAM].setValue(1);
-				// } else {
-					toggleParamValue(CUE_FORWARDS_PARAM);
-				// }
+			if (cueForwardsInputTrigger.process(rescaleInput(TRANSPORT_INPUT, 4))) {
+				toggleParamValue(CUE_FORWARDS_PARAM);
 				if (params[CUE_FORWARDS_PARAM].getValue()) {
 					// only one cue direction active at a time
 					params[CUE_BACKWARDS_PARAM].setValue(0);
 				}
 			}
-			if (cueForwardsMomentaryInputTrigger.process(rescaleInverseInput(TRANSPORT_INPUT, 2))) {
+			if (cueForwardsMomentaryInputTrigger.process(rescaleInverseInput(TRANSPORT_INPUT, 4))) {
 				if (isTransportCueSwitchMomentary()) {
 					params[CUE_FORWARDS_PARAM].setValue(0);
 				}
@@ -333,81 +327,15 @@ struct TapeRecorder : Module {
 		
 		// transport out
 		
-		processTriggerInputs();
+		processTransportInput();
+
+		playStatus = !params[PAUSE_PARAM].getValue() && (params[PLAY_FORWARDS_PARAM].getValue() || params[PLAY_BACKWARDS_PARAM].getValue());
+		playForwardStatus = !params[PLAY_BACKWARDS_PARAM].getValue();
+		cueStatus = params[CUE_FORWARDS_PARAM].getValue() || params[CUE_BACKWARDS_PARAM].getValue();
+		cueForwardStatus = !params[CUE_BACKWARDS_PARAM].getValue();
+
 		processLoopInput();
 		processTempoOutput(args);
-		// if (playForwardsTrigger.process(params[PLAY_FORWARDS_PARAM].getValue() > 0.f)) {
-			// if (playForwardStatus && playStatus) {
-				// playStatus = !playStatus;
-			// } else {
-				// playForwardStatus = true;
-				// playStatus = true;
-			// }
-		// }
-		// if (playBackwardsTrigger.process(params[PLAY_BACKWARDS_PARAM].getValue() > 0.f)) {
-			// if (!playForwardStatus && playStatus) {
-				// playStatus = !playStatus;
-			// } else {
-				// playForwardStatus = false;
-				// playStatus = true;
-			// }
-		// }
-		// if (playStatus) {
-			// cueStatus = (params[CUE_FORWARDS_PARAM].getValue() > 0.f || params[CUE_BACKWARDS_PARAM].getValue() > 0.f);
-			// if (params[CUE_FORWARDS_PARAM].getValue() > 0.f) {
-				// cueForwardStatus = true;
-			// }
-			// if (params[CUE_BACKWARDS_PARAM].getValue() > 0.f) {
-				// cueForwardStatus = false;
-			// }
-		// } else {
-			// if (cueForwardsTrigger.process(params[CUE_FORWARDS_PARAM].getValue() > 0.f)) {
-				// if (cueForwardStatus && cueStatus) {
-					// cueStatus = !cueStatus;
-				// } else {
-					// cueForwardStatus = true;
-					// cueStatus = true;
-				// }
-			// }
-			// if (cueBackwardsTrigger.process(params[CUE_BACKWARDS_PARAM].getValue() > 0.f)) {
-				// if (!cueForwardStatus && cueStatus) {
-					// cueStatus = !cueStatus;
-				// } else {
-					// cueForwardStatus = false;
-					// cueStatus = true;
-				// }
-			// }
-		// }
-		// if (inputs[TRANSPORT_INPUT].isConnected()) {
-			// float playDirectionInput = inputs[TRANSPORT_INPUT].getVoltage(0);
-			// if (playDirectionInput >= 1.f) {
-				// playForwardStatus = true;
-				// playStatus = true;
-			// } else if (playDirectionInput <= -1.f) {
-				// playForwardStatus = false;
-				// playStatus = true;
-			// } else {
-				// playStatus = false;
-			// }				
-			// int channels = inputs[TRANSPORT_INPUT].getChannels();
-			// if (channels > 1) {
-				// float cueDirectionInput = inputs[TRANSPORT_INPUT].getVoltage(1);
-				// if (cueDirectionInput >= 1.f) {
-					// cueForwardStatus = true;
-					// cueStatus = true;
-				// } else if (cueDirectionInput <= -1.f) {
-					// cueForwardStatus = false;
-					// cueStatus = true;
-				// } else {
-					// cueStatus = false;
-				// }				
-			// }
-		// }
-		// params[PLAY_FORWARDS_PARAM].setValue(playStatus && playForwardStatus ? 1.f : 0.f);
-		// params[PLAY_BACKWARDS_PARAM].setValue(playStatus && !playForwardStatus ? 1.f : 0.f);
-		// params[CUE_FORWARDS_PARAM].setValue(cueStatus && cueForwardStatus ? 1.f : 0.f);
-		// params[CUE_BACKWARDS_PARAM].setValue(cueStatus && !cueForwardStatus ? 1.f : 0.f);
-
 
 		speed = 1.f;
 		

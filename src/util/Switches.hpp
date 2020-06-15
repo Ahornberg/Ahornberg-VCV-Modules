@@ -1,53 +1,38 @@
-struct RoundSwitch : SvgSwitch {
+struct BasicSwitch : SvgSwitch {
+	BasicSwitch() {
+		momentary = false;
+		shadow->opacity = 0;
+	}
+
+	void addFrame(const std::string& filename) {
+		SvgSwitch::addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, filename)));
+	}	
+};
+
+struct RoundSwitch : BasicSwitch {
 	RoundSwitch() {
-		momentary = false;
-		shadow->opacity = 0;
-		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/switches/Round_off.svg")));
-		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/switches/Round_on.svg")));
+		addFrame("res/switches/Round_off.svg");
+		addFrame("res/switches/Round_on.svg");
 	}
 };
 
-struct RoundSwitchRed : SvgSwitch {
+struct RoundSwitchRed : BasicSwitch {
 	RoundSwitchRed() {
-		momentary = false;
-		shadow->opacity = 0;
-		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/switches/Round_off.svg")));
-		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/switches/Round_red.svg")));
+		addFrame("res/switches/Round_off.svg");
+		addFrame("res/switches/Round_red.svg");
 	}
 };
 
-struct RoundLargeSwitch : SvgSwitch {
+struct RoundLargeSwitch : BasicSwitch {
 	RoundLargeSwitch() {
-		momentary = false;
-		shadow->opacity = 0;
-		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/switches/RoundLarge_off.svg")));
-		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/switches/RoundLarge_on.svg")));
+		addFrame("res/switches/RoundLarge_off.svg");
+		addFrame("res/switches/RoundLarge_on.svg");
 	}
 };
 
-struct PlayBackwardsSwitch : SvgSwitch {
-	PlayBackwardsSwitch() {
-		momentary = false;
-		shadow->opacity = 0.f;
-		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/switches/PlayBackwards_off.svg")));
-		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/switches/PlayBackwards_on.svg")));
-	}
-};
-
-struct PauseSwitch : SvgSwitch {
+struct PauseSwitch : BasicSwitch {
 	PauseSwitch() {
-		momentary = false;
-		shadow->opacity = 0.f;
-		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/switches/Pause_off.svg")));
-		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/switches/Pause_on.svg")));
-	}
-};
-
-struct PlayForwardsSwitch : SvgSwitch {
-	PlayForwardsSwitch() {
-		momentary = false;
-		shadow->opacity = 0.f;
-		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/switches/PlayForwards_off.svg")));
-		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/switches/PlayForwards_on.svg")));
+		addFrame("res/switches/Pause_off.svg");
+		addFrame("res/switches/Pause_on.svg");
 	}
 };

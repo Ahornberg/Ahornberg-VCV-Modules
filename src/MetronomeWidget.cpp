@@ -60,14 +60,14 @@ struct RadioSwitch : RoundSwitch {
 	void onChange(const event::Change& e) override {
 		RoundSwitch::onChange(e);
 		if (metronome) {
-			if( metronome->params[Metronome::BPM_VALUE_BUTTON_PARAM + bpmIndex].getValue() != 0) {
+			if( metronome->params[Metronome::BPM_VALUE_BUTTON_PARAM + bpmIndex].getValue()) {
 				for (auto i = 0; i < NUM_BPM_VALUES; ++i) {
 					if (i == bpmIndex) {
-						if (metronome->params[Metronome::BPM_VALUE_BUTTON_PARAM + i].getValue() != 1) {
+						if (!metronome->params[Metronome::BPM_VALUE_BUTTON_PARAM + i].getValue()) {
 							metronome->params[Metronome::BPM_VALUE_BUTTON_PARAM + i].setValue(1);
 						}
 					} else {
-						if (metronome->params[Metronome::BPM_VALUE_BUTTON_PARAM + i].getValue() != 0) {
+						if (metronome->params[Metronome::BPM_VALUE_BUTTON_PARAM + i].getValue()) {
 							metronome->params[Metronome::BPM_VALUE_BUTTON_PARAM + i].setValue(0);
 						}
 					}
@@ -122,7 +122,7 @@ struct MetronomeWidget : ModuleWidgetWithScrews {
 			addChild(new BpmDisplay(positionOnCircle(i, center, 80), i));
 		}
 		addParam(createParamCentered<RoundLargeSwitch>(center, module, Metronome::PLAY_PARAM));
-		addParam(createParamCentered<KnobSmall>(Vec(180, 266), module, Metronome::BPM_RESET_VALUE_PARAM));
+		addParam(createParamCentered<KnobSmallSnap>(Vec(180, 266), module, Metronome::BPM_RESET_VALUE_PARAM));
 
 		addInput(createInputCentered<InPort>(Vec( 30,   310), module, Metronome::PLAY_INPUT));
 		addInput(createInputCentered<InPort>(Vec( 63,   310), module, Metronome::ONE_STEP_SLOWER_INPUT));

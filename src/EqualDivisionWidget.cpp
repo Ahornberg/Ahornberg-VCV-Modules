@@ -40,8 +40,8 @@ struct EqualDivisionWidget : ModuleWidgetWithScrews {
 		setScrews(true, false, false, true);
 
 		addParam(createParam<KnobBig>(  Vec(             46.5,  47), module, EqualDivision::FINE_PARAM));
-		addParam(createParam<KnobSmall>(Vec(             10,   124), module, EqualDivision::STEPS_PARAM));
-		addParam(createParam<KnobSmall>(Vec(box.size.x - 37,   124), module, EqualDivision::INTERVAL_PARAM));
+		addParam(createParam<KnobSmallSnap>(Vec(             10,   124), module, EqualDivision::STEPS_PARAM));
+		addParam(createParam<KnobSmallSnap>(Vec(box.size.x - 37,   124), module, EqualDivision::INTERVAL_PARAM));
 	
 		addInput(createInput<InPort>(Vec( 4, 167),    module, EqualDivision::PITCH_INPUT + 0));
 		addInput(createInput<InPort>(Vec(33, 167),    module, EqualDivision::PITCH_INPUT + 1));

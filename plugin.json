@@ -41,6 +41,17 @@
       "tags": [ 
 	    "Clock generator"
 	  ]
+    },
+    {
+      "slug": "Harmonizer",
+      "name": "Harmonizer",
+      "description": "harmonic and subharmonic CV generator",
+      "tags": [ 
+		"Envelope follower",
+		"Multiple",
+		"Polyphonic",
+		"Tuner"
+	  ]
     }
   ]
 }

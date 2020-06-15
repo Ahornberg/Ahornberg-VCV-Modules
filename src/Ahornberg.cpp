@@ -2,11 +2,11 @@
 
 Plugin* pluginInstance;
 
-void init(rack::Plugin *p) {
-
+void init(Plugin *p) {
 	pluginInstance = p;
 
 	p->addModel(modelEqualDivision);
 	p->addModel(modelTapeRecorder);
 	p->addModel(modelMetronome);
+	p->addModel(modelHarmonizer);
 }

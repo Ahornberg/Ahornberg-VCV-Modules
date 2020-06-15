@@ -33,33 +33,75 @@ struct StripeWidget : widget::SvgWidget {
 
 // Switches *******************************************************************
 
-struct TransportCueSwitch : SvgSwitch {
+struct TransportSwitch : BasicSwitch {
+	TapeRecorder* tapeRecorder;
+};
+
+struct TransportCueSwitch : TransportSwitch {
 	TapeRecorder* tapeRecorder;
 	
 	void step() override {
 		if (tapeRecorder) {
 			momentary = tapeRecorder->isTransportCueSwitchMomentary();
 		}
-		SvgSwitch::step();
+		TransportSwitch::step();
 	}
 };
 
 struct CueBackwardsSwitch : TransportCueSwitch {
 	CueBackwardsSwitch() {
-		momentary = false;
-		shadow->opacity = 0.f;
-		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/switches/CueBackwards_off.svg")));
-		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/switches/CueBackwards_on.svg")));
+		addFrame("res/switches/CueBackwards_off.svg");
+		addFrame("res/switches/CueBackwards_on.svg");
+	}
+
+	void onChange(const event::Change& e) override {
+		TransportCueSwitch::onChange(e);
+		if (tapeRecorder && tapeRecorder->params[TapeRecorder::CUE_BACKWARDS_PARAM].getValue()) {
+			tapeRecorder->params[TapeRecorder::CUE_FORWARDS_PARAM].setValue(0);
+		}
 	}
 };
 
 
 struct CueForwardsSwitch : TransportCueSwitch {
 	CueForwardsSwitch() {
-		momentary = false;
-		shadow->opacity = 0.f;
-		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/switches/CueForwards_off.svg")));
-		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/switches/CueForwards_on.svg")));
+		addFrame("res/switches/CueForwards_off.svg");
+		addFrame("res/switches/CueForwards_on.svg");
+	}
+
+	void onChange(const event::Change& e) override {
+		TransportCueSwitch::onChange(e);
+		if (tapeRecorder && tapeRecorder->params[TapeRecorder::CUE_FORWARDS_PARAM].getValue()) {
+			tapeRecorder->params[TapeRecorder::CUE_BACKWARDS_PARAM].setValue(0);
+		}
+	}
+};
+
+struct PlayBackwardsSwitch : TransportSwitch {
+	PlayBackwardsSwitch() {
+		addFrame("res/switches/PlayBackwards_off.svg");
+		addFrame("res/switches/PlayBackwards_on.svg");
+	}
+
+	void onChange(const event::Change& e) override {
+		TransportSwitch::onChange(e);
+		if (tapeRecorder && tapeRecorder->params[TapeRecorder::PLAY_BACKWARDS_PARAM].getValue()) {
+			tapeRecorder->params[TapeRecorder::PLAY_FORWARDS_PARAM].setValue(0);
+		}
+	}
+};
+
+struct PlayForwardsSwitch : TransportSwitch {
+	PlayForwardsSwitch() {
+		addFrame("res/switches/PlayForwards_off.svg");
+		addFrame("res/switches/PlayForwards_on.svg");
+	}
+
+	void onChange(const event::Change& e) override {
+		TransportSwitch::onChange(e);
+		if (tapeRecorder && tapeRecorder->params[TapeRecorder::PLAY_FORWARDS_PARAM].getValue()) {
+			tapeRecorder->params[TapeRecorder::PLAY_BACKWARDS_PARAM].setValue(0);
+		}
 	}
 };
 
@@ -86,24 +128,36 @@ struct KnobWheel : SvgKnob {
 	
 	float calcTouchedWheelForce(float distance, float maxDistance) {
 		if (distance >= maxDistance) {
+			glfwSetCursor(APP->window->win, NULL);
 			return 1;
 		}
+		glfwSetCursor(APP->window->win, cursorHand);
 		return (maxDistance - distance) / maxDistance;
 	}
 	
-	void onButton(const event::Button &e) override {
+	void onButton(const event::Button& e) override {
 		if (module && e.button == GLFW_MOUSE_BUTTON_LEFT && e.action == GLFW_PRESS && module->speed != 0.f) {
 			mousePos = new Vec(e.pos.x, e.pos.y);
 			Vec* center = new Vec(box.size.x * 0.5f, box.size.y * 0.5f);
 			module->touchedWheelForce = calcTouchedWheelForce(distance(mousePos, center), center->x);
-			glfwSetCursor(APP->window->win, cursorHand);
+			// glfwSetCursor(APP->window->win, cursorHand);
 		}
 		SvgKnob::onButton(e);
 	}
 	
+	void onDragHover(const event::DragHover& e) override {
+		if (module && e.button == GLFW_MOUSE_BUTTON_LEFT && module->speed != 0.f) {
+			mousePos = new Vec(e.pos.x, e.pos.y);
+			Vec* center = new Vec(box.size.x * 0.5f, box.size.y * 0.5f);
+			module->touchedWheelForce = calcTouchedWheelForce(distance(mousePos, center), center->x);
+			// glfwSetCursor(APP->window->win, cursorHand);
+		}
+		SvgKnob::onDragHover(e);
+	}
+	
 	void onDragStart(const event::DragStart& e) override {
 		if (module && e.button == GLFW_MOUSE_BUTTON_LEFT && module->speed != 0.f) {
-			glfwSetCursor(APP->window->win, cursorHand);
+			// glfwSetCursor(APP->window->win, cursorHand);
 			return;
 		}
 		SvgKnob::onDragStart(e);
@@ -121,7 +175,7 @@ struct KnobWheel : SvgKnob {
 	void onDragLeave(const event::DragLeave& e) override {
 		if (module && e.button == GLFW_MOUSE_BUTTON_LEFT && module->speed != 0.f) {
 			module->touchedWheelForce = 1;
-			glfwSetCursor(APP->window->win, NULL);
+			// glfwSetCursor(APP->window->win, NULL);
 			return;
 		}
 		SvgKnob::onDragLeave(e);
@@ -133,7 +187,7 @@ struct KnobWheel : SvgKnob {
 			mousePos->y += e.mouseDelta.y / exp2(settings::zoom);
 			Vec* center = new Vec(box.size.x * 0.5f, box.size.y * 0.5f);
 			module->touchedWheelForce = calcTouchedWheelForce(distance(mousePos, center), center->x);
-			glfwSetCursor(APP->window->win, cursorHand);
+			// glfwSetCursor(APP->window->win, cursorHand);
 			return;
 		}
 		SvgKnob::onDragMove(e);
@@ -576,12 +630,12 @@ struct TapeRecorderWidget : ModuleWidgetWithScrews {
 		setSize(Vec(120, 380));
 		setScrews(true, true, false, true);
 
-		addParam(createParam<KnobBig>(  Vec(43,  42),   module, TapeRecorder::TEMPO_PARAM));
-		addParam(createParam<KnobSmall>(Vec(10,  50),   module, TapeRecorder::BEATS_PER_BAR_PARAM));
-		addParam(createParam<KnobSmall>(Vec(10, 118),   module, TapeRecorder::LOOP_START_PARAM));
-		addParam(createParam<KnobSmall>(Vec(46, 118),   module, TapeRecorder::LOOP_END_PARAM));
-		addParam(createParam<KnobScrew>(Vec(42, 334.5), module, TapeRecorder::CUE_SPEED_PARAM));
-		addParam(createParam<KnobScrew>(Vec(61, 330),   module, TapeRecorder::CUE_SLEW_PARAM));
+		addParam(createParam<KnobBig>(Vec(      43,  42),   module, TapeRecorder::TEMPO_PARAM));
+		addParam(createParam<KnobSmallSnap>(Vec(10,  50),   module, TapeRecorder::BEATS_PER_BAR_PARAM));
+		addParam(createParam<KnobSmallSnap>(Vec(10, 118),   module, TapeRecorder::LOOP_START_PARAM));
+		addParam(createParam<KnobSmallSnap>(Vec(46, 118),   module, TapeRecorder::LOOP_END_PARAM));
+		addParam(createParam<KnobScrew>(Vec(    42, 334.5), module, TapeRecorder::CUE_SPEED_PARAM));
+		addParam(createParam<KnobScrew>(Vec(    61, 330),   module, TapeRecorder::CUE_SLEW_PARAM));
 		
 		KnobWheel* rightWheel = createParam<KnobWheel>(Vec(32, 178), module, TapeRecorder::WHEEL_RIGHT_PARAM);
 		rightWheel->module = module;
@@ -596,14 +650,23 @@ struct TapeRecorderWidget : ModuleWidgetWithScrews {
 		CueBackwardsSwitch* cueBackwardsSwitch = dynamic_cast<CueBackwardsSwitch*>(createParam<CueBackwardsSwitch>(Vec(94, 179.5), module, TapeRecorder::CUE_BACKWARDS_PARAM));
 		cueBackwardsSwitch->tapeRecorder = module;
 		addParam(cueBackwardsSwitch);
-		addParam(createParam<PlayBackwardsSwitch>(Vec(94, 199), module, TapeRecorder::PLAY_BACKWARDS_PARAM));
-		addParam(createParam<PauseSwitch>(        Vec(94, 218.5),   module, TapeRecorder::PAUSE_PARAM));
-		addParam(createParam<PlayForwardsSwitch>( Vec(94, 238), module, TapeRecorder::PLAY_FORWARDS_PARAM));
+		
+		PlayBackwardsSwitch* playBackwardsSwitch = dynamic_cast<PlayBackwardsSwitch*>(createParam<PlayBackwardsSwitch>(Vec(94, 199), module, TapeRecorder::PLAY_BACKWARDS_PARAM));
+		playBackwardsSwitch->tapeRecorder = module;
+		addParam(playBackwardsSwitch);
+		
+		addParam(createParam<PauseSwitch>(Vec(94, 218.5), module, TapeRecorder::PAUSE_PARAM));
+		
+		PlayForwardsSwitch* playForwardsSwitch = dynamic_cast<PlayForwardsSwitch*>(createParam<PlayForwardsSwitch>(Vec(94, 238), module, TapeRecorder::PLAY_FORWARDS_PARAM));
+		playForwardsSwitch->tapeRecorder = module;
+		addParam(playForwardsSwitch);
+		
 		CueForwardsSwitch* cueForwardsSwitch = dynamic_cast<CueForwardsSwitch*>(createParam<CueForwardsSwitch>(Vec(94, 261.5), module, TapeRecorder::CUE_FORWARDS_PARAM));
 		cueForwardsSwitch->tapeRecorder = module;
 		addParam(cueForwardsSwitch);
-		addParam(createParam<RoundSwitchRed>(     Vec(18, 126),   module, TapeRecorder::LOOP_START_BUTTON_PARAM));
-		addParam(createParam<RoundSwitchRed>(     Vec(54, 126),   module, TapeRecorder::LOOP_END_BUTTON_PARAM));
+		
+		addParam(createParam<RoundSwitchRed>(Vec(18, 126), module, TapeRecorder::LOOP_START_BUTTON_PARAM));
+		addParam(createParam<RoundSwitchRed>(Vec(54, 126), module, TapeRecorder::LOOP_END_BUTTON_PARAM));
 		
 		addInput(createInput<InPort>(Vec(84,  62), module, TapeRecorder::SPEED_INPUT));
 		addInput(createInput<InPort>(Vec(94, 122), module, TapeRecorder::LOOP_INPUT));
