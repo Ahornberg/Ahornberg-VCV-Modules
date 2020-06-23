@@ -51,8 +51,6 @@ struct BpmDisplay : TransparentWidget {
 	}
 };
 
-
-
 struct RadioSwitch : RoundSwitch {
 	Metronome* metronome;
 	int bpmIndex;
@@ -60,7 +58,7 @@ struct RadioSwitch : RoundSwitch {
 	void onChange(const event::Change& e) override {
 		RoundSwitch::onChange(e);
 		if (metronome) {
-			if( metronome->params[Metronome::BPM_VALUE_BUTTON_PARAM + bpmIndex].getValue()) {
+			if (metronome->params[Metronome::BPM_VALUE_BUTTON_PARAM + bpmIndex].getValue()) {
 				for (auto i = 0; i < NUM_BPM_VALUES; ++i) {
 					if (i == bpmIndex) {
 						if (!metronome->params[Metronome::BPM_VALUE_BUTTON_PARAM + i].getValue()) {

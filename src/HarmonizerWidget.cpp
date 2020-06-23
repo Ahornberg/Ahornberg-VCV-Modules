@@ -33,6 +33,26 @@ struct HarmonicsDisplay : Display {
 	}
 };
 
+struct MixtureSwitch : RoundSwitch {
+	Harmonizer* harmonizer;
+	int mixture;
+	
+	void onChange(const event::Change& e) override {
+		RoundSwitch::onChange(e);
+		if (harmonizer) {
+			if (harmonizer->params[Harmonizer::MIXTUR_PARAM + mixture].getValue()) {
+				for (auto i = 0; i < NUM_MIXTURES; ++i) {
+					if (i != mixture) {
+						if (harmonizer->params[Harmonizer::MIXTUR_PARAM + i].getValue()) {
+							harmonizer->params[Harmonizer::MIXTUR_PARAM + i].setValue(0);
+						}
+					}
+				}
+			}
+		}
+	}
+};
+
 struct HarmonizerWidget : ModuleWidgetWithScrews {
 	HarmonizerWidget(Harmonizer* module) {
 		setModule(module);
@@ -40,24 +60,24 @@ struct HarmonizerWidget : ModuleWidgetWithScrews {
 		setSize(Vec(885, 380));
 		setScrews(true, true, true, true);
 
-		addInput(createInputCentered<InPort>(Vec(   380,  30), module, Harmonizer::GATE_INPUT));
-		addOutput(createOutputCentered<OutPort>(Vec(415,  30), module, Harmonizer::GATE_OUTPUT));
+		addInput(createInputCentered<InPort>(Vec(   385,  30), module, Harmonizer::GATE_INPUT));
+		addOutput(createOutputCentered<OutPort>(Vec(420,  30), module, Harmonizer::GATE_OUTPUT));
 
-		addInput(createInputCentered<InPort>(Vec(   500,  30), module, Harmonizer::RETRIGGER_INPUT));
-		addOutput(createOutputCentered<OutPort>(Vec(535,  30), module, Harmonizer::RETRIGGER_OUTPUT));
+		addInput(createInputCentered<InPort>(Vec(   495,  30), module, Harmonizer::RETRIGGER_INPUT));
+		addOutput(createOutputCentered<OutPort>(Vec(530,  30), module, Harmonizer::RETRIGGER_OUTPUT));
 
-		addInput(createInputCentered<InPort>(Vec(   320, 350), module, Harmonizer::VELOCITY_INPUT));
-		addInput(createInputCentered<InPort>(Vec(   355, 350), module, Harmonizer::VELOCITY_GLOBAL_MODULATION_INPUT));
-		addParam(createParamCentered<KnobTiny>(Vec( 385, 350), module, Harmonizer::VELOCITY_GLOBAL_MODULATION_PARAM));
-		addOutput(createOutputCentered<OutPort>(Vec(415, 350), module, Harmonizer::VELOCITY_GLOBAL_OUTPUT));
+		addInput(createInputCentered<InPort>(Vec(   325, 350), module, Harmonizer::VELOCITY_INPUT));
+		addInput(createInputCentered<InPort>(Vec(   360, 350), module, Harmonizer::VELOCITY_GLOBAL_MODULATION_INPUT));
+		addParam(createParamCentered<KnobTiny>(Vec( 390, 350), module, Harmonizer::VELOCITY_GLOBAL_MODULATION_PARAM));
+		addOutput(createOutputCentered<OutPort>(Vec(420, 350), module, Harmonizer::VELOCITY_GLOBAL_OUTPUT));
 		
-		addInput(createInputCentered<InPort>(Vec(   500, 350), module, Harmonizer::PITCH_INPUT));
-		addInput(createInputCentered<InPort>(Vec   (535, 350), module, Harmonizer::PITCH_GLOBAL_MODULATION_INPUT));
-		addParam(createParamCentered<KnobTiny>(Vec( 565, 350), module, Harmonizer::PITCH_GLOBAL_MODULATION_PARAM));
-		addOutput(createOutputCentered<OutPort>(Vec(595, 350), module, Harmonizer::PITCH_GLOBAL_OUTPUT));
+		addInput(createInputCentered<InPort>(Vec(   495, 350), module, Harmonizer::PITCH_INPUT));
+		addInput(createInputCentered<InPort>(Vec   (530, 350), module, Harmonizer::PITCH_GLOBAL_MODULATION_INPUT));
+		addParam(createParamCentered<KnobTiny>(Vec( 560, 350), module, Harmonizer::PITCH_GLOBAL_MODULATION_PARAM));
+		addOutput(createOutputCentered<OutPort>(Vec(590, 350), module, Harmonizer::PITCH_GLOBAL_OUTPUT));
 
 		for (auto i = 0; i < NUM_CHANNELS; ++i) {
-			float x = i < 8 ? 20 : 470;
+			float x = i < 8 ? 25 : 465;
 			float y = i < 8 ? 63 + i * 33 + (i < 4 ? 0 : 23) : 63 + (i - 8) * 33 + (i < 12 ? 0 : 23);
 			addParam(createParamCentered<RoundSwitch>(Vec(  x +   0, y), module, Harmonizer::CHANNEL_ACTIVE_PARAM + i));
 
@@ -74,13 +94,15 @@ struct HarmonizerWidget : ModuleWidgetWithScrews {
 			addParam(createParamCentered<KnobTiny>(Vec(     x + 365, y), module, Harmonizer::PITCH_FINE_PARAM + i));
 			addOutput(createOutputCentered<OutPort>(Vec(    x + 395, y), module, Harmonizer::PITCH_OUTPUT + i));
 		}
-		addParam(createParamCentered<RoundSwitch>(Vec(190,  30), module, Harmonizer::MIXTUR_PARAM));
-		addParam(createParamCentered<RoundSwitch>(Vec(640,  30), module, Harmonizer::MIXTUR_PARAM + 1));
-		addParam(createParamCentered<RoundSwitch>(Vec(190, 350), module, Harmonizer::MIXTUR_PARAM + 2));
-		addParam(createParamCentered<RoundSwitch>(Vec(640, 350), module, Harmonizer::MIXTUR_PARAM + 3));
-		
-		addInput(createInputCentered<InPort>(Vec(     830,  30), module, Harmonizer::MIXTUR_INPUT));
-		addOutput(createOutputCentered<OutPort>(Vec(  865,  30), module, Harmonizer::MIXTUR_OUTPUT));
+		for (auto i = 0; i < NUM_MIXTURES; ++i) {
+			float x = i < 2 ? 195 : 635;
+			float y = i % 2 ? 350 : 30;
+			MixtureSwitch* mixtureSwitch = dynamic_cast<MixtureSwitch*>(createParamCentered<MixtureSwitch>(Vec(  x +   0, y), module, Harmonizer::MIXTUR_PARAM + i));
+			mixtureSwitch->mixture = i;
+			mixtureSwitch->harmonizer = module;
+			addParam(mixtureSwitch);
+			addInput(createInputCentered<InPort>(Vec(50 + i * 35,  350), module, Harmonizer::MIXTUR_INPUT + i));
+		}
 	}
 };
 
