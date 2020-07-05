@@ -13,7 +13,32 @@ struct BasicKnob : SvgKnob {
 
 struct KnobScrew : BasicKnob {
 	KnobScrew() {
+		BasicKnob::setSvg("res/knobs/ScrewWithDot.svg");
+	}
+};
+
+struct KnobScrewMountModule : BasicKnob {
+	Module* module;
+	int param;
+
+	KnobScrewMountModule() {
+		minAngle = -5 * M_PI;
+		maxAngle = 5 * M_PI;
+		speed = 0.1f;
+		shadow->show();
+		shadow->box.pos = Vec(0, 0);
+		shadow->blurRadius = 3;
 		BasicKnob::setSvg("res/knobs/Screw.svg");
+	}
+	
+	void onChange(const event::Change& e) override {
+		BasicKnob::onChange(e);
+		if (module) {
+			if (!module->params[param].getValue()) {
+				hide();
+			}
+			shadow->box.pos = Vec(0, 10 - module->params[param].getValue() * 2);
+		}
 	}
 };
 

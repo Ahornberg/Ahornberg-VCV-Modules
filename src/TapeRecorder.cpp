@@ -21,9 +21,9 @@ static const TapeLength TAPE_LENGTHS[] = {
 
 constexpr int NUM_TAPE_LENGTHS = 9;
 
-struct TapeRecorder : Module {
+struct TapeRecorder : ModuleWithScrews {
 	enum ParamIds {
-		PAUSE_PARAM,
+		PAUSE_PARAM = NUM_MAX_SCREWS,
 		PLAY_FORWARDS_PARAM,
 		PLAY_BACKWARDS_PARAM,
 		CUE_FORWARDS_PARAM,
@@ -104,6 +104,7 @@ struct TapeRecorder : Module {
 	
 	TapeRecorder() { 
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+		configScrewParams();
 		configParam(PAUSE_PARAM,               0,     1,   0, "Pause");
 		configParam(PLAY_FORWARDS_PARAM,       0,     1,   0, "Play");
 		configParam(PLAY_BACKWARDS_PARAM,      0,     1,   0, "Play Reverse");

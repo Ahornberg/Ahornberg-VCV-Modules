@@ -132,6 +132,7 @@ struct MetronomeWidget : ModuleWidgetWithScrews {
 		addOutput(createOutputCentered<OutPort>(Vec(30, 350), module, Metronome::BPM_OUTPUT));
 
 		addChild(new TempoDisplay(Rect(163, 40, 34, 18), module));
+		// addChild(createLight<TempoDisplay>(Vec(7.5f, 38.0f), module, Metronome::BPM_VALUE_BUTTON_PARAM));
 	}
 	
 	Vec positionOnCircle(int positionInList, Vec center, int radius) {

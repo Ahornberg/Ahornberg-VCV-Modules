@@ -34,9 +34,9 @@ struct IntervalNames : ParamQuantity {
 	}
 };
 
-struct EqualDivision : Module {
+struct EqualDivision : ModuleWithScrews {
 	enum ParamIds {
-		FINE_PARAM,
+		FINE_PARAM = NUM_MAX_SCREWS,
 		STEPS_PARAM,
 		INTERVAL_PARAM,
 		NUM_PARAMS
@@ -55,6 +55,7 @@ struct EqualDivision : Module {
 
 	EqualDivision() { 
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+		configScrewParams();
 		configParam(FINE_PARAM, .97, 1.03, 1, "Fine", "%", 0, 100, -100);
 		configParam(STEPS_PARAM, 1, 99, INIT_STEP, "Equal Steps");
 		configParam<IntervalNames>(INTERVAL_PARAM, 0, NUM_INTERVALS, INIT_INTERVAL, "Interval");

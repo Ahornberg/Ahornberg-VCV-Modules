@@ -15,10 +15,10 @@ struct BpmValues : ParamQuantity {
 	}
 };
 
-struct Metronome : Module {
+struct Metronome : ModuleWithScrews {
 	enum ParamIds {
+		BPM_VALUE_PARAM = NUM_MAX_SCREWS,
 		ENUMS(BPM_VALUE_BUTTON_PARAM, NUM_BPM_VALUES),
-		BPM_VALUE_PARAM,
 		BPM_RESET_VALUE_PARAM,
 		PLAY_PARAM,
 		NUM_PARAMS
@@ -51,6 +51,7 @@ struct Metronome : Module {
 
 	Metronome() { 
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+		configScrewParams();
 		for (auto i = 0; i < NUM_BPM_VALUES; ++i) {
 			configParam(BPM_VALUE_BUTTON_PARAM + i, 0, 1, i == INIT_BPM ? 1 : 0, string::f("%d BPM", BPM_VALUES[i]));
 		}
