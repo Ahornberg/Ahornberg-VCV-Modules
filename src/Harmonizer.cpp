@@ -133,7 +133,7 @@ struct Harmonizer : ModuleWithScrews {
 					pitchModIn = inputs[PITCH_MODULATION_INPUT + i].getVoltage() * powf(params[PITCH_MODULATION_PARAM + i].getValue(), 4);
 				}
 				float freqMultiplier = FREQ_RATIOS[(int) params[PITCH_HARMONICS_PARAM + i].getValue() - 1][(int) params[PITCH_SUBHARMONICS_PARAM + i].getValue() - 1];
-				float pitchOut = pitchModIn + pitchGlobalIn + freqMultiplier + params[PITCH_FINE_PARAM + i].getValue();
+				float pitchOut = pitchModIn + pitchGlobalIn + freqMultiplier + params[PITCH_FINE_PARAM + i].getValue() - 1;
 				outputs[PITCH_GLOBAL_OUTPUT].setVoltage(pitchOut, numActiveChannels);
 				if (outputs[PITCH_OUTPUT + i].isConnected()) {
 					outputs[PITCH_OUTPUT + i].setVoltage(pitchOut);

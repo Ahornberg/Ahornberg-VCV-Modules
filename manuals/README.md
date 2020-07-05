@@ -1,15 +1,5 @@
 # Manuals for Ahornberg-VCV-Modules
 
-## Metronome
-
-A virtual rebuild of a vintage electronic metronome.
-
-![Metronome](Metronome.png)
-
-How to use it:
-
-[![Metronome Manual](https://img.youtube.com/vi/NcPUyekx2pQ/0.jpg)](https://www.youtube.com/watch?v=NcPUyekx2pQ)
-
 ## Equal Division
 
 Module for VCV-Rack to convert Note CV in Standard Western Tuning (12ed2 = 1 step equals 100 cents) to several Equal Division Tunings.
@@ -50,3 +40,39 @@ https://en.xen.wiki/w/33ed4
 Happy tuning!
 
 Microtonal music by Ahornberg: https://soundcloud.com/ahornberg/sets/equivocal-tuning-33ed4
+
+## CV-Frequency Shift
+
+A linear frequency shifter for CV note pitch signals.
+
+![CV-Frequency Shift](CVFreqShift.png)
+
+How to use it:
+
+[![CV-Frequency Shift Manual](https://img.youtube.com/vi/Yk5vrDa_Sio/0.jpg)](https://www.youtube.com/watch?v=Yk5vrDa_Sio)
+
+## Tape Recorder
+
+![Tape Recorder](TapeRecorder.png)
+
+Coming soon.
+
+## Metronome
+
+A virtual rebuild of a vintage electronic metronome.
+
+![Metronome](Metronome.png)
+
+How to use it:
+
+[![Metronome Manual](https://img.youtube.com/vi/NcPUyekx2pQ/0.jpg)](https://www.youtube.com/watch?v=NcPUyekx2pQ)
+
+## Harmonizer
+
+A virtual rebuild of a vintage electronic metronome.
+
+![Harmonizer](Harmonizer.png)
+
+How to use it:
+
+[![Harmonizer Manual](https://img.youtube.com/vi/6k2-fbuGoeU/0.jpg)](https://www.youtube.com/watch?v=6k2-fbuGoeU)

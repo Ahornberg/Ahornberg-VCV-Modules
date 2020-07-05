@@ -6,10 +6,10 @@
   "brand": "Ahornberg",
   "author": "Ahornberg",
   "authorEmail": "",
-  "authorUrl": "https://github.com/Ahornberg/Ahornberg-Microtonal",
-  "pluginUrl": "https://github.com/Ahornberg/Ahornberg-Microtonal",
-  "manualUrl": "https://github.com/Ahornberg/Ahornberg-Microtonal/blob/master/README.md",
-  "sourceUrl": "https://github.com/Ahornberg/Ahornberg-Microtonal",
+  "authorUrl": "https://github.com/Ahornberg/Ahornberg-VCV-Modules",
+  "pluginUrl": "https://github.com/Ahornberg/Ahornberg-VCV-Modules",
+  "manualUrl": "https://github.com/Ahornberg/Ahornberg-VCV-Modules/blob/master/README.md",
+  "sourceUrl": "https://github.com/Ahornberg/Ahornberg-VCV-Modules",
   "changelogUrl": "",
   "donateUrl": "",
   "modules": [
@@ -18,7 +18,7 @@
       "name": "Equal Division",
       "description": "microtonal re-tuner and attenuverter",
 	  "disabled": false,
-	  "manualUrl": "https://github.com/Ahornberg/Ahornberg-Microtonal/blob/master/README.md",
+	  "manualUrl": "https://github.com/Ahornberg/Ahornberg-VCV-Modules/blob/master/manuals/README.md#equal-division",
       "tags": [ 
 	    "Attenuator",
 		"Tuner",
@@ -30,7 +30,7 @@
       "name": "CV-Frequency Shift",
       "description": "linear frequency shifter and modulator for note-cv",
 	  "disabled": false,
-	  "manualUrl": "https://github.com/Ahornberg/Ahornberg-Microtonal/blob/master/README.md",
+	  "manualUrl": "https://github.com/Ahornberg/Ahornberg-VCV-Modules/blob/master/manuals/README.md#cv-frequency-shift",
       "tags": [ 
 		"Tuner",
         "Polyphonic"
@@ -41,7 +41,7 @@
       "name": "Tape Recorder",
       "description": "micro cassette recorder",
 	  "disabled": false,
-	  "manualUrl": "https://github.com/Ahornberg/Ahornberg-Microtonal/blob/master/README.md",
+	  "manualUrl": "https://github.com/Ahornberg/Ahornberg-VCV-Modules/blob/master/manuals/README.md#tape-recorder",
       "tags": [ 
 	    "Clock generator",
 		"Polyphonic",
@@ -53,7 +53,7 @@
       "slug": "Metronome",
       "name": "Metronome",
 	  "disabled": false,
-	  "manualUrl": "https://github.com/Ahornberg/Ahornberg-Microtonal/blob/master/README.md",
+	  "manualUrl": "https://github.com/Ahornberg/Ahornberg-VCV-Modules/blob/master/manuals/README.md#metronome",
       "description": "classic rehearsal metronome",
       "tags": [ 
 	    "Clock generator"
@@ -64,7 +64,7 @@
       "name": "Harmonizer",
       "description": "harmonic and subharmonic CV generator",
  	  "disabled": false,
-	  "manualUrl": "https://github.com/Ahornberg/Ahornberg-Microtonal/blob/master/README.md",
+	  "manualUrl": "https://github.com/Ahornberg/Ahornberg-VCV-Modules/blob/master/manuals/README.md#harmonizer",
       "tags": [ 
 		"Envelope follower",
 		"Multiple",
