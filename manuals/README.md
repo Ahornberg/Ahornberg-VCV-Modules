@@ -1,6 +1,6 @@
 # Manuals for Ahornberg-VCV-Modules
 
-## [Metronome](#Metronome)
+## Metronome
 
 A virtual rebuild of a vintage electronic metronome.
 
@@ -10,7 +10,7 @@ How to use it:
 
 [![Metronome Manual](https://img.youtube.com/vi/NcPUyekx2pQ/0.jpg)](https://www.youtube.com/watch?v=NcPUyekx2pQ)
 
-## [Equal Division](#EqualDivision)
+## Equal Division
 
 Module for VCV-Rack to convert Note CV in Standard Western Tuning (12ed2 = 1 step equals 100 cents) to several Equal Division Tunings.
 

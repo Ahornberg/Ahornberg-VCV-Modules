@@ -2,8 +2,8 @@
 
 ## Manuals
 
-[![Metronome](manuals/Metronome.png)](manuals/README.md#Metronome)
-[![EqualDivision](manuals/EqualDivision.png)](manuals/README.md#EqualDivision)
+[![Metronome](manuals/Metronome.png)](manuals/README.md#metronome)
+[![EqualDivision](manuals/EqualDivision.png)](manuals/README.md#equal-division)
 
 # Ahornberg Music Tools
 ## Why
