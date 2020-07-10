@@ -1,8 +1,7 @@
+// #define NDEBUG
+#include <assert.h>
 #include "rack.hpp"
 #include <settings.hpp>
-
-#include "util/Colors.hpp"
-#include "util/Fonts.hpp"
 
 using namespace rack;
 using simd::float_4;
@@ -15,8 +14,14 @@ extern Model* modelTapeRecorder;
 extern Model* modelMetronome;
 extern Model* modelHarmonizer;
 
+#include "util/Colors.hpp"
+#include "util/Fonts.hpp"
 #include "util/Ports.hpp"
 #include "util/Knobs.hpp"
 #include "util/Switches.hpp"
 #include "util/Widgets.hpp"
 #include "util/Displays.hpp"
+
+#ifndef NDEBUG
+#  include "test/Asserts.hpp"
+#endif

@@ -31,8 +31,8 @@ The green letters ED stand for Equal Division.
 #### Number Of Equal Steps
 The yellow digits on the left side display the number of equal steps the interval is divided in.
 ### 9 x Note In/Out
-Nine vertically orientated pairs of Note CV inputs and outputs provide the ability to tune 9 different polyphonic signals simultaneously using only one module.
-## Further Readings
+Nine vertically orientated pairs of Note CV inputs and outputs provide the ability to tune 9 x 16 = 144 different signals simultaneously using only one module.
+### Further Readings
 https://en.xen.wiki/w/Equal-step_tuning
 
 https://en.xen.wiki/w/33ed4
@@ -47,9 +47,24 @@ A linear frequency shifter for CV note pitch signals.
 
 ![CV-Frequency Shift](CVFreqShift.png)
 
+The input is taken as a CV-pitch value and is transformed to frequency in Hz, e.g. 0 Volts input = note C4 = 261.63 Hz, then let’s say + 108.36 Hz will be applied, this results in 369.99 Hz = F#4. But if I would have taken C5 = 523.26 Hz as input, by applying the same + 108.36 Hz leads to 631.62 Hz and this frequency lies between D#5 and E5.
+
+So it is a linear frequency shift, of course only on the base frequency, not on overtones that might be produced by VCOs afterwards. The intention is to use VCOs that produce sine waves. The module can calc 9 x 16 = 144 values simultaneously, so enough to build complex sounds with inharmonic overtones based on sinewaves.
+
+This module complements the Harmonizer module.
+
 How to use it:
 
 [![CV-Frequency Shift Manual](https://img.youtube.com/vi/Yk5vrDa_Sio/0.jpg)](https://www.youtube.com/watch?v=Yk5vrDa_Sio)
+
+### Root Octave
+
+### Frequency Shift
+
+### Frequency Modulation
+
+### 9 x Note In/Out
+Nine vertically orientated pairs of Note CV inputs and outputs provide the ability to tune 9 x 16 = 144 different signals simultaneously using only one module.
 
 ## Tape Recorder
 
