@@ -2,12 +2,12 @@
 
 Plugin* pluginInstance;
 
-void init(Plugin *p) {
-	pluginInstance = p;
+void init(Plugin* plugin) {
+	pluginInstance = plugin;
 
-	p->addModel(modelEqualDivision);
-	p->addModel(modelCVFreqShift);
-	p->addModel(modelTapeRecorder);
-	p->addModel(modelMetronome);
-	p->addModel(modelHarmonizer);
+	pluginInstance->addModel(modelEqualDivision);
+	pluginInstance->addModel(modelCVFreqShift);
+	// pluginInstance->addModel(modelTapeRecorder);
+	pluginInstance->addModel(modelMetronome);
+	pluginInstance->addModel(modelHarmonizer);
 }

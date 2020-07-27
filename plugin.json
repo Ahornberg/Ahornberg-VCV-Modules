@@ -1,6 +1,6 @@
 {
   "slug": "Ahornberg",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "license": "CC0-1.0",
   "name": "Ahornberg",
   "brand": "Ahornberg",
@@ -34,19 +34,6 @@
       "tags": [ 
 		"Tuner",
         "Polyphonic"
-	  ]
-    },
-    {
-      "slug": "TapeRecorder",
-      "name": "Tape Recorder",
-      "description": "micro cassette recorder",
-	  "disabled": false,
-	  "manualUrl": "https://github.com/Ahornberg/Ahornberg-VCV-Modules/blob/master/manuals/README.md#tape-recorder",
-      "tags": [ 
-	    "Clock generator",
-		"Polyphonic",
-		"Recording",
-		"Sampler"
 	  ]
     },
     {

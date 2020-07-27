@@ -1,4 +1,4 @@
-// #define NDEBUG
+#define NDEBUG
 #include <assert.h>
 #include "rack.hpp"
 #include <settings.hpp>
@@ -6,11 +6,11 @@
 using namespace rack;
 using simd::float_4;
 
-extern Plugin *pluginInstance;
+extern Plugin* pluginInstance;
 
 extern Model* modelEqualDivision;
 extern Model* modelCVFreqShift;
-extern Model* modelTapeRecorder;
+// extern Model* modelTapeRecorder;
 extern Model* modelMetronome;
 extern Model* modelHarmonizer;
 
