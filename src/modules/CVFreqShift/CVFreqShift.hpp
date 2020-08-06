@@ -1,10 +1,22 @@
 #include "../../Ahornberg.hpp"
 
+struct FrequencyRanges : ParamQuantity {
+	std::string getDisplayValueString() override;
+};
+
+struct FrequencyRange {
+	int rangeInHz;
+	float rangeBasedOnC4;
+};
+
 struct CVFreqShift : ModuleWithScrews {
+	const static FrequencyRange FREQUENCY_RANGES[];
+	constexpr static int MIN_FREQUENCY_RANGE = 10;
+	
 	enum ParamIds {
 		FREQUENCY_PARAM = NUM_MAX_SCREWS,
 		FREQUENCY_MODULATION_AMOUNT_PARAM,
-		ROOT_OCTAVE_PARAM,
+		FREQUENCY_RANGE_PARAM,
 		NUM_PARAMS
 	};
 	enum InputIds {

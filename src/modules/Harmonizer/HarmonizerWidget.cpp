@@ -45,7 +45,7 @@ HarmonizerWidget::HarmonizerWidget(Harmonizer* module) {
 	setModule(module);
 	setPanel("res/Harmonizer.svg");
 	setSize(Vec(885, 380));
-	setScrews(true, true, true, true);
+	setScrews(SCREW_TOP_LEFT, SCREW_TOP_RIGHT, SCREW_BOTTOM_LEFT, SCREW_BOTTOM_RIGHT);
 
 	addInput(createInputCentered<InPort>(Vec(   385,  30), module, Harmonizer::GATE_INPUT));
 	addOutput(createOutputCentered<OutPort>(Vec(420,  30), module, Harmonizer::GATE_OUTPUT));

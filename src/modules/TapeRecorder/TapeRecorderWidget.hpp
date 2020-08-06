@@ -117,9 +117,11 @@ struct TapeLengthDisplay : ModuleLinkedWidget, TextOnCassette {
 	void draw(const DrawArgs &disp) override;
 };
 
-std::string trackCountText(int trackCount);
+struct TrackCountText {
+	std::string createTrackCountText(int trackCount);
+};
 
-struct TrackCountDisplay : ModuleLinkedWidget, TextOnCassette {
+struct TrackCountDisplay : ModuleLinkedWidget, TextOnCassette, TrackCountText {
 	TrackCountDisplay(Rect box, TapeRecorder* tapeRecorder);
 	void draw(const DrawArgs &disp) override;
 };
@@ -143,7 +145,6 @@ struct TapeNameMenuItem : TextFieldMenuItem {
 };
 
 struct OldSchoolModeMenuItem : TapeRecorderMenuItem {
-	
 	OldSchoolModeMenuItem(TapeRecorder* tapeRecorder);
 	void onAction(const event::Action& e) override;
 };
@@ -155,7 +156,7 @@ struct TrackCountValueItem : TapeRecorderMenuItem {
 	void onAction(const event::Action& e) override;
 };
 
-struct TrackCountMenuItem : TapeRecorderMenuItem {
+struct TrackCountMenuItem : TapeRecorderMenuItem, TrackCountText {
 	TrackCountMenuItem(TapeRecorder* tapeRecorder);
 	Menu* createChildMenu() override;
 };
@@ -186,6 +187,12 @@ struct TapeStripesMenuItem : MenuItem {
 	TapeStripesMenuItem(StripeWidget* stripeWidget);
 	Menu* createChildMenu() override;
 };
+
+struct EraseTapeMenuItem : TapeRecorderMenuItem {
+	EraseTapeMenuItem(TapeRecorder* tapeRecorder);
+	void onAction(const event::Action& e) override;
+};
+
 
 struct TapeRecorderWidget : ModuleWidgetWithScrews {
 	TapeNameDisplay* tapeNameDisplay;

@@ -25,9 +25,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="6.9341437"
-     inkscape:cx="41.867956"
-     inkscape:cy="353.81893"
+     inkscape:zoom="21.289117"
+     inkscape:cx="34.124634"
+     inkscape:cy="266.76462"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -35,18 +35,20 @@
      inkscape:snap-bbox="true"
      inkscape:snap-page="true"
      inkscape:bbox-nodes="false"
-     inkscape:snap-bbox-edge-midpoints="true"
-     inkscape:window-width="1920"
+     inkscape:snap-bbox-edge-midpoints="false"
+     inkscape:window-width="3840"
      inkscape:window-height="2050"
-     inkscape:window-x="1908"
+     inkscape:window-x="-12"
      inkscape:window-y="-12"
-     inkscape:window-maximized="0"
+     inkscape:window-maximized="1"
      inkscape:snap-global="true"
      showguides="true"
      inkscape:guide-bbox="true"
      inkscape:snap-grids="true"
-     inkscape:snap-text-baseline="false"
-     inkscape:snap-bbox-midpoints="true">
+     inkscape:snap-text-baseline="true"
+     inkscape:snap-bbox-midpoints="false"
+     inkscape:object-nodes="false"
+     inkscape:snap-nodes="false">
     <inkscape:grid
        type="xygrid"
        id="grid927" />
@@ -64,7 +66,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -230,32 +232,6 @@
          style="opacity:1;fill:#727272;fill-opacity:1;stroke:none;stroke-width:0.7952702;stroke-opacity:1" />
     </g>
     <g
-       aria-label="root"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:2.82222223px;line-height:1.25;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-       id="text900"
-       transform="translate(0,-0.52916667)">
-      <path
-         d="m 5.5700305,219.37095 h -0.180523 v -0.27698 l -0.3376193,0.011 v 1.16582 H 4.8686091 v -1.34083 h 0.1832791 v 0.0372 q 0.090951,-0.0138 0.1832791,-0.0289 0.110243,-0.0165 0.183279,-0.0165 0.1515842,0 0.1515842,0.15021 z"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:2.82222223px;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.26458332"
-         id="path1067"
-         inkscape:connector-curvature="0" />
-      <path
-         d="m 6.5759984,220.11509 q 0,0.15572 -0.1557183,0.15572 H 5.9600153 q -0.1543402,0 -0.1543402,-0.15572 v -1.02939 q 0,-0.15572 0.1543402,-0.15572 h 0.4602648 q 0.1557183,0 0.1557183,0.15572 z m -0.1832791,-0.006 v -1.01837 H 5.9889541 v 1.01837 z"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:2.82222223px;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.26458332"
-         id="path1069"
-         inkscape:connector-curvature="0" />
-      <path
-         d="m 7.6453559,220.11509 q 0,0.15572 -0.1557183,0.15572 H 7.0293728 q -0.1543402,0 -0.1543402,-0.15572 v -1.02939 q 0,-0.15572 0.1543402,-0.15572 h 0.4602648 q 0.1557183,0 0.1557183,0.15572 z m -0.1832791,-0.006 v -1.01837 H 7.0583116 v 1.01837 z"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:2.82222223px;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.26458332"
-         id="path1071"
-         inkscape:connector-curvature="0" />
-      <path
-         d="M 8.4267038,220.27081 H 8.1662546 q -0.1543403,0 -0.1543403,-0.15572 v -1.02388 H 7.8506838 v -0.16123 h 0.1612305 v -0.41754 h 0.180523 v 0.41754 h 0.2342665 v 0.16123 H 8.1924373 v 1.01837 h 0.2342665 z"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:2.82222223px;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.26458332"
-         id="path1073"
-         inkscape:connector-curvature="0" />
-    </g>
-    <g
        aria-label="frequency"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:2.82222223px;line-height:1.25;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
        id="text904"
@@ -405,42 +381,6 @@
          d="m 21.387151,233.49998 h -0.183279 v -1.17684 l -0.403765,0.011 v 1.16582 h -0.183279 v -1.34083 h 0.183279 v 0.0372 q 0.107487,-0.0138 0.216352,-0.0289 0.132292,-0.0165 0.21773,-0.0165 0.152962,0 0.152962,0.1502 z"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:2.82222223px;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.26458332"
          id="path1045"
-         inkscape:connector-curvature="0" />
-    </g>
-    <g
-       aria-label="octave"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:2.82222223px;line-height:1.25;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-       id="text935"
-       transform="translate(0,-0.52916667)">
-      <path
-         d="m 4.575087,223.2901 q 0,0.15572 -0.1557184,0.15572 H 3.9591039 q -0.1543403,0 -0.1543403,-0.15572 v -1.0294 q 0,-0.15572 0.1543403,-0.15572 h 0.4602647 q 0.1557184,0 0.1557184,0.15572 z m -0.1832791,-0.006 v -1.01837 H 3.9880427 v 1.01837 z"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:2.82222223px;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.26458332"
-         id="path996"
-         inkscape:connector-curvature="0" />
-      <path
-         d="m 5.6182619,223.2901 q 0,0.15572 -0.1543403,0.15572 H 5.0284615 q -0.1543403,0 -0.1543403,-0.15572 v -1.0294 q 0,-0.15572 0.1543403,-0.15572 h 0.4354601 q 0.1543403,0 0.1543403,0.15572 v 0.26734 h -0.180523 v -0.26182 H 5.0574003 v 1.01837 h 0.3803386 v -0.29904 h 0.180523 z"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:2.82222223px;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.26458332"
-         id="path998"
-         inkscape:connector-curvature="0" />
-      <path
-         d="M 6.3982315,223.44582 H 6.1377823 q -0.1543403,0 -0.1543403,-0.15572 v -1.02388 H 5.8222116 v -0.16124 H 5.983442 v -0.41754 h 0.180523 v 0.41754 h 0.2342665 v 0.16124 H 6.163965 v 1.01837 h 0.2342665 z"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:2.82222223px;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.26458332"
-         id="path1000"
-         inkscape:connector-curvature="0" />
-      <path
-         d="m 7.3904191,223.44582 h -0.180523 v -0.0372 q -0.108865,0.0152 -0.2177301,0.0289 -0.1350477,0.0165 -0.216352,0.0165 -0.1502061,0 -0.1502061,-0.14882 v -0.48921 q 0,-0.15434 0.1557183,-0.15434 h 0.431326 v -0.40376 h -0.394119 v 0.22875 H 6.6407663 v -0.226 q 0,-0.15572 0.1543403,-0.15572 h 0.4409722 q 0.1543403,0 0.1543403,0.15572 z m -0.1777669,-0.16675 v -0.47404 H 6.8033748 v 0.48231 z"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:2.82222223px;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.26458332"
-         id="path1002"
-         inkscape:connector-curvature="0" />
-      <path
-         d="m 8.4459964,222.10498 -0.3321072,1.34359 H 7.9471466 l -0.3334853,-1.34359 h 0.1887913 l 0.2287543,1.05558 0.2315104,-1.05558 z"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:2.82222223px;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.26458332"
-         id="path1004"
-         inkscape:connector-curvature="0" />
-      <path
-         d="m 9.4216473,223.2901 q 0,0.15572 -0.1543403,0.15572 H 8.8263348 q -0.1543403,0 -0.1543403,-0.15572 v -1.0294 q 0,-0.15572 0.1543403,-0.15572 H 9.267307 q 0.1543403,0 0.1543403,0.15572 v 0.48232 l -0.062012,0.0648 H 8.8497614 v 0.48507 h 0.3941189 v -0.24529 h 0.177767 z m -0.177767,-0.62839 v -0.40376 H 8.8497614 v 0.40376 z"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:2.82222223px;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.26458332"
-         id="path1006"
          inkscape:connector-curvature="0" />
     </g>
     <g
@@ -616,6 +556,88 @@
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:semi-expanded;font-size:4.23333311px;font-family:Magneto;-inkscape-font-specification:'Magneto, Bold Semi-Expanded';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332"
          id="path1104"
          inkscape:connector-curvature="0" />
+    </g>
+    <g
+       aria-label="range"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:2.82222223px;line-height:1.25;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       id="text920"
+       transform="translate(0.05512165)">
+      <path
+         d="m 4.8203776,222.0168 h -0.180523 v -0.27699 l -0.3376194,0.011 v 1.16582 h -0.183279 v -1.34083 h 0.183279 v 0.0372 q 0.090951,-0.0138 0.1832791,-0.0289 0.1102431,-0.0165 0.1832791,-0.0165 0.1515842,0 0.1515842,0.1502 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:2.82222223px;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332"
+         id="path922"
+         inkscape:connector-curvature="0" />
+      <path
+         d="m 5.8139431,222.91666 h -0.180523 v -0.0372 q -0.108865,0.0152 -0.21773,0.0289 -0.1350478,0.0165 -0.216352,0.0165 -0.1502062,0 -0.1502062,-0.14882 v -0.48921 q 0,-0.15434 0.1557183,-0.15434 h 0.431326 v -0.40376 H 5.2420573 v 0.22875 H 5.0642904 v -0.226 q 0,-0.15571 0.1543402,-0.15571 h 0.4409723 q 0.1543402,0 0.1543402,0.15571 z m -0.1777669,-0.16675 v -0.47404 H 5.2268989 v 0.48231 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:2.82222223px;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332"
+         id="path924"
+         inkscape:connector-curvature="0" />
+      <path
+         d="M 6.8846789,222.91666 H 6.7013998 v -1.17685 l -0.4037652,0.011 v 1.16582 H 6.1143555 v -1.34083 h 0.1832791 v 0.0372 q 0.107487,-0.0138 0.216352,-0.0289 0.1322917,-0.0165 0.21773,-0.0165 0.1529623,0 0.1529623,0.1502 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:2.82222223px;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332"
+         id="path926"
+         inkscape:connector-curvature="0" />
+      <path
+         d="m 7.9457682,223.26943 q 0,0.15572 -0.1557184,0.15572 h -0.43546 q -0.1584744,0 -0.1584744,-0.19706 0,-0.0234 0.00138,-0.0703 0.00276,-0.0455 0.00276,-0.0661 h 0.180523 v 0.17776 H 7.763873 v -0.35277 H 7.4620768 q -0.1226454,0 -0.2039497,-0.0813 -0.081304,-0.0827 -0.081304,-0.2067 v -0.78411 q 0,-0.11851 0.071658,-0.19706 0.071658,-0.0799 0.1887913,-0.0799 0.031695,0 0.326595,0.0455 v -0.0372 h 0.1819011 z m -0.1819011,-0.514 v -1.01286 q -0.21773,-0.0138 -0.253559,-0.0138 -0.1515842,0 -0.1515842,0.15434 v 0.71796 q 0,0.15434 0.1515842,0.15434 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:2.82222223px;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332"
+         id="path928"
+         inkscape:connector-curvature="0" />
+      <path
+         d="m 8.9972114,222.76094 q 0,0.15572 -0.1543402,0.15572 H 8.4018989 q -0.1543402,0 -0.1543402,-0.15572 v -1.0294 q 0,-0.15571 0.1543402,-0.15571 h 0.4409723 q 0.1543402,0 0.1543402,0.15571 v 0.48232 l -0.062012,0.0648 H 8.4253256 v 0.48507 h 0.3941189 v -0.24529 h 0.1777669 z m -0.1777669,-0.62839 v -0.40376 H 8.4253256 v 0.40376 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:2.82222223px;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332"
+         id="path930"
+         inkscape:connector-curvature="0" />
+    </g>
+    <g
+       transform="translate(-10.583334,-0.52916667)"
+       id="g951"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:2.82222223px;line-height:1.25;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       aria-label="frequency">
+      <path
+         inkscape:connector-curvature="0"
+         id="path933"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:2.82222223px;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.26458332"
+         d="m 13.384884,218.27541 h -0.259071 v 0.65457 h 0.228754 v 0.16123 h -0.228754 v 1.1796 H 12.94529 v -1.1796 h -0.155718 v -0.16123 h 0.155718 v -0.66008 q 0,-0.15572 0.15434,-0.15572 h 0.285254 z" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path935"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:2.82222223px;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.26458332"
+         d="m 14.25167,219.37095 h -0.180523 v -0.27698 l -0.337619,0.011 v 1.16582 h -0.183279 v -1.34083 h 0.183279 v 0.0372 q 0.09095,-0.0138 0.183279,-0.0289 0.110243,-0.0165 0.183279,-0.0165 0.151584,0 0.151584,0.15021 z" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path937"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:2.82222223px;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.26458332"
+         d="m 15.236968,220.11509 q 0,0.15572 -0.154341,0.15572 h -0.440972 q -0.15434,0 -0.15434,-0.15572 v -1.02939 q 0,-0.15572 0.15434,-0.15572 h 0.440972 q 0.154341,0 0.154341,0.15572 v 0.48231 l -0.06201,0.0648 h -0.509874 v 0.48507 h 0.394119 v -0.24529 h 0.177767 z m -0.177767,-0.62838 v -0.40377 h -0.394119 v 0.40377 z" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path939"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:2.82222223px;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.26458332"
+         d="M 16.302191,220.77931 H 16.12029 v -0.5085 H 15.8185 q -0.122646,0 -0.20395,-0.0813 -0.0813,-0.0827 -0.0813,-0.20671 v -0.7841 q 0,-0.11851 0.07166,-0.19706 0.07166,-0.0799 0.188791,-0.0799 0.0317,0 0.326595,0.0455 v -0.0372 h 0.181901 z m -0.181901,-0.66973 v -1.01286 q -0.21773,-0.0138 -0.253559,-0.0138 -0.151584,0 -0.151584,0.15434 v 0.71796 q 0,0.15434 0.151584,0.15434 z" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path941"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:2.82222223px;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.26458332"
+         d="m 17.371549,220.27081 h -0.180523 v -0.0372 q -0.110243,0.0152 -0.219108,0.0289 -0.132292,0.0165 -0.219108,0.0165 -0.148828,0 -0.148828,-0.14883 v -1.20027 h 0.180523 v 1.17685 l 0.406521,-0.011 v -1.16582 h 0.180523 z" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path943"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:2.82222223px;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.26458332"
+         d="m 18.422992,220.11509 q 0,0.15572 -0.15434,0.15572 h -0.440973 q -0.15434,0 -0.15434,-0.15572 v -1.02939 q 0,-0.15572 0.15434,-0.15572 h 0.440973 q 0.15434,0 0.15434,0.15572 v 0.48231 l -0.06201,0.0648 h -0.509874 v 0.48507 h 0.394119 v -0.24529 h 0.177767 z m -0.177767,-0.62838 v -0.40377 h -0.394119 v 0.40377 z" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path945"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:2.82222223px;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.26458332"
+         d="m 19.496484,220.27081 h -0.18328 v -1.17684 l -0.403765,0.011 v 1.16582 H 18.72616 v -1.34083 h 0.183279 v 0.0372 q 0.107487,-0.0138 0.216352,-0.0289 0.132292,-0.0165 0.21773,-0.0165 0.152963,0 0.152963,0.15021 z" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path947"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:2.82222223px;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.26458332"
+         d="m 20.539659,220.11509 q 0,0.15572 -0.154341,0.15572 h -0.43546 q -0.15434,0 -0.15434,-0.15572 v -1.02939 q 0,-0.15572 0.15434,-0.15572 h 0.43546 q 0.154341,0 0.154341,0.15572 v 0.26734 h -0.180523 v -0.26183 h -0.380339 v 1.01837 h 0.380339 v -0.29903 h 0.180523 z" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path949"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:2.82222223px;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.26458332"
+         d="m 21.59248,218.92998 -0.322461,1.32981 -0.13367,0.51952 h -0.180523 l 0.135048,-0.51952 -0.330729,-1.32981 h 0.188791 l 0.228754,1.05558 0.231511,-1.05558 z" />
     </g>
   </g>
 </svg>

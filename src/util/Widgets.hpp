@@ -33,8 +33,25 @@ struct ModuleWithScrews : Module {
 };
 
 struct ModuleWidgetWithScrews : ModuleWidget {
+	enum ScrewTopLeft {
+		NO_SCREW_TOP_LEFT,
+		SCREW_TOP_LEFT
+	};
+	enum ScrewTopRight {
+		NO_SCREW_TOP_RIGHT,
+		SCREW_TOP_RIGHT
+	};
+	enum ScrewBottomLeft {
+		NO_SCREW_BOTTOM_LEFT,
+		SCREW_BOTTOM_LEFT
+	};
+	enum ScrewBottomRight {
+		NO_SCREW_BOTTOM_RIGHT,
+		SCREW_BOTTOM_RIGHT
+	};
+	
 	void setPanel(const std::string& filename);
-	void setScrews(bool topLeft, bool topRight, bool bottomLeft, bool bottomRight);
+	void setScrews(ScrewTopLeft topLeft, ScrewTopRight topRight, ScrewBottomLeft bottomLeft, ScrewBottomRight bottomRight);
 	void addScrew(Vec pos, int screwParam);
 	void step() override;
 };

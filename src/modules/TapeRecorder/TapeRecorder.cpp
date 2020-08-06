@@ -36,9 +36,7 @@ TapeRecorder::TapeRecorder() {
 	configParam(OLD_SCHOOL_MODE_PARAM,     0,     1,   0, "Old School Mode");
 	sizeAudioBuffer = TAPE_LENGTHS[(int) params[TAPE_LENGTH_PARAM].getValue()].value;
 	audioBuffer = new float[sizeAudioBuffer];
-	for (auto i = 0; i < sizeAudioBuffer; ++i) {
-		audioBuffer[i] = 0.f;
-	}
+	eraseTape();
 	playStatus = false;
 	cueStatus = false;
 	playForwardStatus = false;
@@ -68,6 +66,12 @@ TapeRecorder::TapeRecorder() {
 
 TapeRecorder::~TapeRecorder() {
 	delete audioBuffer;
+}
+
+void TapeRecorder::eraseTape() {
+	for (auto i = 0; i < sizeAudioBuffer; ++i) {
+		audioBuffer[i] = 0.f;
+	}
 }
 
 void TapeRecorder::processTempoOutput(const ProcessArgs &args) {

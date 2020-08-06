@@ -1,4 +1,4 @@
-struct BasicPort : SvgPort {
+struct BasicPort : SvgPort, ManualText {
 	BasicPort();
 	void setSvg(const std::string& filename);
 };

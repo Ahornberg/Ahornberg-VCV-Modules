@@ -30,7 +30,7 @@ void ModuleWidgetWithScrews::setPanel(const std::string& filename) {
 	ModuleWidget::setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, filename)));
 }
 
-void ModuleWidgetWithScrews::setScrews(bool topLeft, bool topRight, bool bottomLeft, bool bottomRight) {
+void ModuleWidgetWithScrews::setScrews(ScrewTopLeft topLeft, ScrewTopRight topRight, ScrewBottomLeft bottomLeft, ScrewBottomRight bottomRight) {
 	if (topLeft) {
 		addScrew(Vec(0, 0), ModuleWithScrews::SCREW_PARAM);
 	} else if (module) {

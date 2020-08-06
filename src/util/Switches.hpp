@@ -1,4 +1,4 @@
-struct BasicSwitch : SvgSwitch {
+struct BasicSwitch : SvgSwitch, ManualText {
 	BasicSwitch();
 	void addFrame(const std::string& filename);
 };

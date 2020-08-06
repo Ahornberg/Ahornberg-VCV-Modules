@@ -351,7 +351,7 @@ void TapeLengthDisplay::draw(const DrawArgs &disp) {
 	drawText(disp, box);
 }
 
-std::string trackCountText(int trackCount) {
+std::string TrackCountText::createTrackCountText(int trackCount) {
 	if (trackCount == 1) {
 		return "Mono";
 	}
@@ -372,7 +372,7 @@ TrackCountDisplay::TrackCountDisplay(Rect box, TapeRecorder* tapeRecorder) : Mod
 
 void TrackCountDisplay::draw(const DrawArgs &disp) {
 	if (tapeRecorder) {
-		text = trackCountText(tapeRecorder->params[TapeRecorder::TRACK_COUNT_PARAM].getValue());
+		text = createTrackCountText(tapeRecorder->params[TapeRecorder::TRACK_COUNT_PARAM].getValue());
 	}
 	drawText(disp, box);
 }
@@ -435,7 +435,7 @@ void TrackCountValueItem::onAction(const event::Action& e) {
 TrackCountMenuItem::TrackCountMenuItem(TapeRecorder* tapeRecorder) : TapeRecorderMenuItem(tapeRecorder) {
 	text = "Tape Layout";
 	if (tapeRecorder) {
-		rightText = trackCountText(tapeRecorder->params[TapeRecorder::TRACK_COUNT_PARAM].getValue()) + " " + RIGHT_ARROW;
+		rightText = createTrackCountText(tapeRecorder->params[TapeRecorder::TRACK_COUNT_PARAM].getValue()) + " " + RIGHT_ARROW;
 	}
 }
 
@@ -445,7 +445,7 @@ Menu* TrackCountMenuItem::createChildMenu() {
 		if (trackCount == 3) {
 			continue;
 		}
-		menu->addChild(new TrackCountValueItem(tapeRecorder, trackCount, trackCountText(trackCount)));
+		menu->addChild(new TrackCountValueItem(tapeRecorder, trackCount, createTrackCountText(trackCount)));
 	}
 	return menu;
 }
@@ -505,13 +505,23 @@ Menu* TapeStripesMenuItem::createChildMenu() {
 	return menu;
 }
 
+EraseTapeMenuItem::EraseTapeMenuItem(TapeRecorder* tapeRecorder) : TapeRecorderMenuItem(tapeRecorder) {
+	text = "Erase Tape (no undo)";
+}
+
+void EraseTapeMenuItem::onAction(const event::Action& e) {
+	if (tapeRecorder) {
+		tapeRecorder->eraseTape();
+	}
+}
+
 // Widget *********************************************************************
 	
 TapeRecorderWidget::TapeRecorderWidget(TapeRecorder* module) {
 	setModule(module);
 	setPanel("res/TapeRecorder.svg");
 	setSize(Vec(120, 380));
-	setScrews(true, true, false, true);
+	setScrews(SCREW_TOP_LEFT, SCREW_TOP_RIGHT, NO_SCREW_BOTTOM_LEFT, SCREW_BOTTOM_RIGHT);
 
 	addParam(createParam<KnobBig>(Vec(      43,  42),   module, TapeRecorder::TEMPO_PARAM));
 	addParam(createParam<KnobSmallSnap>(Vec(10,  50),   module, TapeRecorder::BEATS_PER_BAR_PARAM));
@@ -578,10 +588,11 @@ void TapeRecorderWidget::appendContextMenu(Menu* menu) {
 	TapeRecorder* tapeRecorder = dynamic_cast<TapeRecorder*>(this->module);
 	menu->addChild(new MenuEntry);
 	menu->addChild(new TapeNameMenuItem(tapeNameDisplay));
-	menu->addChild(new OldSchoolModeMenuItem(tapeRecorder));
-	menu->addChild(new TapeLengthMenuItem(tapeRecorder));
-	menu->addChild(new TrackCountMenuItem(tapeRecorder));
+	// menu->addChild(new OldSchoolModeMenuItem(tapeRecorder));
+	// menu->addChild(new TapeLengthMenuItem(tapeRecorder));
+	// menu->addChild(new TrackCountMenuItem(tapeRecorder));
 	menu->addChild(new TapeStripesMenuItem(stripeWidget));
+	menu->addChild(new EraseTapeMenuItem(tapeRecorder));
 }
 
 json_t* TapeRecorderWidget::toJson() {

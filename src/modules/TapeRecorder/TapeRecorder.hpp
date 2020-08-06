@@ -92,6 +92,7 @@ struct TapeRecorder : ModuleWithScrews {
 	
 	TapeRecorder();
 	~TapeRecorder();
+	void eraseTape();
 	void processTempoOutput(const ProcessArgs &args);
 	void processSpeedInput(const ProcessArgs &args);
 	void processSpeedOutput();

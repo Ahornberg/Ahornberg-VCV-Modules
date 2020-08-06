@@ -28,8 +28,8 @@ Harmonizer::Harmonizer() {
 				FREQ_RATIOS[i][j] = log2f((i + 1.) / (j + 1.));
 			}
 		}
+		FREQ_RATIOS_INITIALIZED = true;
 	}
-	FREQ_RATIOS_INITIALIZED = true;
 }
 
 void Harmonizer::setMixture(int mixture) {

@@ -1,4 +1,4 @@
-struct BasicKnob : SvgKnob {
+struct BasicKnob : SvgKnob, ManualText {
 	BasicKnob();
 	void setSvg(const std::string& filename);
 };

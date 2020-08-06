@@ -1,12 +1,21 @@
 #include "CVFreqShiftWidget.hpp"
 
+void MultiplierKnob::onChange(const event::Change& e) {
+	KnobSmallSnap::onChange(e);
+	if (module) {
+		module->paramQuantities[CVFreqShift::FREQUENCY_PARAM]->displayMultiplier = CVFreqShift::FREQUENCY_RANGES[(int) module->params[CVFreqShift::FREQUENCY_RANGE_PARAM].getValue()].rangeInHz;
+	}
+}
+
 CVFreqShiftWidget::CVFreqShiftWidget(CVFreqShift* module) {
 	setModule(module);
 	setPanel("res/CVFreqShift.svg");
 	setSize(Vec(90, 380));
-	setScrews(true, false, false, true);
+	setScrews(SCREW_TOP_LEFT, NO_SCREW_TOP_RIGHT, NO_SCREW_BOTTOM_LEFT, SCREW_BOTTOM_RIGHT);
 
-	addParam(createParam<KnobSmallSnap>(Vec(10,    50), module, CVFreqShift::ROOT_OCTAVE_PARAM));
+	MultiplierKnob* multiplierKnob = dynamic_cast<MultiplierKnob*>(createParam<MultiplierKnob>(Vec(10, 50), module, CVFreqShift::FREQUENCY_RANGE_PARAM));
+	multiplierKnob->module = module;
+	addParam(multiplierKnob);
 	addParam(createParam<KnobBig>(Vec(      46.5,  42), module, CVFreqShift::FREQUENCY_PARAM));
 	addParam(createParam<KnobSmall>(Vec(    50,   105), module, CVFreqShift::FREQUENCY_MODULATION_AMOUNT_PARAM));
 

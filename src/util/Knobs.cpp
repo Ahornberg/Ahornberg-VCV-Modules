@@ -23,6 +23,8 @@ KnobScrewMountModule::KnobScrewMountModule() {
 	shadow->box.pos = Vec(0, 0);
 	shadow->blurRadius = 3;
 	BasicKnob::setSvg("res/knobs/Screw.svg");
+	manualTitle = "Screw";
+	manualContent = "This is a Screw.";
 }
 
 void KnobScrewMountModule::onChange(const event::Change& e) {
