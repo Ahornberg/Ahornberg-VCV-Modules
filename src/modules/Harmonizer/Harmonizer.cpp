@@ -1,6 +1,6 @@
 #include "Harmonizer.hpp"
 
-float Harmonizer::FREQ_RATIOS[NUM_HARMONICS][NUM_HARMONICS] = {};
+float Harmonizer::FREQ_RATIOS[NUM_HARMONICS] = {};
 bool Harmonizer::FREQ_RATIOS_INITIALIZED = false;
 
 Harmonizer::Harmonizer() { 
@@ -24,9 +24,7 @@ Harmonizer::Harmonizer() {
 	params[CHANNEL_ACTIVE_PARAM].setValue(1);
 	if (!FREQ_RATIOS_INITIALIZED) {
 		for (auto i = 0; i < NUM_HARMONICS; ++i) {
-			for (auto j = 0; j < NUM_HARMONICS; ++j) {
-				FREQ_RATIOS[i][j] = log2f((i + 1.) / (j + 1.));
-			}
+			FREQ_RATIOS[i] = log2f(i + 1.);
 		}
 		FREQ_RATIOS_INITIALIZED = true;
 	}
@@ -89,7 +87,7 @@ void Harmonizer::process(const ProcessArgs &args) {
 			if (inputs[PITCH_MODULATION_INPUT + i].isConnected()) {
 				pitchModIn = inputs[PITCH_MODULATION_INPUT + i].getVoltage() * powf(params[PITCH_MODULATION_PARAM + i].getValue(), 4);
 			}
-			float freqMultiplier = FREQ_RATIOS[(int) params[PITCH_HARMONICS_PARAM + i].getValue() - 1][(int) params[PITCH_SUBHARMONICS_PARAM + i].getValue() - 1];
+			float freqMultiplier = FREQ_RATIOS[(int) params[PITCH_HARMONICS_PARAM + i].getValue() - 1] - FREQ_RATIOS[(int) params[PITCH_SUBHARMONICS_PARAM + i].getValue() - 1];
 			float pitchOut = pitchModIn + pitchGlobalIn + freqMultiplier + params[PITCH_FINE_PARAM + i].getValue() - 1;
 			outputs[PITCH_GLOBAL_OUTPUT].setVoltage(pitchOut, numActiveChannels);
 			if (outputs[PITCH_OUTPUT + i].isConnected()) {

@@ -4,7 +4,7 @@ struct Harmonizer : ModuleWithScrews {
 	constexpr static int NUM_CHANNELS = 16;
 	constexpr static int NUM_MIXTURES = 4;
 	constexpr static int NUM_HARMONICS = 96;
-	static float FREQ_RATIOS[NUM_HARMONICS][NUM_HARMONICS];
+	static float FREQ_RATIOS[NUM_HARMONICS];
 	static bool FREQ_RATIOS_INITIALIZED;
 	
 	enum ParamIds {
