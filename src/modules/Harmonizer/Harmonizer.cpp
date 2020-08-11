@@ -58,7 +58,7 @@ int Harmonizer::processMixtureTriggers() {
 	return activeMixture;
 }
 
-void Harmonizer::process(const ProcessArgs &args) {
+void Harmonizer::process(const ProcessArgs& args) {
 	int activeMixture = processMixtureTriggers();
 
 	float gateIn = inputs[GATE_INPUT].getVoltage();

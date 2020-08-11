@@ -5,7 +5,7 @@ struct TempoDisplay : Display {
 	int bpmIndex;
 
 	TempoDisplay(Rect box, Metronome* metronome);
-	void drawText(const DrawArgs &disp) override;
+	void drawText(const DrawArgs& disp) override;
 };
 
 struct BpmDisplay : TransparentWidget {
@@ -14,7 +14,7 @@ struct BpmDisplay : TransparentWidget {
 	int bpmIndex;
 
 	BpmDisplay(Vec pos, int bpmIndex);
-	void draw(const DrawArgs &disp) override;
+	void draw(const DrawArgs& disp) override;
 };
 
 struct RadioSwitch : RoundSwitch {

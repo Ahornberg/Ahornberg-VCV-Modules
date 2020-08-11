@@ -7,7 +7,7 @@ struct HarmonicsDisplay : Display {
 	int subharmonics;
 
 	HarmonicsDisplay(Rect box, Harmonizer* harmonizer, int channel);
-	void drawText(const DrawArgs &disp) override;
+	void drawText(const DrawArgs& disp) override;
 };
 
 struct MixtureSwitch : RoundSwitch {

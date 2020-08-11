@@ -79,7 +79,7 @@ struct TapePositionDisplay : Display {
 	bool cueForwardStatus;
 
 	TapePositionDisplay(Rect box, TapeRecorder* tapeRecorder);
-	void drawText(const DrawArgs &disp) override;
+	void drawText(const DrawArgs& disp) override;
 };
 
 struct ModuleLinkedWidget : SizedTransparentWidget {
@@ -97,7 +97,7 @@ struct TapeDisplay : ModuleLinkedWidget {
 	double tapeOnRightWheel;
 	
 	TapeDisplay(Rect box, TapeRecorder* tapeRecorder);
-	void draw(const DrawArgs &disp) override;
+	void draw(const DrawArgs& disp) override;
 };
 
 struct TextOnCassette {
@@ -109,26 +109,26 @@ struct TextOnCassette {
 	bool useScissor;
 	Vec textPos;
 	
-	void drawText(const Widget::DrawArgs &disp, Rect box);
+	void drawText(const Widget::DrawArgs& disp, Rect box);
 };
 
 struct TapeLengthDisplay : ModuleLinkedWidget, TextOnCassette {
 	TapeLengthDisplay(Rect box, TapeRecorder* tapeRecorder);
-	void draw(const DrawArgs &disp) override;
+	void draw(const DrawArgs& disp) override;
 };
 
 struct TrackCountText {
-	std::string createTrackCountText(int trackCount);
+	std::string createTrackCountText(const int trackCount);
 };
 
 struct TrackCountDisplay : ModuleLinkedWidget, TextOnCassette, TrackCountText {
 	TrackCountDisplay(Rect box, TapeRecorder* tapeRecorder);
-	void draw(const DrawArgs &disp) override;
+	void draw(const DrawArgs& disp) override;
 };
 
 struct TapeNameDisplay : SizedTransparentWidget, TextOnCassette {
 	TapeNameDisplay(Rect box);
-	void draw(const DrawArgs &disp) override;
+	void draw(const DrawArgs& disp) override;
 };
 
 struct TapeRecorderMenuItem : MenuItem {

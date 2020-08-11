@@ -6,7 +6,7 @@ struct IntervalDisplay : Display {
 	int interval;
 
 	IntervalDisplay(Rect box, EqualDivision *equalDivision);
-	void drawText(const DrawArgs &disp) override;
+	void drawText(const DrawArgs& disp) override;
 };
 
 struct EqualDivisionWidget : ModuleWidgetWithScrews {

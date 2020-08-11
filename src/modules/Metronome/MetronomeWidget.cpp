@@ -5,7 +5,7 @@ TempoDisplay::TempoDisplay(Rect box, Metronome* metronome) : Display(box) {
 	bpmIndex = Metronome::INIT_BPM;
 }
 
-void TempoDisplay::drawText(const DrawArgs &disp) {
+void TempoDisplay::drawText(const DrawArgs& disp) {
 	if (metronome) {
 		bpmIndex = metronome->params[Metronome::BPM_VALUE_PARAM].getValue();
 	}
@@ -25,7 +25,7 @@ BpmDisplay::BpmDisplay(Vec pos, int bpmIndex) {
 	this->bpmIndex = bpmIndex;
 }
 
-void BpmDisplay::draw(const DrawArgs &disp) {
+void BpmDisplay::draw(const DrawArgs& disp) {
 	nvgBeginPath(disp.vg);
 	nvgFontSize(disp.vg, 9);
 	nvgFontFaceId(disp.vg, font->handle);

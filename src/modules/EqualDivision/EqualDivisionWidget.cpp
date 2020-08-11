@@ -6,7 +6,7 @@ IntervalDisplay::IntervalDisplay(Rect box, EqualDivision *equalDivision) : Displ
 	interval = EqualDivision::INIT_INTERVAL;
 }
 
-void IntervalDisplay::drawText(const DrawArgs &disp) {
+void IntervalDisplay::drawText(const DrawArgs& disp) {
 	if (equalDivision) {
 		step = (int) equalDivision->params[EqualDivision::STEPS_PARAM].getValue();
 		interval = (int) equalDivision->params[EqualDivision::INTERVAL_PARAM].getValue();

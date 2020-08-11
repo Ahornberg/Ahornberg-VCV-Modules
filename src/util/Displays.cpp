@@ -9,7 +9,7 @@ Display::Display(Rect box) : SizedTransparentWidget(box) {
 	textColorRed = COLOR_RED;
 }
 
-void Display::drawBackground(const DrawArgs &disp) {
+void Display::drawBackground(const DrawArgs& disp) {
 	nvgBeginPath(disp.vg);
 	nvgRoundedRect(disp.vg, 0.0, 0.0, box.size.x, box.size.y, 3.0);
 	nvgFillColor(disp.vg, backgroundColor);
@@ -23,9 +23,9 @@ void Display::drawBackground(const DrawArgs &disp) {
 	nvgTextLetterSpacing(disp.vg, 1);
 }
 
-void Display::drawText(const DrawArgs &disp) {}
+void Display::drawText(const DrawArgs& disp) {}
 
-void Display::draw(const DrawArgs &disp) {
+void Display::draw(const DrawArgs& disp) {
 	drawBackground(disp);
 	drawText(disp);
 }

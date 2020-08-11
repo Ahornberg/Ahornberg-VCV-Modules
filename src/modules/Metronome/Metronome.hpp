@@ -43,5 +43,5 @@ struct Metronome : ModuleWithScrews {
 	dsp::SchmittTrigger playTrigger;
 
 	Metronome();
-	void process(const ProcessArgs &args) override;
+	void process(const ProcessArgs& args) override;
 };

@@ -24,7 +24,7 @@ CVFreqShift::CVFreqShift() {
 	configParam<FrequencyRanges>(FREQUENCY_RANGE_PARAM, 0, 8, 4, "Frequency Range", "Hz");
 }
 
-void CVFreqShift::process(const ProcessArgs &args) {
+void CVFreqShift::process(const ProcessArgs& args) {
 	float freqShift = params[FREQUENCY_PARAM].getValue() * FREQUENCY_RANGES[(int) params[FREQUENCY_RANGE_PARAM].getValue()].rangeBasedOnC4;
 	if (inputs[FREQUENCY_MODULATION_INPUT].isConnected()) {
 		freqShift += powf(params[FREQUENCY_MODULATION_AMOUNT_PARAM].getValue(), 4) * inputs[FREQUENCY_MODULATION_INPUT].getVoltage();

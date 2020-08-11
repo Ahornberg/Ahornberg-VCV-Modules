@@ -178,7 +178,7 @@ TapePositionDisplay::TapePositionDisplay(Rect box, TapeRecorder* tapeRecorder) :
 	cueForwardStatus = false;
 }
 
-void TapePositionDisplay::drawText(const DrawArgs &disp) {
+void TapePositionDisplay::drawText(const DrawArgs& disp) {
 	if (tapeRecorder) {
 		loopStartConnected = tapeRecorder->inputs[TapeRecorder::LOOP_INPUT].isConnected();
 		loopStart = tapeRecorder->loopStart;
@@ -303,7 +303,7 @@ TapeDisplay::TapeDisplay(Rect box, TapeRecorder* tapeRecorder) : ModuleLinkedWid
 	tapeOnRightWheel = 1;
 }
 
-void TapeDisplay::draw(const DrawArgs &disp) {
+void TapeDisplay::draw(const DrawArgs& disp) {
 	if (tapeRecorder) {
 		tapeOnLeftWheel = tapeRecorder->tapeOnLeftWheel;
 		tapeOnRightWheel = tapeRecorder->tapeOnRightWheel;
@@ -322,7 +322,7 @@ void TapeDisplay::draw(const DrawArgs &disp) {
 	nvgFill(disp.vg);
 }
 
-void TextOnCassette::drawText(const Widget::DrawArgs &disp, Rect box) {
+void TextOnCassette::drawText(const Widget::DrawArgs& disp, Rect box) {
 	nvgBeginPath(disp.vg);
 	nvgRotate(disp.vg, (-90 * NVG_PI) / 180);
 	if (useScissor) {
@@ -344,14 +344,14 @@ TapeLengthDisplay::TapeLengthDisplay(Rect box, TapeRecorder* tapeRecorder) : Mod
 	textPos =  Vec(4, 14);
 }
 
-void TapeLengthDisplay::draw(const DrawArgs &disp) {
+void TapeLengthDisplay::draw(const DrawArgs& disp) {
 	if (tapeRecorder) {
 		text = TapeRecorder::TAPE_LENGTHS[(int) tapeRecorder->params[TapeRecorder::TAPE_LENGTH_PARAM].getValue()].name;
 	}
 	drawText(disp, box);
 }
 
-std::string TrackCountText::createTrackCountText(int trackCount) {
+std::string TrackCountText::createTrackCountText(const int trackCount) {
 	if (trackCount == 1) {
 		return "Mono";
 	}
@@ -370,7 +370,7 @@ TrackCountDisplay::TrackCountDisplay(Rect box, TapeRecorder* tapeRecorder) : Mod
 	textPos =  Vec(4, 14);
 }
 
-void TrackCountDisplay::draw(const DrawArgs &disp) {
+void TrackCountDisplay::draw(const DrawArgs& disp) {
 	if (tapeRecorder) {
 		text = createTrackCountText(tapeRecorder->params[TapeRecorder::TRACK_COUNT_PARAM].getValue());
 	}
@@ -387,7 +387,7 @@ TapeNameDisplay::TapeNameDisplay(Rect box) : SizedTransparentWidget(box) {
 	textPos =  Vec(0, 11);
 }
 
-void TapeNameDisplay::draw(const DrawArgs &disp) {
+void TapeNameDisplay::draw(const DrawArgs& disp) {
 	drawText(disp, box);
 }
 

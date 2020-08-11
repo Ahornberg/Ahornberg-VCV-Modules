@@ -74,7 +74,7 @@ void TapeRecorder::eraseTape() {
 	}
 }
 
-void TapeRecorder::processTempoOutput(const ProcessArgs &args) {
+void TapeRecorder::processTempoOutput(const ProcessArgs& args) {
 	if (outputs[TEMPO_OUTPUT].isConnected() && playStatus) {
 		float beat = 0;
 		if (beatsPulse.process(args.sampleTime)) {
@@ -87,7 +87,7 @@ void TapeRecorder::processTempoOutput(const ProcessArgs &args) {
 	}
 }
 
-void TapeRecorder::processSpeedInput(const ProcessArgs &args) {
+void TapeRecorder::processSpeedInput(const ProcessArgs& args) {
 	if (inputs[SPEED_INPUT].isConnected()) {
 		speed *= exp2(inputs[SPEED_INPUT].getVoltage());
 	}
@@ -134,7 +134,7 @@ void TapeRecorder::processLoopInput() {
 	}
 }
 
-void TapeRecorder::processLoopOutput(const ProcessArgs &args) {
+void TapeRecorder::processLoopOutput(const ProcessArgs& args) {
 	
 }
 
@@ -204,21 +204,21 @@ void TapeRecorder::processTransportInput() {
 	}
 }
 
-void TapeRecorder::processTransportOutput(const ProcessArgs &args) {
+void TapeRecorder::processTransportOutput(const ProcessArgs& args) {
 	
 }
 
-void TapeRecorder::processAudioInput(const ProcessArgs &args) {
+void TapeRecorder::processAudioInput(const ProcessArgs& args) {
 	
 }
 
-void TapeRecorder::processAudioOutput(const ProcessArgs &args) {
+void TapeRecorder::processAudioOutput(const ProcessArgs& args) {
 	
 }
 
 // process ****************************************************************
 
-void TapeRecorder::process(const ProcessArgs &args) {
+void TapeRecorder::process(const ProcessArgs& args) {
 	// tape begin/end reached
 	
 	// locator left/right reached

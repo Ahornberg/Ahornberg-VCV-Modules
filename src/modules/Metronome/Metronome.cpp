@@ -28,7 +28,7 @@ Metronome::Metronome() {
 	playTrigger.reset();
 }
 
-void Metronome::process(const ProcessArgs &args) {
+void Metronome::process(const ProcessArgs& args) {
 	if (outputs[BPM_OUTPUT].isConnected() && params[PLAY_PARAM].getValue()) {
 		float time = timer.process(args.sampleTime);
 		if (time >= 60. / BPM_VALUES[(int) params[BPM_VALUE_PARAM].getValue()]) {

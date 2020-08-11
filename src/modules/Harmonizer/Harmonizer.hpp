@@ -50,5 +50,5 @@ struct Harmonizer : ModuleWithScrews {
 	Harmonizer();
 	void setMixture(int mixture);
 	int processMixtureTriggers();
-	void process(const ProcessArgs &args) override;
+	void process(const ProcessArgs& args) override;
 };

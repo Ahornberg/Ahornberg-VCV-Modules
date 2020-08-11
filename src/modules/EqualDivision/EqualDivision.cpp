@@ -30,7 +30,7 @@ EqualDivision::EqualDivision() {
 
 }
 
-void EqualDivision::process(const ProcessArgs &args) {
+void EqualDivision::process(const ProcessArgs& args) {
 	float multiplier = INTERVALS[(int)params[INTERVAL_PARAM].getValue()].value / params[STEPS_PARAM].getValue() * params[FINE_PARAM].getValue();
 
 	for (int i = 0; i < 9; i++) {

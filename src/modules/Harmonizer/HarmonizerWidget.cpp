@@ -7,7 +7,7 @@ HarmonicsDisplay::HarmonicsDisplay(Rect box, Harmonizer* harmonizer, int channel
 	subharmonics = 1;
 }
 
-void HarmonicsDisplay::drawText(const DrawArgs &disp) {
+void HarmonicsDisplay::drawText(const DrawArgs& disp) {
 	if (harmonizer) {
 		harmonics = (int) harmonizer->params[Harmonizer::PITCH_HARMONICS_PARAM + channel].getValue();
 		subharmonics = (int) harmonizer->params[Harmonizer::PITCH_SUBHARMONICS_PARAM + channel].getValue();
