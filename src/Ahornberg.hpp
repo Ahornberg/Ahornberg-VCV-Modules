@@ -10,7 +10,8 @@ extern Plugin* pluginInstance;
 
 extern Model* modelEqualDivision;
 extern Model* modelCVFreqShift;
-extern Model* modelTapeRecorder;
+extern Model* modelFunWithFrames;
+// extern Model* modelTapeRecorder;
 extern Model* modelMetronome;
 extern Model* modelHarmonizer;
 // extern Model* modelManual;

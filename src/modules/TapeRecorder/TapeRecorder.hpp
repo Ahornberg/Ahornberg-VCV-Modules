@@ -50,6 +50,12 @@ struct TapeRecorder : ModuleWithScrews {
 		NUM_LIGHTS
 	};
 
+	enum TapeStatus {
+		TAPE_BEGIN,
+		TAPE_MIDDLE,
+		TAPE_END
+	};
+
 	int sizeAudioBuffer;
 	float* audioBuffer;
 	double audioBufferPosition;
@@ -59,6 +65,7 @@ struct TapeRecorder : ModuleWithScrews {
 	double tapeOnLeftWheel;
 	double tapeOnRightWheel;
 	int lastAudioBufferLocation;
+	TapeStatus tapeStatus;
 
 	dsp::BooleanTrigger playForwardsTrigger;
 	dsp::BooleanTrigger playBackwardsTrigger;

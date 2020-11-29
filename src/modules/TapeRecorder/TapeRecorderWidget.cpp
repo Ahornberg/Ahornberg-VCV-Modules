@@ -605,7 +605,7 @@ json_t* TapeRecorderWidget::toJson() {
 
 void TapeRecorderWidget::fromJson(json_t* rootJ) {
 	ModuleWidget::fromJson(rootJ);
-
+	
 	json_t* tapeNameJ = json_object_get(rootJ, "tape-name");
 	if (tapeNameJ) {
 		tapeNameDisplay->text = json_string_value(tapeNameJ);

@@ -19,6 +19,11 @@ RoundSwitchRed::RoundSwitchRed() {
 	addFrame("res/switches/Round_red.svg");
 }
 
+RoundSwitchLinearJump::RoundSwitchLinearJump() {
+	addFrame("res/switches/Round_linear.svg");
+	addFrame("res/switches/Round_linear_jump.svg");
+}
+
 RoundLargeSwitch::RoundLargeSwitch() {
 	addFrame("res/switches/RoundLarge_off.svg");
 	addFrame("res/switches/RoundLarge_on.svg");

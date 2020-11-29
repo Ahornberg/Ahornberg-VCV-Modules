@@ -62,6 +62,7 @@ TapeRecorder::TapeRecorder() {
 	cueBackwardsInputTrigger.reset();
 	cueForwardsMomentaryInputTrigger.reset();
 	cueBackwardsMomentaryInputTrigger.reset();
+	tapeStatus = TAPE_BEGIN;
 }
 
 TapeRecorder::~TapeRecorder() {
@@ -220,6 +221,13 @@ void TapeRecorder::processAudioOutput(const ProcessArgs& args) {
 
 void TapeRecorder::process(const ProcessArgs& args) {
 	// tape begin/end reached
+	if (audioBufferPosition < 0) {
+		tapeStatus = TAPE_BEGIN;
+	} else if (audioBufferPosition >= sizeAudioBuffer) {
+		tapeStatus = TAPE_END;
+	} else {
+		tapeStatus = TAPE_MIDDLE;
+	}
 	
 	// locator left/right reached
 	
@@ -249,6 +257,21 @@ void TapeRecorder::process(const ProcessArgs& args) {
 	playForwardStatus = !params[PLAY_BACKWARDS_PARAM].getValue();
 	cueStatus = params[CUE_FORWARDS_PARAM].getValue() || params[CUE_BACKWARDS_PARAM].getValue();
 	cueForwardStatus = !params[CUE_BACKWARDS_PARAM].getValue();
+	if (tapeStatus == TAPE_BEGIN) {
+		if (cueStatus && !cueForwardStatus) {
+			cueStatus = false;
+		}
+		if (playStatus && !playForwardStatus) {
+			playStatus = false;
+		}
+	} else if (tapeStatus == TAPE_END) {
+		if (cueStatus && cueForwardStatus) {
+			cueStatus = false;
+		}
+		if (playStatus && playForwardStatus) {
+			playStatus = false;
+		}
+	}
 
 	processLoopInput();
 	processTempoOutput(args);
@@ -278,6 +301,7 @@ void TapeRecorder::process(const ProcessArgs& args) {
 	processSpeedOutput();
 
 	if (audioBufferPosition >= 0) {
+		tapeStatus = TAPE_MIDDLE;
 		tapePosition = (args.sampleTime * audioBufferPosition * params[TEMPO_PARAM].getValue()) / (60 * params[BEATS_PER_BAR_PARAM].getValue());
 		int newBar = (int) tapePosition;
 		int newBeat = (int) ((tapePosition - bar) * params[BEATS_PER_BAR_PARAM].getValue());
@@ -308,17 +332,12 @@ void TapeRecorder::process(const ProcessArgs& args) {
 	}
 	
 	if (audioBufferPosition < 0) {
+		tapeStatus = TAPE_BEGIN;
 		if (outputs[AUDIO_OUTPUT].isConnected()) {
 			outputs[AUDIO_OUTPUT].setVoltage(inputs[AUDIO_INPUT].getVoltage());
 		}
 		audioBufferPosition = 0.;
 		lastAudioBufferLocation = -1;
-		if (cueStatus && !cueForwardStatus) {
-			cueStatus = false;
-		}
-		if (playStatus && !playForwardStatus) {
-			playStatus = false;
-		}
 		tapeOnLeftWheel = 0;
 		tapeOnRightWheel = 1;
 		params[WHEEL_LEFT_PARAM].setValue(0);
@@ -327,17 +346,12 @@ void TapeRecorder::process(const ProcessArgs& args) {
 		return;
 	}
 	if (audioBufferPosition >= sizeAudioBuffer) {
+		tapeStatus = TAPE_END;
 		if (outputs[AUDIO_OUTPUT].isConnected()) {
 			outputs[AUDIO_OUTPUT].setVoltage(inputs[AUDIO_INPUT].getVoltage());
 		}
 		audioBufferPosition = sizeAudioBuffer - 1;
 		lastAudioBufferLocation = sizeAudioBuffer;
-		if (cueStatus && cueForwardStatus) {
-			cueStatus = false;
-		}
-		if (playStatus && playForwardStatus) {
-			playStatus = false;
-		}
 		tapeOnLeftWheel = 1;
 		tapeOnRightWheel = 0;
 		params[WHEEL_LEFT_PARAM].setValue(0);

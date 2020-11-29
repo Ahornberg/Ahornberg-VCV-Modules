@@ -11,6 +11,10 @@ struct RoundSwitchRed : BasicSwitch {
 	RoundSwitchRed();
 };
 
+struct RoundSwitchLinearJump : BasicSwitch {
+	RoundSwitchLinearJump();
+};
+
 struct RoundLargeSwitch : BasicSwitch {
 	RoundLargeSwitch();
 };

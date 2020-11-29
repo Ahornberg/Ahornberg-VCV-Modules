@@ -37,10 +37,21 @@
 	  ]
     },
     {
+      "slug": "FunWithFrames",
+      "name": "Fun with Frames",
+      "description": "utility to enhance Regen Modular Frames",
+	  "disabled": false,
+	  "manualUrl": "https://github.com/Ahornberg/Ahornberg-VCV-Modules/blob/master/manuals/README.md#fun-with-frames",
+      "tags": [ 
+		"Utility",
+        "Polyphonic"
+	  ]
+    },
+    {
       "slug": "TapeRecorder",
       "name": "Tape Recorder",
       "description": "micro cassette recorder",
-	  "disabled": false,
+	  "disabled": true,
 	  "manualUrl": "https://github.com/Ahornberg/Ahornberg-VCV-Modules/blob/master/manuals/README.md#tape-recorder",
       "tags": [ 
 	    "Clock generator",
