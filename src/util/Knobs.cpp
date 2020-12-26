@@ -49,6 +49,10 @@ KnobSmallSnap::KnobSmallSnap() {
 	snap = true;
 }
 
+KnobSmallSnapFast::KnobSmallSnapFast() {
+	speed = 0.8f;
+}
+
 KnobBig::KnobBig() {
 	BasicKnob::setSvg("res/knobs/Big.svg");
 }

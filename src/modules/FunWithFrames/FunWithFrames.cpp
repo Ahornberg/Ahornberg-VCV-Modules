@@ -13,9 +13,12 @@ FunWithFrames::FunWithFrames() {
 		lastPitchChord[i] = 0;
 		pitchGate[i] = false;
 	}
+	arpeggioPosition = 0;
+	clockInputTrigger.reset();
 }
 
 void FunWithFrames::process(const ProcessArgs& args) {
+	// time-table
 	for (auto i = 0; i < NUM_VALUE_IO; i++) {
 		if (outputs[VALUE_OUTPUT + i].isConnected()) {
 			float valueOut = inputs[VALUE_INPUT + i].getVoltage() * 2.125;
@@ -29,8 +32,20 @@ void FunWithFrames::process(const ProcessArgs& args) {
 			outputs[VALUE_OUTPUT + i].setVoltage(valueOut);
 		}
 	}
+	// chord-builder
+	bool arpeggio = inputs[CLOCK_INPUT].isConnected();
 	if (outputs[NOTE_OUTPUT].isConnected()) {
-		outputs[NOTE_OUTPUT].setChannels(params[MAX_CHORD_SIZE_PARAM].getValue());
+		if (arpeggio) {
+			outputs[NOTE_OUTPUT].setChannels(1);
+			if (clockInputTrigger.process(rescale(inputs[CLOCK_INPUT].getVoltage(), 0.1, 2, 0, 1))) {
+				++arpeggioPosition;
+				if (arpeggioPosition > params[MAX_CHORD_SIZE_PARAM].getValue() || !inputs[GATE_INPUT].getVoltage()) {
+					arpeggioPosition = 0;
+				}
+			}
+		} else {
+			outputs[NOTE_OUTPUT].setChannels(params[MAX_CHORD_SIZE_PARAM].getValue());
+		}
 		for (auto i = 0; i < params[MAX_CHORD_SIZE_PARAM].getValue(); i++) {
 			float pitchOut = inputs[NOTE_INPUT].getVoltage();
 			if (i > 0) {
@@ -48,16 +63,38 @@ void FunWithFrames::process(const ProcessArgs& args) {
 					pitchGate[i - 1] = false;
 				}
 			}
-			outputs[NOTE_OUTPUT].setVoltage(pitchOut, i);
+			if (arpeggio) {
+				if (i + 1 == arpeggioPosition) {
+					if (!pitchGate[i - 1]) {
+						++arpeggioPosition;
+						if (arpeggioPosition > params[MAX_CHORD_SIZE_PARAM].getValue()) {
+							arpeggioPosition = 0;
+						}
+					} else {
+						outputs[NOTE_OUTPUT].setVoltage(pitchOut);
+					}
+				}
+			} else {
+				outputs[NOTE_OUTPUT].setVoltage(pitchOut, i);
+			}
+		}
+		if (arpeggio && !arpeggioPosition) {
+			// first arpeggio-pitch
+			outputs[NOTE_OUTPUT].setVoltage(inputs[NOTE_INPUT].getVoltage());
 		}
 	}
 	if (outputs[GATE_OUTPUT].isConnected()) {
-		outputs[GATE_OUTPUT].setChannels(params[MAX_CHORD_SIZE_PARAM].getValue());
-		for (auto i = 0; i < params[MAX_CHORD_SIZE_PARAM].getValue(); i++) {
-			if (i > 0 && !pitchGate[i - 1]) {
-				outputs[GATE_OUTPUT].setVoltage(0, i);
-			} else {
-				outputs[GATE_OUTPUT].setVoltage(inputs[GATE_INPUT].getVoltage(), i);
+		if (arpeggio) {
+			outputs[GATE_OUTPUT].setChannels(1);
+			outputs[GATE_OUTPUT].setVoltage(inputs[GATE_INPUT].getVoltage());
+		} else {
+			outputs[GATE_OUTPUT].setChannels(params[MAX_CHORD_SIZE_PARAM].getValue());
+			for (auto i = 0; i < params[MAX_CHORD_SIZE_PARAM].getValue(); i++) {
+				if (i > 0 && !pitchGate[i - 1]) {
+					outputs[GATE_OUTPUT].setVoltage(0, i);
+				} else {
+					outputs[GATE_OUTPUT].setVoltage(inputs[GATE_INPUT].getVoltage(), i);
+				}
 			}
 		}
 	}

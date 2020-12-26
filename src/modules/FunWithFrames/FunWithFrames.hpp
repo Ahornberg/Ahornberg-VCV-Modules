@@ -18,6 +18,7 @@ struct FunWithFrames : ModuleWithScrews {
 		ENUMS(VALUE_INPUT, NUM_VALUE_IO),
 		NOTE_INPUT,
 		GATE_INPUT,
+		CLOCK_INPUT,
 		NUM_INPUTS
 	};
 	enum OutputIds {
@@ -29,6 +30,9 @@ struct FunWithFrames : ModuleWithScrews {
 	enum LightIds {
 		NUM_LIGHTS
 	};
+	
+	int arpeggioPosition;
+	dsp::SchmittTrigger clockInputTrigger;
 
 	FunWithFrames();
 	void process(const ProcessArgs& args) override;
