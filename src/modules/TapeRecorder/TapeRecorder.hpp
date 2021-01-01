@@ -22,25 +22,26 @@ struct TapeRecorder : ModuleWithScrews {
 		BEATS_PER_BAR_PARAM,
 		LOOP_START_PARAM,
 		LOOP_END_PARAM,
-		LOOP_START_BUTTON_PARAM,
-		LOOP_END_BUTTON_PARAM,
+		// LOOP_START_BUTTON_PARAM,
+		// LOOP_END_BUTTON_PARAM,
 		WHEEL_LEFT_PARAM,
 		WHEEL_RIGHT_PARAM,
 		TAPE_LENGTH_PARAM,
 		TRACK_COUNT_PARAM,
-		OLD_SCHOOL_MODE_PARAM,
+		// OLD_SCHOOL_MODE_PARAM,
 		NUM_PARAMS
 	};
 	enum InputIds {
 		AUDIO_INPUT,
-		LOOP_INPUT,
+		LOOP_START_INPUT,
+		LOOP_END_INPUT,
 		SPEED_INPUT,
 		TRANSPORT_INPUT,
 		NUM_INPUTS
 	};
 	enum OutputIds {
 		AUDIO_OUTPUT,
-		LOOP_OUTPUT,
+		// LOOP_OUTPUT,
 		SPEED_OUTPUT,
 		TEMPO_OUTPUT,
 		TRANSPORT_OUTPUT,
@@ -64,6 +65,8 @@ struct TapeRecorder : ModuleWithScrews {
 	double tapePosition;
 	double tapeOnLeftWheel;
 	double tapeOnRightWheel;
+	float positionLeftWheel;
+	float positionRightWheel;
 	int lastAudioBufferLocation;
 	TapeStatus tapeStatus;
 
@@ -85,6 +88,7 @@ struct TapeRecorder : ModuleWithScrews {
 	dsp::PulseGenerator barsPulse;
 	dsp::PulseGenerator beatsPulse;
 	dsp::ExponentialSlewLimiter speedSlewLimiter;
+	dsp::ExponentialSlewLimiter wheelMovementSlewLimiter;
 	dsp::SchmittTrigger loopInputTrigger;
 	dsp::SchmittTrigger pauseInputTrigger;
 	dsp::SchmittTrigger playForwardsInputTrigger;
@@ -96,26 +100,28 @@ struct TapeRecorder : ModuleWithScrews {
 	
 	float speed;
 	float touchedWheelForce;
+	float wheelMovement;
 	
 	TapeRecorder();
 	~TapeRecorder();
 	void eraseTape();
+	void calcTapeAndPositionsOnWheels();
 	void processTempoOutput(const ProcessArgs& args);
 	void processSpeedInput(const ProcessArgs& args);
 	void processSpeedOutput();
 	void processLoopInput();
-	void processLoopOutput(const ProcessArgs& args);
+	// void processLoopOutput(const ProcessArgs& args);
 	void toggleParamValue(int param);
 	bool isTransportCueSwitchMomentary();
 	float rescaleInput(int port, int channel = 0);
 	float rescaleInverseInput(int port, int channel = 0);
 	void processTransportInput();
-	void processTransportOutput(const ProcessArgs& args);
+	void processTransportOutput();
 	void processAudioInput(const ProcessArgs& args);
 	void processAudioOutput(const ProcessArgs& args);
 	void process(const ProcessArgs& args) override;
-	float valueAtOffset (const float* const inputs, const float offset) noexcept;
+	// float valueAtOffset (const float* const inputs, const float offset) noexcept;
 	void setTrackCount(int trackCount);
 	void setTapeLength(int tapeLength);
-	void setOldSchoolMode(bool oldSchoolMode);
+	// void setOldSchoolMode(bool oldSchoolMode);
 };

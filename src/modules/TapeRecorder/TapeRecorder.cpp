@@ -27,13 +27,13 @@ TapeRecorder::TapeRecorder() {
 	configParam(BEATS_PER_BAR_PARAM,       1,    48,   4, "Beats / Bar");
 	configParam(LOOP_START_PARAM,          0,    99,   0, "Loop Start on Bar");
 	configParam(LOOP_END_PARAM,            0,    99,   0, "Loop End on Bar");
-	configParam(LOOP_START_BUTTON_PARAM,   0,     1,   0, "Loop Start on Tape Position");
-	configParam(LOOP_END_BUTTON_PARAM,     0,     1,   0, "Loop End on Tape Position");
+	// configParam(LOOP_START_BUTTON_PARAM,   0,     1,   0, "Loop Start on Tape Position");
+	// configParam(LOOP_END_BUTTON_PARAM,     0,     1,   0, "Loop End on Tape Position");
 	configParam(WHEEL_LEFT_PARAM,        -12.4,  12,   0, "Left Wheel");
 	configParam(WHEEL_RIGHT_PARAM,       -12,    12.1, 0, "Right Wheel");
 	configParam(TAPE_LENGTH_PARAM,         0, NUM_TAPE_LENGTHS - 1, 0, "Tape Length");
 	configParam(TRACK_COUNT_PARAM,         1,    16,   1, "Tape Layout");
-	configParam(OLD_SCHOOL_MODE_PARAM,     0,     1,   0, "Old School Mode");
+	// configParam(OLD_SCHOOL_MODE_PARAM,     0,     1,   0, "Old School Mode");
 	sizeAudioBuffer = TAPE_LENGTHS[(int) params[TAPE_LENGTH_PARAM].getValue()].value;
 	audioBuffer = new float[sizeAudioBuffer];
 	eraseTape();
@@ -45,8 +45,9 @@ TapeRecorder::TapeRecorder() {
 	loopStartPosition = 0;
 	loopEndPosition = 0;
 	tapePosition = 0;
-	tapeOnLeftWheel = 0;
-	tapeOnRightWheel = 1;
+	calcTapeAndPositionsOnWheels();
+	params[WHEEL_LEFT_PARAM].setValue(positionLeftWheel);
+	params[WHEEL_RIGHT_PARAM].setValue(positionRightWheel);
 	lastAudioBufferLocation = -1;
 	beat = 0;
 	bar = 0;
@@ -55,6 +56,7 @@ TapeRecorder::TapeRecorder() {
 	speed = 0;
 	touchedWheelForce = 1;
 	speedSlewLimiter.setRiseFall(params[CUE_SLEW_PARAM].getValue(), 20);
+	wheelMovementSlewLimiter.setRiseFall(40, 40);
 	pauseInputTrigger.reset();
 	playForwardsInputTrigger.reset();
 	playBackwardsInputTrigger.reset();
@@ -72,6 +74,25 @@ TapeRecorder::~TapeRecorder() {
 void TapeRecorder::eraseTape() {
 	for (auto i = 0; i < sizeAudioBuffer; ++i) {
 		audioBuffer[i] = 0.f;
+	}
+}
+
+void TapeRecorder::calcTapeAndPositionsOnWheels() {
+	tapeOnLeftWheel = (1.0 - ((pow((1.0 - (audioBufferPosition / sizeAudioBuffer)) * 21.0 + 14.0, 2.0) - 196.0) / 1029.0));
+	tapeOnRightWheel = (1.0 - ((pow((audioBufferPosition / sizeAudioBuffer) * 21.0 + 14.0, 2) - 196.0) / 1029.0));
+	positionLeftWheel = tapeOnLeftWheel * 120;
+	while (positionLeftWheel > 6) {
+		positionLeftWheel -= 12;
+	}
+	while (positionLeftWheel < -6) {
+		positionLeftWheel += 12;
+	}
+	positionRightWheel = tapeOnRightWheel * -120;
+	while (positionRightWheel > 6) {
+		positionRightWheel -= 12;
+	}
+	while (positionRightWheel < -6) {
+		positionRightWheel += 12;
 	}
 }
 
@@ -109,11 +130,11 @@ void TapeRecorder::processSpeedOutput() {
 
 void TapeRecorder::processLoopInput() {
 	if (params[LOOP_START_PARAM].getValue() != oldLoopStartParam) {
-		params[LOOP_START_BUTTON_PARAM].setValue(0.f);
+		// params[LOOP_START_BUTTON_PARAM].setValue(0.f);
 		oldLoopStartParam = params[LOOP_START_PARAM].getValue();
 	}
-	if (inputs[LOOP_INPUT].isConnected()) {
-		loopStart = (int) ((inputs[LOOP_INPUT].getVoltage(0) * 12.f) + 0.5f + params[LOOP_START_PARAM].getValue());
+	if (inputs[LOOP_START_INPUT].isConnected()) {
+		loopStart = (int) ((inputs[LOOP_START_INPUT].getVoltage() * 12.f) + 0.5f + params[LOOP_START_PARAM].getValue());
 		if (loopStart < 0) {
 			loopStart = 0;
 		}
@@ -122,11 +143,11 @@ void TapeRecorder::processLoopInput() {
 	}
 	
 	if (params[LOOP_END_PARAM].getValue() != oldLoopEndParam) {
-		params[LOOP_END_BUTTON_PARAM].setValue(0.f);
+		// params[LOOP_END_BUTTON_PARAM].setValue(0.f);
 		oldLoopEndParam = params[LOOP_END_PARAM].getValue();
 	}
-	if (inputs[LOOP_INPUT].isConnected() && inputs[LOOP_INPUT].getChannels() > 1) {
-		loopEnd = (int) ((inputs[LOOP_INPUT].getVoltage(1) * 12.f) + 0.5f + params[LOOP_END_PARAM].getValue());
+	if (inputs[LOOP_END_INPUT].isConnected()) { // && inputs[LOOP_INPUT].getChannels() > 1) {
+		loopEnd = (int) ((inputs[LOOP_END_INPUT].getVoltage() * 12.f) + 0.5f + params[LOOP_END_PARAM].getValue());
 		if (loopEnd < 0) {
 			loopEnd = 0;
 		}
@@ -135,9 +156,9 @@ void TapeRecorder::processLoopInput() {
 	}
 }
 
-void TapeRecorder::processLoopOutput(const ProcessArgs& args) {
+// void TapeRecorder::processLoopOutput(const ProcessArgs& args) {
 	
-}
+// }
 
 void TapeRecorder::toggleParamValue(int param) {
 	params[param].getValue() ? params[param].setValue(0) : params[param].setValue(1);
@@ -158,55 +179,62 @@ float TapeRecorder::rescaleInverseInput(int port, int channel) {
 void TapeRecorder::processTransportInput() {
 	// TODO loop input
 	if (inputs[TRANSPORT_INPUT].isConnected()) {
-		if (pauseInputTrigger.process(rescaleInput(TRANSPORT_INPUT, 2))) {
+		if (pauseInputTrigger.process(rescaleInput(TRANSPORT_INPUT, 0))) {
 			// pause is independend from all other transport keys
 			toggleParamValue(PAUSE_PARAM);
 		}
-		if (playBackwardsInputTrigger.process(rescaleInput(TRANSPORT_INPUT, 1))) {
-			toggleParamValue(PLAY_BACKWARDS_PARAM);
-			if (params[PLAY_BACKWARDS_PARAM].getValue()) {
-				// only one play direction active at a time
-				params[PLAY_FORWARDS_PARAM].setValue(0);
-			}
-		}
-		if (playForwardsInputTrigger.process(rescaleInput(TRANSPORT_INPUT, 3))) {
-			toggleParamValue(PLAY_FORWARDS_PARAM);
-			if (params[PLAY_FORWARDS_PARAM].getValue()) {
-				// only one play direction active at a time
-				params[PLAY_BACKWARDS_PARAM].setValue(0);
-			}
-		}
-		if (cueBackwardsInputTrigger.process(rescaleInput(TRANSPORT_INPUT, 0))) {
-			toggleParamValue(CUE_BACKWARDS_PARAM);
-			if (params[CUE_BACKWARDS_PARAM].getValue()) {
-				// only one cue direction active at a time
-				params[CUE_FORWARDS_PARAM].setValue(0);
-			}
-		}
-		if (cueBackwardsMomentaryInputTrigger.process(rescaleInverseInput(TRANSPORT_INPUT, 0))) {
-			if (isTransportCueSwitchMomentary()) {
-				params[CUE_BACKWARDS_PARAM].setValue(0);
-			}
-		}
-
-		if (cueForwardsInputTrigger.process(rescaleInput(TRANSPORT_INPUT, 4))) {
-			toggleParamValue(CUE_FORWARDS_PARAM);
-			if (params[CUE_FORWARDS_PARAM].getValue()) {
-				// only one cue direction active at a time
-				params[CUE_BACKWARDS_PARAM].setValue(0);
-			}
-		}
-		if (cueForwardsMomentaryInputTrigger.process(rescaleInverseInput(TRANSPORT_INPUT, 4))) {
-			if (isTransportCueSwitchMomentary()) {
-				params[CUE_FORWARDS_PARAM].setValue(0);
-			}
-		}
+		// if (playBackwardsInputTrigger.process(rescaleInput(TRANSPORT_INPUT, 1))) {
+			// toggleParamValue(PLAY_BACKWARDS_PARAM);
+			// if (params[PLAY_BACKWARDS_PARAM].getValue()) {
+				// // only one play direction active at a time
+				// params[PLAY_FORWARDS_PARAM].setValue(0);
+			// }
+		// }
+		// if (playForwardsInputTrigger.process(rescaleInput(TRANSPORT_INPUT, 3))) {
+			// toggleParamValue(PLAY_FORWARDS_PARAM);
+			// if (params[PLAY_FORWARDS_PARAM].getValue()) {
+				// // only one play direction active at a time
+				// params[PLAY_BACKWARDS_PARAM].setValue(0);
+			// }
+		// }
+		// if (cueBackwardsInputTrigger.process(rescaleInput(TRANSPORT_INPUT, 0))) {
+			// toggleParamValue(CUE_BACKWARDS_PARAM);
+			// if (params[CUE_BACKWARDS_PARAM].getValue()) {
+				// // only one cue direction active at a time
+				// params[CUE_FORWARDS_PARAM].setValue(0);
+			// }
+		// }
+		// if (cueBackwardsMomentaryInputTrigger.process(rescaleInverseInput(TRANSPORT_INPUT, 0))) {
+			// if (isTransportCueSwitchMomentary()) {
+				// params[CUE_BACKWARDS_PARAM].setValue(0);
+			// }
+		// }
+		// if (cueForwardsInputTrigger.process(rescaleInput(TRANSPORT_INPUT, 4))) {
+			// toggleParamValue(CUE_FORWARDS_PARAM);
+			// if (params[CUE_FORWARDS_PARAM].getValue()) {
+				// // only one cue direction active at a time
+				// params[CUE_BACKWARDS_PARAM].setValue(0);
+			// }
+		// }
+		// if (cueForwardsMomentaryInputTrigger.process(rescaleInverseInput(TRANSPORT_INPUT, 4))) {
+			// if (isTransportCueSwitchMomentary()) {
+				// params[CUE_FORWARDS_PARAM].setValue(0);
+			// }
+		// }
 
 	}
 }
 
-void TapeRecorder::processTransportOutput(const ProcessArgs& args) {
-	
+void TapeRecorder::processTransportOutput() {
+	if (playStatus) {
+		if (playForwardStatus) {
+			outputs[TRANSPORT_OUTPUT].setVoltage(5);
+		} else {
+			outputs[TRANSPORT_OUTPUT].setVoltage(-5);
+		}
+	} else {
+		outputs[TRANSPORT_OUTPUT].setVoltage(0);
+	}
 }
 
 void TapeRecorder::processAudioInput(const ProcessArgs& args) {
@@ -253,7 +281,7 @@ void TapeRecorder::process(const ProcessArgs& args) {
 	
 	processTransportInput();
 
-	playStatus = !params[PAUSE_PARAM].getValue() && (params[PLAY_FORWARDS_PARAM].getValue() || params[PLAY_BACKWARDS_PARAM].getValue());
+	playStatus = params[PLAY_FORWARDS_PARAM].getValue() || params[PLAY_BACKWARDS_PARAM].getValue();
 	playForwardStatus = !params[PLAY_BACKWARDS_PARAM].getValue();
 	cueStatus = params[CUE_FORWARDS_PARAM].getValue() || params[CUE_BACKWARDS_PARAM].getValue();
 	cueForwardStatus = !params[CUE_BACKWARDS_PARAM].getValue();
@@ -275,14 +303,16 @@ void TapeRecorder::process(const ProcessArgs& args) {
 
 	processLoopInput();
 	processTempoOutput(args);
+	processTransportOutput();
 
 	speed = 1.f;
 	
 	processSpeedInput(args);
 	
-	if (!playStatus && !cueStatus) {
+	if ((!playStatus && !cueStatus) || (playStatus && params[PAUSE_PARAM].getValue() && !cueStatus)) {
 		// TODO slew
-		speed = 0.f;
+		// speed = 0.f;
+		speed = wheelMovementSlewLimiter.process(args.sampleTime, wheelMovement);
 		// speed = speedSlewLimiter.process(args.sampleTime, speed);
 	} else if (cueStatus) {
 		speed *= params[CUE_SPEED_PARAM].getValue();
@@ -296,11 +326,17 @@ void TapeRecorder::process(const ProcessArgs& args) {
 		speed *= -1.f;
 	}
 	
+	// if (speed == 0) {
+		// // if (positionLeftWheel != params[WHEEL_LEFT_PARAM].getValue()) {
+			// speed = wheelMovement;
+		// // }
+	// }
+	
 	audioBufferPosition += speed;
 	
 	processSpeedOutput();
 
-	if (audioBufferPosition >= 0) {
+	if (audioBufferPosition >= 0 && audioBufferPosition < sizeAudioBuffer) {
 		tapeStatus = TAPE_MIDDLE;
 		tapePosition = (args.sampleTime * audioBufferPosition * params[TEMPO_PARAM].getValue()) / (60 * params[BEATS_PER_BAR_PARAM].getValue());
 		int newBar = (int) tapePosition;
@@ -313,22 +349,42 @@ void TapeRecorder::process(const ProcessArgs& args) {
 			beatsPulse.trigger();
 		}
 		beat = newBeat;
-		if (params[LOOP_START_BUTTON_PARAM].getValue() == 1.0f) {
-			loopStartPosition = audioBufferPosition;
-		} else {
+		// if (params[LOOP_START_BUTTON_PARAM].getValue() == 1.0f) {
+			// loopStartPosition = audioBufferPosition;
+		// } else {
 			loopStartPosition = (args.sampleRate * loopStart * 60 * params[BEATS_PER_BAR_PARAM].getValue()) / params[TEMPO_PARAM].getValue();
-		}
-		if (params[LOOP_END_BUTTON_PARAM].getValue() == 1.0f) {
-			loopEndPosition = audioBufferPosition;
-		} else {
+		// }
+		// if (params[LOOP_END_BUTTON_PARAM].getValue() == 1.0f) {
+			// loopEndPosition = audioBufferPosition;
+		// } else {
 			loopEndPosition = (args.sampleRate * loopEnd * 60 * params[BEATS_PER_BAR_PARAM].getValue()) / params[TEMPO_PARAM].getValue();
+		// }
+	}
+	if (loopStart < loopEnd) {
+		if (audioBufferPosition <= loopStartPosition && playStatus && !playForwardStatus) {
+			toggleParamValue(PLAY_FORWARDS_PARAM);
+			toggleParamValue(PLAY_BACKWARDS_PARAM);
+		}
+		if (audioBufferPosition > loopEndPosition && playStatus && playForwardStatus) {
+			toggleParamValue(PLAY_FORWARDS_PARAM);
+			toggleParamValue(PLAY_BACKWARDS_PARAM);
+		}
+	} else if (loopStart > loopEnd) {
+		if (audioBufferPosition <= loopEndPosition && playStatus && !playForwardStatus) {
+			toggleParamValue(PLAY_FORWARDS_PARAM);
+			toggleParamValue(PLAY_BACKWARDS_PARAM);
+		}
+		if (audioBufferPosition > loopStartPosition && playStatus && playForwardStatus) {
+			toggleParamValue(PLAY_FORWARDS_PARAM);
+			toggleParamValue(PLAY_BACKWARDS_PARAM);
 		}
 	}
-	if (speed == 0) {
-		if (outputs[AUDIO_OUTPUT].isConnected()) {
-			outputs[AUDIO_OUTPUT].setVoltage(inputs[AUDIO_INPUT].getVoltage());
-		}
-		return;
+	if (audioBufferPosition < 0) {
+		params[PLAY_BACKWARDS_PARAM].setValue(0);
+		params[CUE_BACKWARDS_PARAM].setValue(0);
+	} else if (audioBufferPosition >= sizeAudioBuffer) {
+		params[PLAY_FORWARDS_PARAM].setValue(0);
+		params[CUE_FORWARDS_PARAM].setValue(0);
 	}
 	
 	if (audioBufferPosition < 0) {
@@ -338,10 +394,9 @@ void TapeRecorder::process(const ProcessArgs& args) {
 		}
 		audioBufferPosition = 0.;
 		lastAudioBufferLocation = -1;
-		tapeOnLeftWheel = 0;
-		tapeOnRightWheel = 1;
-		params[WHEEL_LEFT_PARAM].setValue(0);
-		params[WHEEL_RIGHT_PARAM].setValue(0);
+		calcTapeAndPositionsOnWheels();
+		params[WHEEL_LEFT_PARAM].setValue(positionLeftWheel);
+		params[WHEEL_RIGHT_PARAM].setValue(positionRightWheel);
 		speedSlewLimiter.reset();
 		return;
 	}
@@ -352,34 +407,25 @@ void TapeRecorder::process(const ProcessArgs& args) {
 		}
 		audioBufferPosition = sizeAudioBuffer - 1;
 		lastAudioBufferLocation = sizeAudioBuffer;
-		tapeOnLeftWheel = 1;
-		tapeOnRightWheel = 0;
-		params[WHEEL_LEFT_PARAM].setValue(0);
-		params[WHEEL_RIGHT_PARAM].setValue(0);
+		calcTapeAndPositionsOnWheels();
+		params[WHEEL_LEFT_PARAM].setValue(positionLeftWheel);
+		params[WHEEL_RIGHT_PARAM].setValue(positionRightWheel);
 		speedSlewLimiter.reset();
 		return;
 	}
 	int audioBufferLocation = (int) audioBufferPosition;
 	
-	tapeOnLeftWheel = (1.0 - ((pow((1.0 - (audioBufferPosition / sizeAudioBuffer)) * 21.0 + 14.0, 2.0) - 196.0) / 1029.0));
-	tapeOnRightWheel = (1.0 - ((pow((audioBufferPosition / sizeAudioBuffer) * 21.0 + 14.0, 2) - 196.0) / 1029.0));
-	float positionLeftWheel = tapeOnLeftWheel * 120;
-	while (positionLeftWheel > 6) {
-		positionLeftWheel -= 12;
-	}
-	while (positionLeftWheel < -6) {
-		positionLeftWheel += 12;
-	}
-	float positionRightWheel = tapeOnRightWheel * -120;
-	while (positionRightWheel > 6) {
-		positionRightWheel -= 12;
-	}
-	while (positionRightWheel < -6) {
-		positionRightWheel += 12;
-	}
+	calcTapeAndPositionsOnWheels();
 	params[WHEEL_LEFT_PARAM].setValue(positionLeftWheel);
 	params[WHEEL_RIGHT_PARAM].setValue(positionRightWheel);
 	
+	if (speed == 0) {
+		if (outputs[AUDIO_OUTPUT].isConnected()) {
+			outputs[AUDIO_OUTPUT].setVoltage(inputs[AUDIO_INPUT].getVoltage());
+		}
+		return;
+	}
+
 	if (speed > 0) {
 		while (lastAudioBufferLocation < audioBufferLocation) {
 			++lastAudioBufferLocation;
@@ -404,20 +450,20 @@ void TapeRecorder::process(const ProcessArgs& args) {
 	}
 }
 
-float TapeRecorder::valueAtOffset (const float* const inputs, const float offset) noexcept {
-	// see https://en.wikipedia.org/wiki/Centripetal_Catmull–Rom_spline
-	auto y0 = inputs[3];
-	auto y1 = inputs[2];
-	auto y2 = inputs[1];
-	auto y3 = inputs[0];
+// float TapeRecorder::valueAtOffset (const float* const inputs, const float offset) noexcept {
+	// // see https://en.wikipedia.org/wiki/Centripetal_Catmull–Rom_spline
+	// auto y0 = inputs[3];
+	// auto y1 = inputs[2];
+	// auto y2 = inputs[1];
+	// auto y3 = inputs[0];
 
-	auto halfY0 = 0.5f * y0;
-	auto halfY3 = 0.5f * y3;
+	// auto halfY0 = 0.5f * y0;
+	// auto halfY3 = 0.5f * y3;
 
-	return y1 + offset * ((0.5f * y2 - halfY0)
-		+ (offset * (((y0 + 2.0f * y2) - (halfY3 + 2.5f * y1))
-		+ (offset * ((halfY3 + 1.5f * y1) - (halfY0 + 1.5f * y2))))));
-}
+	// return y1 + offset * ((0.5f * y2 - halfY0)
+		// + (offset * (((y0 + 2.0f * y2) - (halfY3 + 2.5f * y1))
+		// + (offset * ((halfY3 + 1.5f * y1) - (halfY0 + 1.5f * y2))))));
+// }
 
 void TapeRecorder::setTrackCount(int trackCount) {
 	if (params[TRACK_COUNT_PARAM].getValue() != trackCount) {
@@ -436,6 +482,6 @@ void TapeRecorder::setTapeLength(int tapeLength) {
 	}
 }
 
-void TapeRecorder::setOldSchoolMode(bool oldSchoolMode) {
-	oldSchoolMode ? params[OLD_SCHOOL_MODE_PARAM].setValue(1) : params[OLD_SCHOOL_MODE_PARAM].setValue(0);
-}
+// void TapeRecorder::setOldSchoolMode(bool oldSchoolMode) {
+	// oldSchoolMode ? params[OLD_SCHOOL_MODE_PARAM].setValue(1) : params[OLD_SCHOOL_MODE_PARAM].setValue(0);
+// }

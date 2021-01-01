@@ -1,13 +1,18 @@
 #include "TapeRecorderWidget.hpp"
 
 const Stripe StripeWidget::STRIPES[] = {
-	{ "res/stripes/1970.svg",    "1970" },
-	{ "res/stripes/Red.svg",     "Red" },
-	{ "res/stripes/Green.svg",   "Green" },
-	{ "res/stripes/Purple.svg",  "Purple" },
-	{ "res/stripes/Brown.svg",   "Brown" },
-	{ "res/stripes/Rainbow.svg", "Rainbow" },
-	{ "res/stripes/Stars.svg",   "Stars" }
+	{ "res/stripes/1970.svg",      "1970" },
+	{ "res/stripes/Red.svg",       "Red" },
+	{ "res/stripes/Green.svg",     "Green" },
+	{ "res/stripes/Purple.svg",    "Purple" },
+	{ "res/stripes/Brown.svg",     "Brown" },
+	{ "res/stripes/Rainbow.svg",   "Rainbow" },
+	{ "res/stripes/Stars.svg",     "Stars" },
+	{ "res/stripes/Snowflake.svg", "Snowflake" },
+	{ "res/stripes/Flowers.svg",   "Flowers" },
+	{ "res/stripes/Tape.svg",      "Tape" },
+	{ "res/stripes/Chip.svg",      "Chip" },
+	{ "res/stripes/Zzz.svg",       "Zzz" }
 };
 
 StripeWidget::StripeWidget(Vec pos) {
@@ -103,62 +108,131 @@ float KnobWheel::calcTouchedWheelForce(float distance, float maxDistance) {
 }
 
 void KnobWheel::onButton(const event::Button& e) {
-	if (module && e.button == GLFW_MOUSE_BUTTON_LEFT && e.action == GLFW_PRESS && module->speed != 0.f) {
-		mousePos = new Vec(e.pos.x, e.pos.y);
-		Vec* center = new Vec(box.size.x * 0.5f, box.size.y * 0.5f);
-		module->touchedWheelForce = calcTouchedWheelForce(distance(mousePos, center), center->x);
-		// glfwSetCursor(APP->window->win, cursorHand);
+	if (module && e.button == GLFW_MOUSE_BUTTON_LEFT && e.action == GLFW_PRESS) {
+		// if (module->speed != 0.f) {
+			mousePos = new Vec(e.pos.x, e.pos.y);
+			Vec* center = new Vec(box.size.x * 0.5f, box.size.y * 0.5f);
+			module->touchedWheelForce = calcTouchedWheelForce(distance(mousePos, center), center->x);
+		// } else {
+			// if (!oldMousePos) {
+				// oldMousePos = mousePos;
+			// }
+			// module->wheelMovement = oldMousePos->y - mousePos->y;
+			// oldMousePos = mousePos;
+		// }
 	}
 	SvgKnob::onButton(e);
 }
 
 void KnobWheel::onDragHover(const event::DragHover& e) {
-	if (module && e.button == GLFW_MOUSE_BUTTON_LEFT && module->speed != 0.f) {
-		mousePos = new Vec(e.pos.x, e.pos.y);
-		Vec* center = new Vec(box.size.x * 0.5f, box.size.y * 0.5f);
-		module->touchedWheelForce = calcTouchedWheelForce(distance(mousePos, center), center->x);
-		// glfwSetCursor(APP->window->win, cursorHand);
+	if (module && e.button == GLFW_MOUSE_BUTTON_LEFT) {
+		// if (module->speed != 0.f) {
+			mousePos = new Vec(e.pos.x, e.pos.y);
+			Vec* center = new Vec(box.size.x * 0.5f, box.size.y * 0.5f);
+			module->touchedWheelForce = calcTouchedWheelForce(distance(mousePos, center), center->x);
+		// } else {
+			// if (!oldMousePos) {
+				// oldMousePos = mousePos;
+			// }
+			// // if (module->touchedWheelForce < 1) {
+				// // module->wheelMovement = distance(mousePos, oldMousePos);
+				// module->wheelMovement = oldMousePos->y - mousePos->y;
+				// oldMousePos = mousePos;
+			// // }
+		// }
 	}
 	SvgKnob::onDragHover(e);
 }
 
 void KnobWheel::onDragStart(const event::DragStart& e) {
-	if (module && e.button == GLFW_MOUSE_BUTTON_LEFT && module->speed != 0.f) {
-		// glfwSetCursor(APP->window->win, cursorHand);
+	if (module && e.button == GLFW_MOUSE_BUTTON_LEFT) {
+		// if (module->speed != 0.f) {
+			// mousePos = new Vec(e.pos.x, e.pos.y);
+			// if (!oldMousePos) {
+				// oldMousePos = mousePos;
+			// }
+			// module->wheelMovement = mousePos->y - oldMousePos->y;
+			// oldMousePos = mousePos;
+		// }
+		// APP->window->cursorLock();
+		module->wheelMovement = 0;
 		return;
 	}
 	SvgKnob::onDragStart(e);
 }
 
 void KnobWheel::onDragEnd(const event::DragEnd& e) {
-	if (module && e.button == GLFW_MOUSE_BUTTON_LEFT && module->speed != 0.f) {
-		module->touchedWheelForce = 1;
-		glfwSetCursor(APP->window->win, NULL);
+	if (module && e.button == GLFW_MOUSE_BUTTON_LEFT) {
+		// if (module->speed != 0.f) {
+			module->touchedWheelForce = 1;
+			glfwSetCursor(APP->window->win, NULL);
+			module->wheelMovement = 0;
+		// } else {
+			// if (oldMousePos && mousePos) {
+				// module->wheelMovement = mousePos->y - oldMousePos->y;
+			// }
+			// oldMousePos = mousePos;
+		// }
+		// APP->window->cursorUnlock();
 		return;
 	}
 	SvgKnob::onDragEnd(e);
 }
 
 void KnobWheel::onDragLeave(const event::DragLeave& e) {
-	if (module && e.button == GLFW_MOUSE_BUTTON_LEFT && module->speed != 0.f) {
-		module->touchedWheelForce = 1;
-		// glfwSetCursor(APP->window->win, NULL);
+	if (module && e.button == GLFW_MOUSE_BUTTON_LEFT) {
+		// if (module->speed != 0.f) {
+			module->touchedWheelForce = 1;
+			module->wheelMovement = 0;
+		// } else {
+
+		// }
 		return;
 	}
 	SvgKnob::onDragLeave(e);
 }
 
 void KnobWheel::onDragMove(const event::DragMove& e) {
-	if (module && e.button == GLFW_MOUSE_BUTTON_LEFT && module->speed != 0.f) {
-		mousePos->x += e.mouseDelta.x / exp2(settings::zoom);
-		mousePos->y += e.mouseDelta.y / exp2(settings::zoom);
-		Vec* center = new Vec(box.size.x * 0.5f, box.size.y * 0.5f);
-		module->touchedWheelForce = calcTouchedWheelForce(distance(mousePos, center), center->x);
-		// glfwSetCursor(APP->window->win, cursorHand);
+	if (module && e.button == GLFW_MOUSE_BUTTON_LEFT) {
+		// if (module->speed != 0.f) {
+			mousePos->x += e.mouseDelta.x / exp2(settings::zoom);
+			mousePos->y += e.mouseDelta.y / exp2(settings::zoom);
+			Vec* center = new Vec(box.size.x * 0.5f, box.size.y * 0.5f);
+			module->touchedWheelForce = calcTouchedWheelForce(distance(mousePos, center), center->x);
+		// } else {
+			if (!oldMousePos) {
+				oldMousePos = mousePos;
+			}
+			// if (module->touchedWheelForce < 1) {
+				// module->wheelMovement = distance(mousePos, oldMousePos);
+				// module->wheelMovement = oldMousePos->y - mousePos->y;
+				oldMousePos = mousePos;
+			// }
+			float delta = e.mouseDelta.y;
+			delta *= -0.024f;
+
+			// Drag slower if mod is held
+			int mods = APP->window->getMods();
+			if ((mods & RACK_MOD_MASK) == RACK_MOD_CTRL) {
+				delta /= 3.f;
+			}
+			// Drag even slower if mod+shift is held
+			if ((mods & RACK_MOD_MASK) == (RACK_MOD_CTRL | GLFW_MOD_SHIFT)) {
+				delta /= 9.f;
+			}			
+			module->wheelMovement = delta;
+		// }
 		return;
 	}
 	SvgKnob::onDragMove(e);
 }
+
+void KnobWheel::onDoubleClick(const event::DoubleClick& e) {
+	// if (module && e.button == GLFW_MOUSE_BUTTON_LEFT) {
+		return;
+	// }
+}
+
 
 // Displays *******************************************************************
 
@@ -170,8 +244,8 @@ TapePositionDisplay::TapePositionDisplay(Rect box, TapeRecorder* tapeRecorder) :
 	loopEnd = 0;
 	loopStartConnected = false;
 	loopEndConnected = false;
-	loopStartOnTapePosition = false;
-	loopEndOnTapePosition = false;
+	// loopStartOnTapePosition = false;
+	// loopEndOnTapePosition = false;
 	playStatus = false;
 	cueStatus = false;
 	playForwardStatus = false;
@@ -180,9 +254,10 @@ TapePositionDisplay::TapePositionDisplay(Rect box, TapeRecorder* tapeRecorder) :
 
 void TapePositionDisplay::drawText(const DrawArgs& disp) {
 	if (tapeRecorder) {
-		loopStartConnected = tapeRecorder->inputs[TapeRecorder::LOOP_INPUT].isConnected();
+		loopStartConnected = tapeRecorder->inputs[TapeRecorder::LOOP_START_INPUT].isConnected();
 		loopStart = tapeRecorder->loopStart;
-		loopEndConnected = (tapeRecorder->inputs[TapeRecorder::LOOP_INPUT].isConnected() && tapeRecorder->inputs[TapeRecorder::LOOP_INPUT].getChannels() > 1);
+		loopEndConnected = tapeRecorder->inputs[TapeRecorder::LOOP_END_INPUT].isConnected();
+		// loopEndConnected = (tapeRecorder->inputs[TapeRecorder::LOOP_INPUT].isConnected() && tapeRecorder->inputs[TapeRecorder::LOOP_INPUT].getChannels() > 1);
 		loopEnd = tapeRecorder->loopEnd;
 		beatsPerBar = tapeRecorder->params[TapeRecorder::BEATS_PER_BAR_PARAM].getValue();
 		tapePosition = tapeRecorder->tapePosition;
@@ -190,8 +265,8 @@ void TapePositionDisplay::drawText(const DrawArgs& disp) {
 		playStatus = tapeRecorder->playStatus;
 		cueForwardStatus = tapeRecorder->cueForwardStatus;
 		cueStatus = tapeRecorder->cueStatus;
-		loopStartOnTapePosition = (tapeRecorder->params[TapeRecorder::LOOP_START_BUTTON_PARAM].getValue() == 1.0f);
-		loopEndOnTapePosition = (tapeRecorder->params[TapeRecorder::LOOP_END_BUTTON_PARAM].getValue() == 1.0f);
+		// loopStartOnTapePosition = (tapeRecorder->params[TapeRecorder::LOOP_START_BUTTON_PARAM].getValue() == 1.0f);
+		// loopEndOnTapePosition = (tapeRecorder->params[TapeRecorder::LOOP_END_BUTTON_PARAM].getValue() == 1.0f);
 	}
 	Vec textPos = Vec(4, 14);
 	nvgFillColor(disp.vg, textColorLight);
@@ -259,9 +334,10 @@ void TapePositionDisplay::drawText(const DrawArgs& disp) {
 	nvgFontSize(disp.vg, 8);
 
 	textPos = Vec(4, 28);
-	if (loopStartOnTapePosition) {
-		nvgFillColor(disp.vg, textColorRed);
-	} else if (loopStartConnected) {
+	// if (loopStartOnTapePosition) {
+		// nvgFillColor(disp.vg, textColorRed);
+	// } else 
+	if (loopStartConnected) {
 		nvgFillColor(disp.vg, textColorDark);
 	} else {
 		nvgFillColor(disp.vg, textColorLight);
@@ -276,9 +352,10 @@ void TapePositionDisplay::drawText(const DrawArgs& disp) {
 	nvgText(disp.vg, textPos.x, textPos.y, text.c_str(), NULL);
 	
 	textPos = Vec(46, 28);
-	if (loopEndOnTapePosition) {
-		nvgFillColor(disp.vg, textColorRed);
-	} else if (loopEndConnected) {
+	// if (loopEndOnTapePosition) {
+		// nvgFillColor(disp.vg, textColorRed);
+	// } else 
+	if (loopEndConnected) {
 		nvgFillColor(disp.vg, textColorDark);
 	} else {
 		nvgFillColor(disp.vg, textColorLight);
@@ -347,6 +424,9 @@ TapeLengthDisplay::TapeLengthDisplay(Rect box, TapeRecorder* tapeRecorder) : Mod
 void TapeLengthDisplay::draw(const DrawArgs& disp) {
 	if (tapeRecorder) {
 		text = TapeRecorder::TAPE_LENGTHS[(int) tapeRecorder->params[TapeRecorder::TAPE_LENGTH_PARAM].getValue()].name;
+	} else {
+		// widget without module
+		text = "MC 1";
 	}
 	drawText(disp, box);
 }
@@ -373,6 +453,9 @@ TrackCountDisplay::TrackCountDisplay(Rect box, TapeRecorder* tapeRecorder) : Mod
 void TrackCountDisplay::draw(const DrawArgs& disp) {
 	if (tapeRecorder) {
 		text = createTrackCountText(tapeRecorder->params[TapeRecorder::TRACK_COUNT_PARAM].getValue());
+	} else {
+		// widget without module
+		text = createTrackCountText(1);
 	}
 	drawText(disp, box);
 }
@@ -407,78 +490,78 @@ void TapeNameMenuItem::onChange(const event::Change& e) {
 	tapeNameDisplay->text = text;
 }
 
-OldSchoolModeMenuItem::OldSchoolModeMenuItem(TapeRecorder* tapeRecorder) : TapeRecorderMenuItem(tapeRecorder) {
-	text = "Old School Mode";
-	if (tapeRecorder) {
-		rightText = CHECKMARK(tapeRecorder->params[TapeRecorder::OLD_SCHOOL_MODE_PARAM].getValue());
-	}
-}
+// OldSchoolModeMenuItem::OldSchoolModeMenuItem(TapeRecorder* tapeRecorder) : TapeRecorderMenuItem(tapeRecorder) {
+	// text = "Old School Mode";
+	// if (tapeRecorder) {
+		// rightText = CHECKMARK(tapeRecorder->params[TapeRecorder::OLD_SCHOOL_MODE_PARAM].getValue());
+	// }
+// }
 
-void OldSchoolModeMenuItem::onAction(const event::Action& e) {
-	if (tapeRecorder) {
-		tapeRecorder->setOldSchoolMode(!tapeRecorder->params[TapeRecorder::OLD_SCHOOL_MODE_PARAM].getValue());
-	}
-}
+// void OldSchoolModeMenuItem::onAction(const event::Action& e) {
+	// if (tapeRecorder) {
+		// tapeRecorder->setOldSchoolMode(!tapeRecorder->params[TapeRecorder::OLD_SCHOOL_MODE_PARAM].getValue());
+	// }
+// }
 
-TrackCountValueItem::TrackCountValueItem(TapeRecorder* tapeRecorder, int trackCount, std::string trackCountText) : TapeRecorderMenuItem(tapeRecorder) {
-	this->trackCount = trackCount;
-	text = trackCountText;
-	rightText = CHECKMARK(tapeRecorder->params[TapeRecorder::TRACK_COUNT_PARAM].getValue() == trackCount);
-}
+// TrackCountValueItem::TrackCountValueItem(TapeRecorder* tapeRecorder, int trackCount, std::string trackCountText) : TapeRecorderMenuItem(tapeRecorder) {
+	// this->trackCount = trackCount;
+	// text = trackCountText;
+	// rightText = CHECKMARK(tapeRecorder->params[TapeRecorder::TRACK_COUNT_PARAM].getValue() == trackCount);
+// }
 
-void TrackCountValueItem::onAction(const event::Action& e) {
-	if (tapeRecorder) {
-		tapeRecorder->setTrackCount(trackCount);
-	}
-}
+// void TrackCountValueItem::onAction(const event::Action& e) {
+	// if (tapeRecorder) {
+		// tapeRecorder->setTrackCount(trackCount);
+	// }
+// }
 
-TrackCountMenuItem::TrackCountMenuItem(TapeRecorder* tapeRecorder) : TapeRecorderMenuItem(tapeRecorder) {
-	text = "Tape Layout";
-	if (tapeRecorder) {
-		rightText = createTrackCountText(tapeRecorder->params[TapeRecorder::TRACK_COUNT_PARAM].getValue()) + " " + RIGHT_ARROW;
-	}
-}
+// TrackCountMenuItem::TrackCountMenuItem(TapeRecorder* tapeRecorder) : TapeRecorderMenuItem(tapeRecorder) {
+	// text = "Tape Layout";
+	// if (tapeRecorder) {
+		// rightText = createTrackCountText(tapeRecorder->params[TapeRecorder::TRACK_COUNT_PARAM].getValue()) + " " + RIGHT_ARROW;
+	// }
+// }
 
-Menu* TrackCountMenuItem::createChildMenu() {
-	Menu* menu = new Menu;
-	for (auto trackCount = 1; trackCount <= 4; ++trackCount) {
-		if (trackCount == 3) {
-			continue;
-		}
-		menu->addChild(new TrackCountValueItem(tapeRecorder, trackCount, createTrackCountText(trackCount)));
-	}
-	return menu;
-}
+// Menu* TrackCountMenuItem::createChildMenu() {
+	// Menu* menu = new Menu;
+	// for (auto trackCount = 1; trackCount <= 4; ++trackCount) {
+		// if (trackCount == 3) {
+			// continue;
+		// }
+		// menu->addChild(new TrackCountValueItem(tapeRecorder, trackCount, createTrackCountText(trackCount)));
+	// }
+	// return menu;
+// }
 
-TapeLengthValueItem::TapeLengthValueItem(TapeRecorder* tapeRecorder, int tapeLength) : TapeRecorderMenuItem(tapeRecorder) {
-	this->tapeRecorder = tapeRecorder;
-	this->tapeLength = tapeLength;
-	text = TapeRecorder::TAPE_LENGTHS[tapeLength].name;
-	if (tapeRecorder) {
-		rightText = CHECKMARK((sizeof(*tapeRecorder->audioBuffer) / sizeof(float)) == TapeRecorder::TAPE_LENGTHS[tapeLength].value);
-	}
-}
+// TapeLengthValueItem::TapeLengthValueItem(TapeRecorder* tapeRecorder, int tapeLength) : TapeRecorderMenuItem(tapeRecorder) {
+	// this->tapeRecorder = tapeRecorder;
+	// this->tapeLength = tapeLength;
+	// text = TapeRecorder::TAPE_LENGTHS[tapeLength].name;
+	// if (tapeRecorder) {
+		// rightText = CHECKMARK((sizeof(*tapeRecorder->audioBuffer) / sizeof(float)) == TapeRecorder::TAPE_LENGTHS[tapeLength].value);
+	// }
+// }
 
-void TapeLengthValueItem::onAction(const event::Action& e) {
-	if (tapeRecorder) {
-		tapeRecorder->setTapeLength(tapeLength);
-	}
-}
+// void TapeLengthValueItem::onAction(const event::Action& e) {
+	// if (tapeRecorder) {
+		// tapeRecorder->setTapeLength(tapeLength);
+	// }
+// }
 
-TapeLengthMenuItem::TapeLengthMenuItem(TapeRecorder* tapeRecorder) : TapeRecorderMenuItem(tapeRecorder) {
-	text = "Tape Length";
-	if (tapeRecorder) {
-		rightText = TapeRecorder::TAPE_LENGTHS[(int) tapeRecorder->params[TapeRecorder::TAPE_LENGTH_PARAM].getValue()].name + " " + RIGHT_ARROW;
-	}
-}
+// TapeLengthMenuItem::TapeLengthMenuItem(TapeRecorder* tapeRecorder) : TapeRecorderMenuItem(tapeRecorder) {
+	// text = "Tape Length";
+	// if (tapeRecorder) {
+		// rightText = TapeRecorder::TAPE_LENGTHS[(int) tapeRecorder->params[TapeRecorder::TAPE_LENGTH_PARAM].getValue()].name + " " + RIGHT_ARROW;
+	// }
+// }
 
-Menu* TapeLengthMenuItem::createChildMenu() {
-	Menu* menu = new Menu;
-	for (auto i = 0; i < TapeRecorder::NUM_TAPE_LENGTHS; ++i) {
-		menu->addChild(new TapeLengthValueItem(tapeRecorder, i));
-	}
-	return menu;
-}
+// Menu* TapeLengthMenuItem::createChildMenu() {
+	// Menu* menu = new Menu;
+	// for (auto i = 0; i < TapeRecorder::NUM_TAPE_LENGTHS; ++i) {
+		// menu->addChild(new TapeLengthValueItem(tapeRecorder, i));
+	// }
+	// return menu;
+// }
 
 TapeStripesValueItem::TapeStripesValueItem(StripeWidget* stripeWidget, int stripe) {
 	this->stripeWidget = stripeWidget;
@@ -558,17 +641,18 @@ TapeRecorderWidget::TapeRecorderWidget(TapeRecorder* module) {
 	cueForwardsSwitch->tapeRecorder = module;
 	addParam(cueForwardsSwitch);
 	
-	addParam(createParam<RoundSwitchRed>(Vec(18, 126), module, TapeRecorder::LOOP_START_BUTTON_PARAM));
-	addParam(createParam<RoundSwitchRed>(Vec(54, 126), module, TapeRecorder::LOOP_END_BUTTON_PARAM));
+	// addParam(createParam<RoundSwitchRed>(Vec(18, 126), module, TapeRecorder::LOOP_START_BUTTON_PARAM));
+	// addParam(createParam<RoundSwitchRed>(Vec(54, 126), module, TapeRecorder::LOOP_END_BUTTON_PARAM));
 	
 	addInput(createInput<InPort>(Vec(84,  62), module, TapeRecorder::SPEED_INPUT));
-	addInput(createInput<InPort>(Vec(94, 122), module, TapeRecorder::LOOP_INPUT));
+	addInput(createInput<InPort>(Vec(94, 122), module, TapeRecorder::LOOP_END_INPUT));
+	addInput(createInput<InPort>(Vec(94, 149), module, TapeRecorder::LOOP_START_INPUT));
 	addInput(createInput<InPort>(Vec(94, 287), module, TapeRecorder::TRANSPORT_INPUT));
 	addInput(createInput<InPort>(Vec( 4, 311), module, TapeRecorder::AUDIO_INPUT));
 
 	addOutput(createOutput<OutPort>(Vec(94,  29), module, TapeRecorder::TEMPO_OUTPUT));
 	addOutput(createOutput<OutPort>(Vec(84,  89), module, TapeRecorder::SPEED_OUTPUT));
-	addOutput(createOutput<OutPort>(Vec(94, 149), module, TapeRecorder::LOOP_OUTPUT));
+	// addOutput(createOutput<OutPort>(Vec(94, 149), module, TapeRecorder::LOOP_OUTPUT));
 	addOutput(createOutput<OutPort>(Vec(94, 314), module, TapeRecorder::TRANSPORT_OUTPUT));
 	addOutput(createOutput<OutPort>(Vec( 4, 338), module, TapeRecorder::AUDIO_OUTPUT));
 

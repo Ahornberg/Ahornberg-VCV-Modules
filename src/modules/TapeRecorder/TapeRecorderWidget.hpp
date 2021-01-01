@@ -8,7 +8,7 @@ struct Stripe {
 
 struct StripeWidget : widget::SvgWidget {
 	const static Stripe STRIPES[];
-	constexpr static int NUM_STRIPES = 7;
+	constexpr static int NUM_STRIPES = 12;
 	
 	int stripe;
 	
@@ -50,6 +50,7 @@ struct PlayForwardsSwitch : TransportSwitch {
 struct KnobWheel : SvgKnob {
 	TapeRecorder* module;
 	Vec* mousePos;
+	Vec* oldMousePos;
 	GLFWcursor* cursorHand;
 	
 	KnobWheel();
@@ -61,6 +62,7 @@ struct KnobWheel : SvgKnob {
 	void onDragEnd(const event::DragEnd& e) override;
 	void onDragLeave(const event::DragLeave& e) override;
 	void onDragMove(const event::DragMove& e) override;
+	void onDoubleClick(const event::DoubleClick& e) override;
 };
 
 struct TapePositionDisplay : Display {
@@ -144,34 +146,34 @@ struct TapeNameMenuItem : TextFieldMenuItem {
 	void onChange(const event::Change& e) override;
 };
 
-struct OldSchoolModeMenuItem : TapeRecorderMenuItem {
-	OldSchoolModeMenuItem(TapeRecorder* tapeRecorder);
-	void onAction(const event::Action& e) override;
-};
+// struct OldSchoolModeMenuItem : TapeRecorderMenuItem {
+	// OldSchoolModeMenuItem(TapeRecorder* tapeRecorder);
+	// void onAction(const event::Action& e) override;
+// };
 
-struct TrackCountValueItem : TapeRecorderMenuItem {
-	int trackCount;
+// struct TrackCountValueItem : TapeRecorderMenuItem {
+	// int trackCount;
 	
-	TrackCountValueItem(TapeRecorder* tapeRecorder, int trackCount, std::string trackCountText);
-	void onAction(const event::Action& e) override;
-};
+	// TrackCountValueItem(TapeRecorder* tapeRecorder, int trackCount, std::string trackCountText);
+	// void onAction(const event::Action& e) override;
+// };
 
-struct TrackCountMenuItem : TapeRecorderMenuItem, TrackCountText {
-	TrackCountMenuItem(TapeRecorder* tapeRecorder);
-	Menu* createChildMenu() override;
-};
+// struct TrackCountMenuItem : TapeRecorderMenuItem, TrackCountText {
+	// TrackCountMenuItem(TapeRecorder* tapeRecorder);
+	// Menu* createChildMenu() override;
+// };
 
-struct TapeLengthValueItem : TapeRecorderMenuItem {
-	int tapeLength;
+// struct TapeLengthValueItem : TapeRecorderMenuItem {
+	// int tapeLength;
 	
-	TapeLengthValueItem(TapeRecorder* tapeRecorder, int tapeLength);
-	void onAction(const event::Action& e) override;
-};
+	// TapeLengthValueItem(TapeRecorder* tapeRecorder, int tapeLength);
+	// void onAction(const event::Action& e) override;
+// };
 
-struct TapeLengthMenuItem : TapeRecorderMenuItem {
-	TapeLengthMenuItem(TapeRecorder* tapeRecorder);
-	Menu* createChildMenu() override;
-};
+// struct TapeLengthMenuItem : TapeRecorderMenuItem {
+	// TapeLengthMenuItem(TapeRecorder* tapeRecorder);
+	// Menu* createChildMenu() override;
+// };
 
 struct TapeStripesValueItem : MenuItem {
 	StripeWidget* stripeWidget;
