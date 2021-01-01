@@ -107,6 +107,10 @@ float KnobWheel::calcTouchedWheelForce(float distance, float maxDistance) {
 	return (maxDistance - distance) / maxDistance;
 }
 
+void KnobWheel::onHover(const event::Hover& e) {
+	return;
+}
+
 void KnobWheel::onButton(const event::Button& e) {
 	if (module && e.button == GLFW_MOUSE_BUTTON_LEFT && e.action == GLFW_PRESS) {
 		// if (module->speed != 0.f) {
@@ -120,6 +124,8 @@ void KnobWheel::onButton(const event::Button& e) {
 			// module->wheelMovement = oldMousePos->y - mousePos->y;
 			// oldMousePos = mousePos;
 		// }
+	} else if (e.button == GLFW_MOUSE_BUTTON_RIGHT && e.action == GLFW_PRESS) {
+		return;
 	}
 	SvgKnob::onButton(e);
 }
@@ -200,13 +206,13 @@ void KnobWheel::onDragMove(const event::DragMove& e) {
 			Vec* center = new Vec(box.size.x * 0.5f, box.size.y * 0.5f);
 			module->touchedWheelForce = calcTouchedWheelForce(distance(mousePos, center), center->x);
 		// } else {
-			if (!oldMousePos) {
-				oldMousePos = mousePos;
-			}
+			// if (!oldMousePos) {
+				// oldMousePos = mousePos;
+			// }
 			// if (module->touchedWheelForce < 1) {
 				// module->wheelMovement = distance(mousePos, oldMousePos);
 				// module->wheelMovement = oldMousePos->y - mousePos->y;
-				oldMousePos = mousePos;
+				// oldMousePos = mousePos;
 			// }
 			float delta = e.mouseDelta.y;
 			delta *= -0.024f;

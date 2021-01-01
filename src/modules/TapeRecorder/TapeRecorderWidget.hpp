@@ -50,12 +50,13 @@ struct PlayForwardsSwitch : TransportSwitch {
 struct KnobWheel : SvgKnob {
 	TapeRecorder* module;
 	Vec* mousePos;
-	Vec* oldMousePos;
+	// Vec* oldMousePos;
 	GLFWcursor* cursorHand;
 	
 	KnobWheel();
 	float distance(Vec* p1, Vec* p2);
 	float calcTouchedWheelForce(float distance, float maxDistance);
+	void onHover(const event::Hover& e) override;
 	void onButton(const event::Button& e) override;
 	void onDragHover(const event::DragHover& e) override;
 	void onDragStart(const event::DragStart& e) override;
