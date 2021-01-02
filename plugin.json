@@ -1,6 +1,6 @@
 {
   "slug": "Ahornberg",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "license": "CC0-1.0",
   "name": "Ahornberg",
   "brand": "Ahornberg",
@@ -21,6 +21,7 @@
 	  "manualUrl": "https://github.com/Ahornberg/Ahornberg-VCV-Modules/blob/master/manuals/README.md#tape-recorder",
       "tags": [ 
 	    "Clock generator",
+		"Polyphonic",
 		"Recording",
 		"Sampler"
 	  ]

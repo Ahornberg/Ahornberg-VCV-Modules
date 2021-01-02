@@ -8,7 +8,7 @@ struct TapeLength {
 struct TapeRecorder : ModuleWithScrews {
 	const static std::string INIT_TAPE_NAME;
 	const static TapeLength TAPE_LENGTHS[];
-	constexpr static int NUM_TAPE_LENGTHS = 9;
+	constexpr static int NUM_TAPE_LENGTHS = 11;
 
 	enum ParamIds {
 		PAUSE_PARAM = NUM_MAX_SCREWS,
@@ -24,11 +24,11 @@ struct TapeRecorder : ModuleWithScrews {
 		LOOP_END_PARAM,
 		// LOOP_START_BUTTON_PARAM,
 		// LOOP_END_BUTTON_PARAM,
+		LOOP_MODE_PARAM,
 		WHEEL_LEFT_PARAM,
 		WHEEL_RIGHT_PARAM,
 		TAPE_LENGTH_PARAM,
 		TRACK_COUNT_PARAM,
-		// OLD_SCHOOL_MODE_PARAM,
 		NUM_PARAMS
 	};
 	enum InputIds {
@@ -57,6 +57,8 @@ struct TapeRecorder : ModuleWithScrews {
 		TAPE_END
 	};
 
+	bool changeTapeInterrupt;
+	bool tapeStoppedAndResetted;
 	int sizeAudioBuffer;
 	float* audioBuffer;
 	double audioBufferPosition;
@@ -74,10 +76,6 @@ struct TapeRecorder : ModuleWithScrews {
 	dsp::BooleanTrigger playBackwardsTrigger;
 	dsp::BooleanTrigger cueForwardsTrigger;
 	dsp::BooleanTrigger cueBackwardsTrigger;
-	bool paramPlayForwards;
-	bool paramPlayBackwards;
-	bool paramCueForwards;
-	bool paramCueBackwards;
 	bool playStatus;
 	bool cueStatus;
 	bool playForwardStatus;
@@ -105,13 +103,16 @@ struct TapeRecorder : ModuleWithScrews {
 	float speed;
 	float touchedWheelForce;
 	float wheelMovement;
+	float tapeLengthInMinutes;
 	
 	bool dataFromJsonCalled;
 	
 	TapeRecorder();
 	~TapeRecorder();
+	void initTape();
 	void eraseTape();
 	void calcTapeAndPositionsOnWheels();
+	float centerWheel(float positionOnWheel);
 	void processTempoOutput(const ProcessArgs& args);
 	void processSpeedInput(const ProcessArgs& args);
 	void processSpeedOutput();
@@ -129,6 +130,5 @@ struct TapeRecorder : ModuleWithScrews {
 	// float valueAtOffset (const float* const inputs, const float offset) noexcept;
 	void setTrackCount(int trackCount);
 	void setTapeLength(int tapeLength);
-	// void setOldSchoolMode(bool oldSchoolMode);
 	void dataFromJson(json_t* root) override;
 };

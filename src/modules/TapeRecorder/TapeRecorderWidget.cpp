@@ -342,15 +342,17 @@ TapeDisplay::TapeDisplay(Rect box, TapeRecorder* tapeRecorder) : ModuleLinkedWid
 	tapeColor = COLOR_BROWN;
 	tapeOnLeftWheel = 0;
 	tapeOnRightWheel = 1;
+	tapeLength = 9;
 }
 
 void TapeDisplay::draw(const DrawArgs& disp) {
 	if (tapeRecorder) {
 		tapeOnLeftWheel = tapeRecorder->tapeOnLeftWheel;
 		tapeOnRightWheel = tapeRecorder->tapeOnRightWheel;
+		tapeLength = tapeRecorder->params[TapeRecorder::TAPE_LENGTH_PARAM].getValue() * 1.3f;
 	}
-	float radiusLeft = (RADIUS_MAX - RADIUS_MIN) * tapeOnLeftWheel + RADIUS_MIN;
-	float radiusRight = (RADIUS_MAX - RADIUS_MIN) * tapeOnRightWheel + RADIUS_MIN;
+	float radiusLeft = (RADIUS_MAX - RADIUS_MIN + tapeLength) * tapeOnLeftWheel + RADIUS_MIN;
+	float radiusRight = (RADIUS_MAX - RADIUS_MIN + tapeLength) * tapeOnRightWheel + RADIUS_MIN;
 	nvgFillColor(disp.vg, tapeColor);
 	nvgScissor(disp.vg, 0, 0, box.size.x, box.size.y);
 	nvgBeginPath(disp.vg);
@@ -454,78 +456,82 @@ void TapeNameMenuItem::onChange(const event::Change& e) {
 	tapeNameDisplay->text = text;
 }
 
-// OldSchoolModeMenuItem::OldSchoolModeMenuItem(TapeRecorder* tapeRecorder) : TapeRecorderMenuItem(tapeRecorder) {
-	// text = "Old School Mode";
-	// if (tapeRecorder) {
-		// rightText = CHECKMARK(tapeRecorder->params[TapeRecorder::OLD_SCHOOL_MODE_PARAM].getValue());
-	// }
-// }
+LoopModeMenuItem::LoopModeMenuItem(TapeRecorder* tapeRecorder) : TapeRecorderMenuItem(tapeRecorder) {
+	text = "Ping-Pong Loop Mode";
+	if (tapeRecorder) {
+		rightText = CHECKMARK(tapeRecorder->params[TapeRecorder::LOOP_MODE_PARAM].getValue());
+	}
+}
 
-// void OldSchoolModeMenuItem::onAction(const event::Action& e) {
-	// if (tapeRecorder) {
-		// tapeRecorder->setOldSchoolMode(!tapeRecorder->params[TapeRecorder::OLD_SCHOOL_MODE_PARAM].getValue());
-	// }
-// }
+void LoopModeMenuItem::onAction(const event::Action& e) {
+	if (tapeRecorder) {
+		if (tapeRecorder->params[TapeRecorder::LOOP_MODE_PARAM].getValue()) {
+			tapeRecorder->params[TapeRecorder::LOOP_MODE_PARAM].setValue(0);
+		} else {
+			tapeRecorder->params[TapeRecorder::LOOP_MODE_PARAM].setValue(1);
+		}
+	}
+}
 
-// TrackCountValueItem::TrackCountValueItem(TapeRecorder* tapeRecorder, int trackCount, std::string trackCountText) : TapeRecorderMenuItem(tapeRecorder) {
-	// this->trackCount = trackCount;
-	// text = trackCountText;
-	// rightText = CHECKMARK(tapeRecorder->params[TapeRecorder::TRACK_COUNT_PARAM].getValue() == trackCount);
-// }
+TrackCountValueItem::TrackCountValueItem(TapeRecorder* tapeRecorder, int trackCount, std::string trackCountText) : TapeRecorderMenuItem(tapeRecorder) {
+	this->trackCount = trackCount;
+	text = trackCountText;
+	rightText = CHECKMARK(tapeRecorder->params[TapeRecorder::TRACK_COUNT_PARAM].getValue() == trackCount);
+}
 
-// void TrackCountValueItem::onAction(const event::Action& e) {
-	// if (tapeRecorder) {
-		// tapeRecorder->setTrackCount(trackCount);
-	// }
-// }
+void TrackCountValueItem::onAction(const event::Action& e) {
+	if (tapeRecorder) {
+		tapeRecorder->setTrackCount(trackCount);
+	}
+}
 
-// TrackCountMenuItem::TrackCountMenuItem(TapeRecorder* tapeRecorder) : TapeRecorderMenuItem(tapeRecorder) {
-	// text = "Tape Layout";
-	// if (tapeRecorder) {
-		// rightText = createTrackCountText(tapeRecorder->params[TapeRecorder::TRACK_COUNT_PARAM].getValue()) + " " + RIGHT_ARROW;
-	// }
-// }
+TrackCountMenuItem::TrackCountMenuItem(TapeRecorder* tapeRecorder) : TapeRecorderMenuItem(tapeRecorder) {
+	text = "Track Count";
+	if (tapeRecorder) {
+		rightText = createTrackCountText(tapeRecorder->params[TapeRecorder::TRACK_COUNT_PARAM].getValue()) + " " + RIGHT_ARROW;
+	}
+}
 
-// Menu* TrackCountMenuItem::createChildMenu() {
-	// Menu* menu = new Menu;
-	// for (auto trackCount = 1; trackCount <= 4; ++trackCount) {
-		// if (trackCount == 3) {
-			// continue;
-		// }
-		// menu->addChild(new TrackCountValueItem(tapeRecorder, trackCount, createTrackCountText(trackCount)));
-	// }
-	// return menu;
-// }
+Menu* TrackCountMenuItem::createChildMenu() {
+	Menu* menu = new Menu;
+	for (auto trackCount = 1; trackCount <= 4; ++trackCount) {
+		if (trackCount == 3) {
+			continue;
+		}
+		menu->addChild(new TrackCountValueItem(tapeRecorder, trackCount, createTrackCountText(trackCount)));
+	}
+	return menu;
+}
 
-// TapeLengthValueItem::TapeLengthValueItem(TapeRecorder* tapeRecorder, int tapeLength) : TapeRecorderMenuItem(tapeRecorder) {
-	// this->tapeRecorder = tapeRecorder;
-	// this->tapeLength = tapeLength;
-	// text = TapeRecorder::TAPE_LENGTHS[tapeLength].name;
-	// if (tapeRecorder) {
-		// rightText = CHECKMARK((sizeof(*tapeRecorder->audioBuffer) / sizeof(float)) == TapeRecorder::TAPE_LENGTHS[tapeLength].value);
-	// }
-// }
+TapeLengthValueItem::TapeLengthValueItem(TapeRecorder* tapeRecorder, int tapeLength) : TapeRecorderMenuItem(tapeRecorder) {
+	this->tapeRecorder = tapeRecorder;
+	this->tapeLength = tapeLength;
+	text = TapeRecorder::TAPE_LENGTHS[tapeLength].name;
+	if (tapeRecorder) {
+		rightText = CHECKMARK(tapeRecorder->params[TapeRecorder::TAPE_LENGTH_PARAM].getValue() == tapeLength);
+	}
+}
 
-// void TapeLengthValueItem::onAction(const event::Action& e) {
-	// if (tapeRecorder) {
-		// tapeRecorder->setTapeLength(tapeLength);
-	// }
-// }
+void TapeLengthValueItem::onAction(const event::Action& e) {
+	if (tapeRecorder) {
+		tapeRecorder->setTapeLength(tapeLength);
+	}
+}
 
-// TapeLengthMenuItem::TapeLengthMenuItem(TapeRecorder* tapeRecorder) : TapeRecorderMenuItem(tapeRecorder) {
-	// text = "Tape Length";
-	// if (tapeRecorder) {
-		// rightText = TapeRecorder::TAPE_LENGTHS[(int) tapeRecorder->params[TapeRecorder::TAPE_LENGTH_PARAM].getValue()].name + " " + RIGHT_ARROW;
-	// }
-// }
+TapeLengthMenuItem::TapeLengthMenuItem(TapeRecorder* tapeRecorder) : TapeRecorderMenuItem(tapeRecorder) {
+	text = "Tape Length";
+	if (tapeRecorder) {
+		rightText = TapeRecorder::TAPE_LENGTHS[(int) tapeRecorder->params[TapeRecorder::TAPE_LENGTH_PARAM].getValue()].name + " " + RIGHT_ARROW;
+	}
+}
 
-// Menu* TapeLengthMenuItem::createChildMenu() {
-	// Menu* menu = new Menu;
-	// for (auto i = 0; i < TapeRecorder::NUM_TAPE_LENGTHS; ++i) {
-		// menu->addChild(new TapeLengthValueItem(tapeRecorder, i));
-	// }
-	// return menu;
-// }
+Menu* TapeLengthMenuItem::createChildMenu() {
+	Menu* menu = new Menu;
+	for (auto i = 0; i < TapeRecorder::NUM_TAPE_LENGTHS; ++i) {
+		menu->addChild(new TapeLengthValueItem(tapeRecorder, i));
+	}
+	return menu;
+}
 
 TapeStripesValueItem::TapeStripesValueItem(StripeWidget* stripeWidget, int stripe) {
 	this->stripeWidget = stripeWidget;
@@ -540,7 +546,7 @@ void TapeStripesValueItem::onAction(const event::Action& e) {
 
 TapeStripesMenuItem::TapeStripesMenuItem(StripeWidget* stripeWidget) {
 	this->stripeWidget = stripeWidget;
-	text = "Tape Color";
+	text = "Cassette Label";
 	rightText = StripeWidget::STRIPES[stripeWidget->stripe].name + " " + RIGHT_ARROW;
 }
 
@@ -553,7 +559,7 @@ Menu* TapeStripesMenuItem::createChildMenu() {
 }
 
 EraseTapeMenuItem::EraseTapeMenuItem(TapeRecorder* tapeRecorder) : TapeRecorderMenuItem(tapeRecorder) {
-	text = "Erase Tape (no undo)";
+	text = "Erase Tape";
 }
 
 void EraseTapeMenuItem::onAction(const event::Action& e) {
@@ -636,10 +642,10 @@ void TapeRecorderWidget::appendContextMenu(Menu* menu) {
 	TapeRecorder* tapeRecorder = dynamic_cast<TapeRecorder*>(this->module);
 	menu->addChild(new MenuEntry);
 	menu->addChild(new TapeNameMenuItem(tapeNameDisplay));
-	// menu->addChild(new OldSchoolModeMenuItem(tapeRecorder));
-	// menu->addChild(new TapeLengthMenuItem(tapeRecorder));
-	// menu->addChild(new TrackCountMenuItem(tapeRecorder));
 	menu->addChild(new TapeStripesMenuItem(stripeWidget));
+	menu->addChild(new LoopModeMenuItem(tapeRecorder));
+	menu->addChild(new TapeLengthMenuItem(tapeRecorder));
+	menu->addChild(new TrackCountMenuItem(tapeRecorder));
 	menu->addChild(new EraseTapeMenuItem(tapeRecorder));
 }
 

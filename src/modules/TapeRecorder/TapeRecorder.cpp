@@ -2,15 +2,17 @@
 
 const std::string TapeRecorder::INIT_TAPE_NAME = "My Magic Tape";
 const TapeLength TapeRecorder::TAPE_LENGTHS[] = {
-	{ 44100 * 60 *  1, "MC 1" },
-	{ 44100 * 60 *  3, "MC 3" },
-	{ 44100 * 60 *  6, "MC 6" },
-	{ 44100 * 60 * 10, "MC 10" },
-	{ 44100 * 60 * 15, "MC 15" },
-	{ 44100 * 60 * 20, "MC 20" },
-	{ 44100 * 60 * 30, "MC 30" },
-	{ 44100 * 60 * 45, "MC 45" },
-	{ 44100 * 60 * 60, "MC 60" }
+	{ 44100 * 60 *   1, "MC 1" },
+	{ 44100 * 60 *   3, "MC 3" },
+	{ 44100 * 60 *   6, "MC 6" },
+	{ 44100 * 60 *  10, "MC 10" },
+	{ 44100 * 60 *  15, "MC 15" },
+	{ 44100 * 60 *  20, "MC 20" },
+	{ 44100 * 60 *  30, "MC 30" },
+	{ 44100 * 60 *  45, "MC 45" },
+	{ 44100 * 60 *  60, "MC 60" },
+	{ 44100 * 60 *  90, "MC 90" },
+	{ 44100 * 60 * 120, "MC 120" }
 };
 
 TapeRecorder::TapeRecorder() { 
@@ -29,13 +31,31 @@ TapeRecorder::TapeRecorder() {
 	configParam(LOOP_END_PARAM,            0,    99,   0, "Loop End on Bar");
 	// configParam(LOOP_START_BUTTON_PARAM,   0,     1,   0, "Loop Start on Tape Position");
 	// configParam(LOOP_END_BUTTON_PARAM,     0,     1,   0, "Loop End on Tape Position");
-	configParam(WHEEL_LEFT_PARAM,        -12.4,  12,   0, "Left Wheel");
-	configParam(WHEEL_RIGHT_PARAM,       -12,    12.1, 0, "Right Wheel");
+	configParam(LOOP_MODE_PARAM,           0,     1,   1, "Loop Mode");
+	configParam(WHEEL_LEFT_PARAM,        -12.4,  11.6, 0, "Left Wheel");
+	configParam(WHEEL_RIGHT_PARAM,       -11.9,  12.1, 0, "Right Wheel");
 	configParam(TAPE_LENGTH_PARAM,         0, NUM_TAPE_LENGTHS - 1, 0, "Tape Length");
 	configParam(TRACK_COUNT_PARAM,         1,    16,   1, "Tape Layout");
-	// configParam(OLD_SCHOOL_MODE_PARAM,     0,     1,   0, "Old School Mode");
+	changeTapeInterrupt = false;
+	tapeStoppedAndResetted = true;
+	initTape();
+}
+
+TapeRecorder::~TapeRecorder() {
+	delete audioBuffer;
+}
+
+void TapeRecorder::initTape() {
+	changeTapeInterrupt = true;
+	// while (!tapeStoppedAndResetted) {
+		
+	// }
+	// init
 	sizeAudioBuffer = TAPE_LENGTHS[(int) params[TAPE_LENGTH_PARAM].getValue()].value;
-	audioBuffer = new float[sizeAudioBuffer];
+	if (audioBuffer) {
+		delete audioBuffer;
+	}
+	audioBuffer = new float[sizeAudioBuffer * (int) params[TRACK_COUNT_PARAM].getValue()];
 	eraseTape();
 	playStatus = false;
 	cueStatus = false;
@@ -45,6 +65,7 @@ TapeRecorder::TapeRecorder() {
 	loopStartPosition = 0;
 	loopEndPosition = 0;
 	tapePosition = 0;
+	tapeLengthInMinutes = sizeAudioBuffer / (44100 * 60);
 	calcTapeAndPositionsOnWheels();
 	params[WHEEL_LEFT_PARAM].setValue(positionLeftWheel);
 	params[WHEEL_RIGHT_PARAM].setValue(positionRightWheel);
@@ -67,14 +88,8 @@ TapeRecorder::TapeRecorder() {
 	cueBackwardsMomentaryInputTrigger.reset();
 	tapeStatus = TAPE_BEGIN;
 	dataFromJsonCalled = false;
-	paramPlayForwards = false;
-	paramPlayBackwards = false;
-	paramCueForwards = false;
-	paramCueBackwards = false;
-}
-
-TapeRecorder::~TapeRecorder() {
-	delete audioBuffer;
+	
+	changeTapeInterrupt = false;
 }
 
 void TapeRecorder::eraseTape() {
@@ -85,21 +100,40 @@ void TapeRecorder::eraseTape() {
 
 void TapeRecorder::calcTapeAndPositionsOnWheels() {
 	tapeOnLeftWheel = (1.0 - ((pow((1.0 - (audioBufferPosition / sizeAudioBuffer)) * 21.0 + 14.0, 2.0) - 196.0) / 1029.0));
-	tapeOnRightWheel = (1.0 - ((pow((audioBufferPosition / sizeAudioBuffer) * 21.0 + 14.0, 2) - 196.0) / 1029.0));
-	positionLeftWheel = tapeOnLeftWheel * 120;
-	while (positionLeftWheel > 6) {
-		positionLeftWheel -= 12;
+	tapeOnRightWheel = (1.0 - ((pow((audioBufferPosition / sizeAudioBuffer) * 21.0 + 14.0, 2.0) - 196.0) / 1029.0));
+	positionLeftWheel = centerWheel(tapeOnLeftWheel * 120 * tapeLengthInMinutes);
+	positionRightWheel = centerWheel(tapeOnRightWheel * -120 * tapeLengthInMinutes);
+	// TODO test somd::fmod
+	// positionLeftWheel = fmod(tapeOnLeftWheel * 120 * tapeLengthInMinutes, 12);
+	// positionRightWheel = fmod(tapeOnRightWheel * -120 * tapeLengthInMinutes, 12);
+}
+
+float TapeRecorder::centerWheel(float positionOnWheel) {
+	while (positionOnWheel > 6000) {
+		positionOnWheel -= 12000;
 	}
-	while (positionLeftWheel < -6) {
-		positionLeftWheel += 12;
+	while (positionOnWheel > 600) {
+		positionOnWheel -= 1200;
 	}
-	positionRightWheel = tapeOnRightWheel * -120;
-	while (positionRightWheel > 6) {
-		positionRightWheel -= 12;
+	while (positionOnWheel > 60) {
+		positionOnWheel -= 120;
 	}
-	while (positionRightWheel < -6) {
-		positionRightWheel += 12;
+	while (positionOnWheel > 6) {
+		positionOnWheel -= 12;
 	}
+	while (positionOnWheel < -6000) {
+		positionOnWheel += 12000;
+	}
+	while (positionOnWheel < -600) {
+		positionOnWheel += 1200;
+	}
+	while (positionOnWheel < -60) {
+		positionOnWheel += 120;
+	}
+	while (positionOnWheel < -6) {
+		positionOnWheel += 12;
+	}
+	return positionOnWheel;
 }
 
 void TapeRecorder::processTempoOutput(const ProcessArgs& args) {
@@ -254,13 +288,17 @@ void TapeRecorder::processAudioOutput(const ProcessArgs& args) {
 // process ****************************************************************
 
 void TapeRecorder::process(const ProcessArgs& args) {
-	// if (dataFromJsonCalled) {
-		// params[PLAY_BACKWARDS_PARAM].setValue(0.);
-		// params[CUE_BACKWARDS_PARAM].setValue(0.);
-		// params[PLAY_FORWARDS_PARAM].setValue(0.);
-		// params[CUE_FORWARDS_PARAM].setValue(0.);
-		// dataFromJsonCalled = false;
-	// }
+	if (changeTapeInterrupt) {
+		params[PLAY_BACKWARDS_PARAM].setValue(0.);
+		params[CUE_BACKWARDS_PARAM].setValue(0.);
+		params[PLAY_FORWARDS_PARAM].setValue(0.);
+		params[CUE_FORWARDS_PARAM].setValue(0.);
+		audioBufferPosition = 0;
+		tapeStoppedAndResetted = true;
+		return;
+	} else {
+		tapeStoppedAndResetted = false;
+	}
 
 	// tape begin/end reached
 	if (audioBufferPosition <= 0) {
@@ -482,23 +520,16 @@ void TapeRecorder::process(const ProcessArgs& args) {
 void TapeRecorder::setTrackCount(int trackCount) {
 	if (params[TRACK_COUNT_PARAM].getValue() != trackCount) {
 		params[TRACK_COUNT_PARAM].setValue(trackCount);
-		// TODO stop tape if needed
-		// panic();
+		initTape();
 	}
 }
 
 void TapeRecorder::setTapeLength(int tapeLength) {
-	if ((sizeof (*audioBuffer) / sizeof (float)) != TAPE_LENGTHS[tapeLength].value) {
+	if (sizeof (*audioBuffer) / sizeof (float) != params[TRACK_COUNT_PARAM].getValue() * TAPE_LENGTHS[tapeLength].value) {
 		params[TAPE_LENGTH_PARAM].setValue(tapeLength);
-		// audioBuffer = trackCount;
-		// TODO stop tape if needed
-		// panic();
+		initTape();
 	}
 }
-
-// void TapeRecorder::setOldSchoolMode(bool oldSchoolMode) {
-	// oldSchoolMode ? params[OLD_SCHOOL_MODE_PARAM].setValue(1) : params[OLD_SCHOOL_MODE_PARAM].setValue(0);
-// }
 
 void TapeRecorder::dataFromJson(json_t* root) {
 	Module::dataFromJson(root);

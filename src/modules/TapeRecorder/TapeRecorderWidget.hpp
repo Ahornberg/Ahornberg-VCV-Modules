@@ -93,11 +93,12 @@ struct ModuleLinkedWidget : SizedTransparentWidget {
 
 struct TapeDisplay : ModuleLinkedWidget {
 	constexpr static int RADIUS_MIN = 21;
-	constexpr static int RADIUS_MAX = 35;
+	constexpr static int RADIUS_MAX = 24;
 
 	NVGcolor tapeColor;
 	double tapeOnLeftWheel;
 	double tapeOnRightWheel;
+	float tapeLength;
 	
 	TapeDisplay(Rect box, TapeRecorder* tapeRecorder);
 	void draw(const DrawArgs& disp) override;
@@ -147,34 +148,34 @@ struct TapeNameMenuItem : TextFieldMenuItem {
 	void onChange(const event::Change& e) override;
 };
 
-// struct OldSchoolModeMenuItem : TapeRecorderMenuItem {
-	// OldSchoolModeMenuItem(TapeRecorder* tapeRecorder);
-	// void onAction(const event::Action& e) override;
-// };
+struct LoopModeMenuItem : TapeRecorderMenuItem {
+	LoopModeMenuItem(TapeRecorder* tapeRecorder);
+	void onAction(const event::Action& e) override;
+};
 
-// struct TrackCountValueItem : TapeRecorderMenuItem {
-	// int trackCount;
+struct TrackCountValueItem : TapeRecorderMenuItem {
+	int trackCount;
 	
-	// TrackCountValueItem(TapeRecorder* tapeRecorder, int trackCount, std::string trackCountText);
-	// void onAction(const event::Action& e) override;
-// };
+	TrackCountValueItem(TapeRecorder* tapeRecorder, int trackCount, std::string trackCountText);
+	void onAction(const event::Action& e) override;
+};
 
-// struct TrackCountMenuItem : TapeRecorderMenuItem, TrackCountText {
-	// TrackCountMenuItem(TapeRecorder* tapeRecorder);
-	// Menu* createChildMenu() override;
-// };
+struct TrackCountMenuItem : TapeRecorderMenuItem, TrackCountText {
+	TrackCountMenuItem(TapeRecorder* tapeRecorder);
+	Menu* createChildMenu() override;
+};
 
-// struct TapeLengthValueItem : TapeRecorderMenuItem {
-	// int tapeLength;
+struct TapeLengthValueItem : TapeRecorderMenuItem {
+	int tapeLength;
 	
-	// TapeLengthValueItem(TapeRecorder* tapeRecorder, int tapeLength);
-	// void onAction(const event::Action& e) override;
-// };
+	TapeLengthValueItem(TapeRecorder* tapeRecorder, int tapeLength);
+	void onAction(const event::Action& e) override;
+};
 
-// struct TapeLengthMenuItem : TapeRecorderMenuItem {
-	// TapeLengthMenuItem(TapeRecorder* tapeRecorder);
-	// Menu* createChildMenu() override;
-// };
+struct TapeLengthMenuItem : TapeRecorderMenuItem {
+	TapeLengthMenuItem(TapeRecorder* tapeRecorder);
+	Menu* createChildMenu() override;
+};
 
 struct TapeStripesValueItem : MenuItem {
 	StripeWidget* stripeWidget;
