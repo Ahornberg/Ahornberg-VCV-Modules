@@ -21,7 +21,6 @@
 	  "manualUrl": "https://github.com/Ahornberg/Ahornberg-VCV-Modules/blob/master/manuals/README.md#tape-recorder",
       "tags": [ 
 	    "Clock generator",
-		"Polyphonic",
 		"Recording",
 		"Sampler"
 	  ]
