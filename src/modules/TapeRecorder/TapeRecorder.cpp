@@ -57,6 +57,7 @@ TapeRecorder::TapeRecorder() {
 	touchedWheelForce = 1;
 	speedSlewLimiter.setRiseFall(params[CUE_SLEW_PARAM].getValue(), 20);
 	wheelMovementSlewLimiter.setRiseFall(40, 40);
+	wheelMovement = 0.f;
 	pauseInputTrigger.reset();
 	playForwardsInputTrigger.reset();
 	playBackwardsInputTrigger.reset();
