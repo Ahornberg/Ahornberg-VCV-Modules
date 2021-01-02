@@ -42,7 +42,7 @@ CueBackwardsSwitch::CueBackwardsSwitch() {
 void CueBackwardsSwitch::onChange(const event::Change& e) {
 	TransportCueSwitch::onChange(e);
 	if (tapeRecorder && tapeRecorder->params[TapeRecorder::CUE_BACKWARDS_PARAM].getValue()) {
-		tapeRecorder->params[TapeRecorder::CUE_FORWARDS_PARAM].setValue(0);
+		tapeRecorder->params[TapeRecorder::CUE_FORWARDS_PARAM].setValue(0.);
 	}
 }
 
@@ -54,7 +54,7 @@ CueForwardsSwitch::CueForwardsSwitch() {
 void CueForwardsSwitch::onChange(const event::Change& e) {
 	TransportCueSwitch::onChange(e);
 	if (tapeRecorder && tapeRecorder->params[TapeRecorder::CUE_FORWARDS_PARAM].getValue()) {
-		tapeRecorder->params[TapeRecorder::CUE_BACKWARDS_PARAM].setValue(0);
+		tapeRecorder->params[TapeRecorder::CUE_BACKWARDS_PARAM].setValue(0.);
 	}
 }
 
@@ -66,7 +66,7 @@ PlayBackwardsSwitch::PlayBackwardsSwitch() {
 void PlayBackwardsSwitch::onChange(const event::Change& e) {
 	TransportSwitch::onChange(e);
 	if (tapeRecorder && tapeRecorder->params[TapeRecorder::PLAY_BACKWARDS_PARAM].getValue()) {
-		tapeRecorder->params[TapeRecorder::PLAY_FORWARDS_PARAM].setValue(0);
+		tapeRecorder->params[TapeRecorder::PLAY_FORWARDS_PARAM].setValue(0.);
 	}
 }
 
@@ -78,7 +78,7 @@ PlayForwardsSwitch::PlayForwardsSwitch() {
 void PlayForwardsSwitch::onChange(const event::Change& e) {
 	TransportSwitch::onChange(e);
 	if (tapeRecorder && tapeRecorder->params[TapeRecorder::PLAY_FORWARDS_PARAM].getValue()) {
-		tapeRecorder->params[TapeRecorder::PLAY_BACKWARDS_PARAM].setValue(0);
+		tapeRecorder->params[TapeRecorder::PLAY_BACKWARDS_PARAM].setValue(0.);
 	}
 }
 
@@ -98,12 +98,20 @@ float KnobWheel::distance(Vec* p1, Vec* p2) {
 	return sqrt(pow(p1->x - p2->x, 2) + pow(p1->y - p2->y, 2));
 }
 
-float KnobWheel::calcTouchedWheelForce(float distance, float maxDistance) {
+float KnobWheel::calcTouchedWheelForce(float distance, float maxDistance, int mods) {
 	if (distance >= maxDistance) {
 		glfwSetCursor(APP->window->win, NULL);
 		return 1;
 	}
 	glfwSetCursor(APP->window->win, cursorHand);
+	// Drag slower if mod is held
+	if ((mods & RACK_MOD_MASK) == RACK_MOD_CTRL) {
+		return (maxDistance - (distance * 1.1f)) / maxDistance;
+	}
+	// Drag even slower if mod+shift is held
+	if ((mods & RACK_MOD_MASK) == (RACK_MOD_CTRL | GLFW_MOD_SHIFT)) {
+		return (maxDistance - (distance * 1.2f)) / maxDistance;
+	}			
 	return (maxDistance - distance) / maxDistance;
 }
 
@@ -115,7 +123,8 @@ void KnobWheel::onButton(const event::Button& e) {
 	if (module && e.button == GLFW_MOUSE_BUTTON_LEFT && e.action == GLFW_PRESS) {
 		mousePos = new Vec(e.pos.x, e.pos.y);
 		Vec* center = new Vec(box.size.x * 0.5f, box.size.y * 0.5f);
-		module->touchedWheelForce = calcTouchedWheelForce(distance(mousePos, center), center->x);
+		int mods = APP->window->getMods();
+		module->touchedWheelForce = calcTouchedWheelForce(distance(mousePos, center), center->x, mods);
 	} else if (e.button == GLFW_MOUSE_BUTTON_RIGHT && e.action == GLFW_PRESS) {
 		// avoid context menu
 		return;
@@ -127,7 +136,8 @@ void KnobWheel::onDragHover(const event::DragHover& e) {
 	if (module && e.button == GLFW_MOUSE_BUTTON_LEFT) {
 		mousePos = new Vec(e.pos.x, e.pos.y);
 		Vec* center = new Vec(box.size.x * 0.5f, box.size.y * 0.5f);
-		module->touchedWheelForce = calcTouchedWheelForce(distance(mousePos, center), center->x);
+		int mods = APP->window->getMods();
+		module->touchedWheelForce = calcTouchedWheelForce(distance(mousePos, center), center->x, mods);
 	}
 	SvgKnob::onDragHover(e);
 }
@@ -164,12 +174,12 @@ void KnobWheel::onDragMove(const event::DragMove& e) {
 		mousePos->x += e.mouseDelta.x / exp2(settings::zoom);
 		mousePos->y += e.mouseDelta.y / exp2(settings::zoom);
 		Vec* center = new Vec(box.size.x * 0.5f, box.size.y * 0.5f);
-		module->touchedWheelForce = calcTouchedWheelForce(distance(mousePos, center), center->x);
+		int mods = APP->window->getMods();
+		module->touchedWheelForce = calcTouchedWheelForce(distance(mousePos, center), center->x, mods);
 		
 		float delta = e.mouseDelta.y;
 		delta *= -0.024f;
 		// Drag slower if mod is held
-		int mods = APP->window->getMods();
 		if ((mods & RACK_MOD_MASK) == RACK_MOD_CTRL) {
 			delta /= 3.f;
 		}

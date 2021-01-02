@@ -74,6 +74,10 @@ struct TapeRecorder : ModuleWithScrews {
 	dsp::BooleanTrigger playBackwardsTrigger;
 	dsp::BooleanTrigger cueForwardsTrigger;
 	dsp::BooleanTrigger cueBackwardsTrigger;
+	bool paramPlayForwards;
+	bool paramPlayBackwards;
+	bool paramCueForwards;
+	bool paramCueBackwards;
 	bool playStatus;
 	bool cueStatus;
 	bool playForwardStatus;
@@ -102,6 +106,8 @@ struct TapeRecorder : ModuleWithScrews {
 	float touchedWheelForce;
 	float wheelMovement;
 	
+	bool dataFromJsonCalled;
+	
 	TapeRecorder();
 	~TapeRecorder();
 	void eraseTape();
@@ -124,4 +130,5 @@ struct TapeRecorder : ModuleWithScrews {
 	void setTrackCount(int trackCount);
 	void setTapeLength(int tapeLength);
 	// void setOldSchoolMode(bool oldSchoolMode);
+	void dataFromJson(json_t* root) override;
 };

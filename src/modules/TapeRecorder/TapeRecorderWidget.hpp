@@ -55,7 +55,7 @@ struct KnobWheel : SvgKnob {
 	
 	KnobWheel();
 	float distance(Vec* p1, Vec* p2);
-	float calcTouchedWheelForce(float distance, float maxDistance);
+	float calcTouchedWheelForce(float distance, float maxDistance, int mods);
 	void onHover(const event::Hover& e) override;
 	void onButton(const event::Button& e) override;
 	void onDragHover(const event::DragHover& e) override;
