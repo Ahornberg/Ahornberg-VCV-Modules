@@ -48,12 +48,20 @@ struct PlayForwardsSwitch : TransportSwitch {
 };
 
 struct KnobWheel : SvgKnob {
+	const static int SMEARED_WHEELS_DISTRIBUTION[];
+	
 	TapeRecorder* module;
 	Vec* mousePos;
 	// Vec* oldMousePos;
 	GLFWcursor* cursorHand;
+	constexpr static int NUM_SMEARED_WHEELS = 32;
+	widget::TransformWidget* smearedWheelsTransform[NUM_SMEARED_WHEELS];
+	widget::SvgWidget* smearedWheelsSvg[NUM_SMEARED_WHEELS];
+	float smearedWheelsAngle[NUM_SMEARED_WHEELS];
+	float lastParamValue;
 	
 	KnobWheel();
+	void setSvgSmeared (std::shared_ptr<Svg> svg);
 	float distance(Vec* p1, Vec* p2);
 	float calcTouchedWheelForce(float distance, float maxDistance, int mods);
 	void onHover(const event::Hover& e) override;
@@ -64,6 +72,8 @@ struct KnobWheel : SvgKnob {
 	void onDragLeave(const event::DragLeave& e) override;
 	void onDragMove(const event::DragMove& e) override;
 	void onDoubleClick(const event::DoubleClick& e) override;
+	void onChange(const event::Change& e) override;
+	// void draw(const DrawArgs& args) override;
 };
 
 struct TapePositionDisplay : Display {

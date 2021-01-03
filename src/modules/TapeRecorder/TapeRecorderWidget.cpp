@@ -83,15 +83,71 @@ void PlayForwardsSwitch::onChange(const event::Change& e) {
 }
 
 // Knobs **********************************************************************
-	
+
+const int KnobWheel::SMEARED_WHEELS_DISTRIBUTION[] = {
+	1,
+	3,
+	5,
+	7,
+	9,
+	11,
+	13,
+	15,
+	17,
+	19,
+	21,
+	23,
+	25,
+	27,
+	29,
+	31,
+	30,
+	28,
+	26,
+	24,
+	22,
+	20,
+	18,
+	16,
+	14,
+	12,
+	10,
+	6,
+	8,
+	4,
+	2,
+	0
+};
+
 KnobWheel::KnobWheel() {
-	setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/knobs/Wheel.svg")));
+	for (auto i = 0; i < NUM_SMEARED_WHEELS; ++i) {
+		smearedWheelsTransform[i] = new widget::TransformWidget;
+		fb->addChild(smearedWheelsTransform[i]);
+		smearedWheelsSvg[i] = new widget::SvgWidget;
+		smearedWheelsTransform[i]->addChild(smearedWheelsSvg[i]);
+	}
+	setSvgSmeared(APP->window->loadSvg(asset::plugin(pluginInstance, "res/knobs/Wheel.svg")));
 	minAngle = -6.f * M_PI;
 	maxAngle = 6.f * M_PI;
 	shadow->opacity = 0.f;
 	shadow->box.pos = Vec(0, 0);
 	speed = 0.1f;
 	cursorHand = glfwCreateStandardCursor(GLFW_HAND_CURSOR);
+	lastParamValue = 0;
+}
+
+void KnobWheel::setSvgSmeared (std::shared_ptr<Svg> svg) {
+	for (auto i = 0; i < NUM_SMEARED_WHEELS; ++i) {
+		smearedWheelsSvg[i]->setSvg(svg);
+		smearedWheelsTransform[i]->box.size = smearedWheelsSvg[i]->box.size;
+	}
+	tw->box.size = smearedWheelsSvg[0]->box.size;
+	fb->box.size = smearedWheelsSvg[0]->box.size;
+	box.size = smearedWheelsSvg[0]->box.size;
+	shadow->box.size = smearedWheelsSvg[0]->box.size;
+	// Move shadow downward by 10%
+	shadow->box.pos = math::Vec(0, smearedWheelsSvg[0]->box.size.y * 0.10);
+	// shadow->box = shadow->box.grow(math::Vec(2, 2));
 }
 
 float KnobWheel::distance(Vec* p1, Vec* p2) {
@@ -196,6 +252,54 @@ void KnobWheel::onDragMove(const event::DragMove& e) {
 void KnobWheel::onDoubleClick(const event::DoubleClick& e) {
 	// avoid double click
 }
+
+void KnobWheel::onChange(const event::Change& e) {
+	// Re-transform the widget::TransformWidget
+	float clampValue = 1 / (9.f * NUM_SMEARED_WHEELS);
+	if (paramQuantity && module) {
+		float diff;
+		float paramValue;
+		if (paramQuantity->isBounded()) {
+			paramValue = paramQuantity->getScaledValue();
+		} else {
+			paramValue = paramQuantity->getValue();
+		}
+		if (lastParamValue - paramValue > 12) {
+			lastParamValue += 12;
+		} else if (lastParamValue - paramValue < -12) {
+			lastParamValue -= 12;
+		}
+		diff = clamp(pow(module->tapeSpeed, 27) / 1000000000000000.f, clampValue * -1.f, clampValue);
+		// diff = 0;//clamp((lastParamValue - paramValue) / NUM_SMEARED_WHEELS, -0.005f, 0.005f);
+		// diff = (lastParamValue - paramValue) / NUM_SMEARED_WHEELS;
+		for (auto i = 0; i < NUM_SMEARED_WHEELS; ++i) {
+			// smearedWheelsAngle[i] = std::fmod(math::rescale(paramValue - diff * (float) i, -1.f, 1.f, minAngle, maxAngle), 2 * M_PI);
+			smearedWheelsAngle[i] = std::fmod(math::rescale(paramValue - diff * SMEARED_WHEELS_DISTRIBUTION[i], -1.f, 1.f, minAngle, maxAngle), 2 * M_PI);
+			// smearedWheelsAngle[i] = std::fmod(math::rescale(paramValue - diff * (rand() % NUM_SMEARED_WHEELS), -1.f, 1.f, minAngle, maxAngle), 2 * M_PI);
+			smearedWheelsTransform[i]->identity();
+			// Rotate SVG
+			math::Vec center = smearedWheelsSvg[i]->box.getCenter();
+			smearedWheelsTransform[i]->translate(center);
+			smearedWheelsTransform[i]->rotate(smearedWheelsAngle[i]);
+			smearedWheelsTransform[i]->translate(center.neg());
+		}
+		lastParamValue = paramValue;
+		fb->dirty = true;
+	}
+	Knob::onChange(e);
+}
+
+// void KnobWheel::draw(const DrawArgs& args) {
+	// tw->identity();
+	// // Rotate SVG
+	// math::Vec center = sw->box.getCenter();
+	// tw->translate(center);
+	// for (auto i = 0; i < NUM_SMEARED_WHEELS; ++i) {
+		// tw->rotate(smearedWheelsAngle[i]);
+		// Widget::draw(args);
+	// }
+	// tw->translate(center.neg());
+// }
 
 
 // Displays *******************************************************************

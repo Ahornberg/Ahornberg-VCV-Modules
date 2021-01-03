@@ -99,8 +99,9 @@ struct TapeRecorder : ModuleWithScrews {
 	dsp::SchmittTrigger cueBackwardsInputTrigger;
 	dsp::SchmittTrigger cueForwardsMomentaryInputTrigger;
 	dsp::SchmittTrigger cueBackwardsMomentaryInputTrigger;
+	dsp::ClockDivider displayDivider;
 	
-	float speed;
+	float tapeSpeed;
 	float touchedWheelForce;
 	float wheelMovement;
 	float tapeLengthInMinutes;
@@ -111,8 +112,8 @@ struct TapeRecorder : ModuleWithScrews {
 	~TapeRecorder();
 	void initTape();
 	void eraseTape();
-	void calcTapeAndPositionsOnWheels();
-	float centerWheel(float positionOnWheel);
+	void calcTapeAndPositionsOnWheels(bool always);
+	// float centerWheel(float positionOnWheel);
 	void processTempoOutput(const ProcessArgs& args);
 	void processSpeedInput(const ProcessArgs& args);
 	void processSpeedOutput();

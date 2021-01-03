@@ -36,8 +36,10 @@ TapeRecorder::TapeRecorder() {
 	configParam(WHEEL_RIGHT_PARAM,       -11.9,  12.1, 0, "Right Wheel");
 	configParam(TAPE_LENGTH_PARAM,         0, NUM_TAPE_LENGTHS - 1, 0, "Tape Length");
 	configParam(TRACK_COUNT_PARAM,         1,    16,   1, "Tape Layout");
+	displayDivider.setDivision(256);
 	changeTapeInterrupt = false;
 	tapeStoppedAndResetted = true;
+	audioBuffer = nullptr;
 	initTape();
 }
 
@@ -66,7 +68,8 @@ void TapeRecorder::initTape() {
 	loopEndPosition = 0;
 	tapePosition = 0;
 	tapeLengthInMinutes = sizeAudioBuffer / (44100 * 60);
-	calcTapeAndPositionsOnWheels();
+	displayDivider.reset();
+	calcTapeAndPositionsOnWheels(true);
 	params[WHEEL_LEFT_PARAM].setValue(positionLeftWheel);
 	params[WHEEL_RIGHT_PARAM].setValue(positionRightWheel);
 	lastAudioBufferLocation = -1;
@@ -74,7 +77,7 @@ void TapeRecorder::initTape() {
 	bar = 0;
 	barsPulse.reset();
 	beatsPulse.reset();
-	speed = 0;
+	tapeSpeed = 0;
 	touchedWheelForce = 1;
 	speedSlewLimiter.setRiseFall(params[CUE_SLEW_PARAM].getValue(), 20);
 	wheelMovementSlewLimiter.setRiseFall(40, 40);
@@ -98,43 +101,44 @@ void TapeRecorder::eraseTape() {
 	}
 }
 
-void TapeRecorder::calcTapeAndPositionsOnWheels() {
-	tapeOnLeftWheel = (1.0 - ((pow((1.0 - (audioBufferPosition / sizeAudioBuffer)) * 21.0 + 14.0, 2.0) - 196.0) / 1029.0));
-	tapeOnRightWheel = (1.0 - ((pow((audioBufferPosition / sizeAudioBuffer) * 21.0 + 14.0, 2.0) - 196.0) / 1029.0));
-	positionLeftWheel = centerWheel(tapeOnLeftWheel * 120 * tapeLengthInMinutes);
-	positionRightWheel = centerWheel(tapeOnRightWheel * -120 * tapeLengthInMinutes);
-	// TODO test somd::fmod
-	// positionLeftWheel = fmod(tapeOnLeftWheel * 120 * tapeLengthInMinutes, 12);
-	// positionRightWheel = fmod(tapeOnRightWheel * -120 * tapeLengthInMinutes, 12);
+void TapeRecorder::calcTapeAndPositionsOnWheels(bool always) {
+	if (displayDivider.process() || always) {
+		tapeOnLeftWheel = (1.0 - ((pow((1.0 - (audioBufferPosition / sizeAudioBuffer)) * 21.0 + 14.0, 2.0) - 196.0) / 1029.0));
+		tapeOnRightWheel = (1.0 - ((pow((audioBufferPosition / sizeAudioBuffer) * 21.0 + 14.0, 2.0) - 196.0) / 1029.0));
+		positionLeftWheel = fmod(tapeOnLeftWheel * 120 * tapeLengthInMinutes, 6) * 4;
+		positionRightWheel = fmod(tapeOnRightWheel * -120 * tapeLengthInMinutes, 6) * 4;
+		// positionLeftWheel = centerWheel(tapeOnLeftWheel * 120 * tapeLengthInMinutes);
+		// positionRightWheel = centerWheel(tapeOnRightWheel * -120 * tapeLengthInMinutes);
+	}
 }
 
-float TapeRecorder::centerWheel(float positionOnWheel) {
-	while (positionOnWheel > 6000) {
-		positionOnWheel -= 12000;
-	}
-	while (positionOnWheel > 600) {
-		positionOnWheel -= 1200;
-	}
-	while (positionOnWheel > 60) {
-		positionOnWheel -= 120;
-	}
-	while (positionOnWheel > 6) {
-		positionOnWheel -= 12;
-	}
-	while (positionOnWheel < -6000) {
-		positionOnWheel += 12000;
-	}
-	while (positionOnWheel < -600) {
-		positionOnWheel += 1200;
-	}
-	while (positionOnWheel < -60) {
-		positionOnWheel += 120;
-	}
-	while (positionOnWheel < -6) {
-		positionOnWheel += 12;
-	}
-	return positionOnWheel;
-}
+// float TapeRecorder::centerWheel(float positionOnWheel) {
+	// while (positionOnWheel > 6000) {
+		// positionOnWheel -= 12000;
+	// }
+	// while (positionOnWheel > 600) {
+		// positionOnWheel -= 1200;
+	// }
+	// while (positionOnWheel > 60) {
+		// positionOnWheel -= 120;
+	// }
+	// while (positionOnWheel > 6) {
+		// positionOnWheel -= 12;
+	// }
+	// while (positionOnWheel < -6000) {
+		// positionOnWheel += 12000;
+	// }
+	// while (positionOnWheel < -600) {
+		// positionOnWheel += 1200;
+	// }
+	// while (positionOnWheel < -60) {
+		// positionOnWheel += 120;
+	// }
+	// while (positionOnWheel < -6) {
+		// positionOnWheel += 12;
+	// }
+	// return positionOnWheel;
+// }
 
 void TapeRecorder::processTempoOutput(const ProcessArgs& args) {
 	if (outputs[TEMPO_OUTPUT].isConnected() && playStatus) {
@@ -151,18 +155,18 @@ void TapeRecorder::processTempoOutput(const ProcessArgs& args) {
 
 void TapeRecorder::processSpeedInput(const ProcessArgs& args) {
 	if (inputs[SPEED_INPUT].isConnected()) {
-		speed *= exp2(inputs[SPEED_INPUT].getVoltage());
+		tapeSpeed *= exp2(inputs[SPEED_INPUT].getVoltage());
 	}
-	speed *= touchedWheelForce;
+	tapeSpeed *= touchedWheelForce;
 	speedSlewLimiter.setRiseFall(params[CUE_SLEW_PARAM].getValue(), 20);
-	speed = speedSlewLimiter.process(args.sampleTime, speed);
+	// tapeSpeed = speedSlewLimiter.process(args.sampleTime, tapeSpeed);
 }
 
 void TapeRecorder::processSpeedOutput() {
-	if (speed > 0) {
-		outputs[SPEED_OUTPUT].setVoltage(log2(speed));
-	} else if (speed < 0) {
-		outputs[SPEED_OUTPUT].setVoltage(log2(speed * -1.f));
+	if (tapeSpeed > 0) {
+		outputs[SPEED_OUTPUT].setVoltage(log2(tapeSpeed));
+	} else if (tapeSpeed < 0) {
+		outputs[SPEED_OUTPUT].setVoltage(log2(tapeSpeed * -1.f));
 	} else {
 		outputs[SPEED_OUTPUT].setVoltage(0);
 	}
@@ -357,34 +361,34 @@ void TapeRecorder::process(const ProcessArgs& args) {
 	processTempoOutput(args);
 	processTransportOutput();
 
-	speed = 1.f;
+	tapeSpeed = args.sampleTime * args.sampleRate;//1.f;
 	
 	processSpeedInput(args);
 	
 	if ((!playStatus && !cueStatus) || (playStatus && params[PAUSE_PARAM].getValue() && !cueStatus)) {
 		// TODO slew
-		// speed = 0.f;
-		speed = wheelMovementSlewLimiter.process(args.sampleTime, wheelMovement);
-		// speed = speedSlewLimiter.process(args.sampleTime, speed);
+		// tapeSpeed = 0.f;
+		tapeSpeed = wheelMovementSlewLimiter.process(args.sampleTime, wheelMovement);
+		// tapeSpeed = speedSlewLimiter.process(args.sampleTime, tapeSpeed);
 	} else if (cueStatus) {
-		speed *= params[CUE_SPEED_PARAM].getValue();
-		// speed = speedSlewLimiter.process(args.sampleTime, speed);
+		tapeSpeed *= params[CUE_SPEED_PARAM].getValue();
+		// tapeSpeed = speedSlewLimiter.process(args.sampleTime, tapeSpeed);
 		if (!cueForwardStatus) {
 			// TODO slew
-			speed *= -1.f;
+			tapeSpeed *= -1.f;
 		}
 	} else if (!playForwardStatus) {
 		// TODO slew
-		speed *= -1.f;
+		tapeSpeed *= -1.f;
 	}
 	
-	// if (speed == 0) {
+	// if (tapeSpeed == 0) {
 		// // if (positionLeftWheel != params[WHEEL_LEFT_PARAM].getValue()) {
-			// speed = wheelMovement;
+			// tapeSpeed = wheelMovement;
 		// // }
 	// }
 	
-	audioBufferPosition += speed;
+	audioBufferPosition += tapeSpeed;
 	
 	processSpeedOutput();
 
@@ -446,7 +450,7 @@ void TapeRecorder::process(const ProcessArgs& args) {
 		}
 		audioBufferPosition = 0.;
 		lastAudioBufferLocation = -1;
-		calcTapeAndPositionsOnWheels();
+		calcTapeAndPositionsOnWheels(false);
 		params[WHEEL_LEFT_PARAM].setValue(positionLeftWheel);
 		params[WHEEL_RIGHT_PARAM].setValue(positionRightWheel);
 		speedSlewLimiter.reset();
@@ -459,7 +463,7 @@ void TapeRecorder::process(const ProcessArgs& args) {
 		}
 		audioBufferPosition = sizeAudioBuffer - 1;
 		lastAudioBufferLocation = sizeAudioBuffer;
-		calcTapeAndPositionsOnWheels();
+		calcTapeAndPositionsOnWheels(false);
 		params[WHEEL_LEFT_PARAM].setValue(positionLeftWheel);
 		params[WHEEL_RIGHT_PARAM].setValue(positionRightWheel);
 		speedSlewLimiter.reset();
@@ -467,18 +471,18 @@ void TapeRecorder::process(const ProcessArgs& args) {
 	}
 	int audioBufferLocation = (int) audioBufferPosition;
 	
-	calcTapeAndPositionsOnWheels();
+	calcTapeAndPositionsOnWheels(false);
 	params[WHEEL_LEFT_PARAM].setValue(positionLeftWheel);
 	params[WHEEL_RIGHT_PARAM].setValue(positionRightWheel);
 	
-	if (speed == 0) {
+	if (tapeSpeed == 0) {
 		if (outputs[AUDIO_OUTPUT].isConnected()) {
 			outputs[AUDIO_OUTPUT].setVoltage(inputs[AUDIO_INPUT].getVoltage());
 		}
 		return;
 	}
 
-	if (speed > 0) {
+	if (tapeSpeed > 0) {
 		while (lastAudioBufferLocation < audioBufferLocation) {
 			++lastAudioBufferLocation;
 			if (playStatus) {
