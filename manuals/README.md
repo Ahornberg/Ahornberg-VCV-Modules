@@ -2,9 +2,27 @@
 
 ## Tape Recorder
 
-An emulation of a [Microcassette](https://en.wikipedia.org/wiki/Microcassette).
+An emulation of a [Microcassette](https://en.wikipedia.org/wiki/Microcassette) recorder.
 
 ![Tape Recorder](TapeRecorder.png)
+### Transport
+There are buttons for play (both directions) and fast forward/rewind.
+#### Record is always on!
+As long as one of the play buttons is on, the machine will record incoming audio to the tape.
+#### Scratching
+For scratching the reels, the play and pause buttons have to be on.
+#### Transport Input
+An impulse toggles the pause button.
+#### Transport Output
+Play forward gives 5 Volts, play backwards gives -5 Volts.
+### Tape Speed
+The speed of the playing tape can be changed in a musical way by providing CV-Pitch (1 V/Octave) input and output.
+### Loop Mode
+The tempo settings (BPM and Beats/Bar) provide the basic time measurements for the loop settings.
+#### Loop On/Off
+As long as loop start and loop end show the same value, loop mode is turned off.
+#### Loop inputs
+Loop start and loop end points can be changed by providing a CV signal (1/12 Volts per Bar). This signal will be added to the corresponding knob value.
 
 ## Equal Division
 

@@ -2,9 +2,9 @@
 
 ## Manuals
 
+[![Tape Recorder](manuals/TapeRecorder.png)](manuals/README.md#tape-recorder)
 [![EqualDivision](manuals/EqualDivision.png)](manuals/README.md#equal-division)
 [![CV-Frequency Shift](manuals/CVFreqShift.png)](manuals/README.md#cv-frequency-shift)
-[![Tape Recorder](manuals/TapeRecorder.png)](manuals/README.md#tape-recorder)
 [![Metronome](manuals/Metronome.png)](manuals/README.md#metronome)
 [![Harmonizer](manuals/Harmonizer.png)](manuals/README.md#harmonizer)
 
