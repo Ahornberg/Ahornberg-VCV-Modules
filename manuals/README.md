@@ -1,5 +1,11 @@
 # Manuals for Ahornberg-VCV-Modules
 
+## Tape Recorder
+
+An emulation of a [Microcassette](https://en.wikipedia.org/wiki/Microcassette).
+
+![Tape Recorder](TapeRecorder.png)
+
 ## Equal Division
 
 Module for VCV-Rack to convert Note CV in Standard Western Tuning (12ed2 = 1 step equals 100 cents) to several Equal Division Tunings.
@@ -65,12 +71,6 @@ How to use it:
 
 ### 9 x Note In/Out
 Nine vertically orientated pairs of Note CV inputs and outputs provide the ability to tune 9 x 16 = 144 different signals simultaneously using only one module.
-
-## Tape Recorder
-
-![Tape Recorder](TapeRecorder.png)
-
-Coming soon.
 
 ## Metronome
 
