@@ -105,8 +105,8 @@ void TapeRecorder::calcTapeAndPositionsOnWheels(bool always) {
 	if (displayDivider.process() || always) {
 		tapeOnLeftWheel = (1.0 - ((pow((1.0 - (audioBufferPosition / sizeAudioBuffer)) * 21.0 + 14.0, 2.0) - 196.0) / 1029.0));
 		tapeOnRightWheel = (1.0 - ((pow((audioBufferPosition / sizeAudioBuffer) * 21.0 + 14.0, 2.0) - 196.0) / 1029.0));
-		positionLeftWheel = fmod(tapeOnLeftWheel * 120 * tapeLengthInMinutes, 6) * 4;
-		positionRightWheel = fmod(tapeOnRightWheel * -120 * tapeLengthInMinutes, 6) * 4;
+		positionLeftWheel = fmod(tapeOnLeftWheel * 120 * 4 * tapeLengthInMinutes, 12);
+		positionRightWheel = fmod(tapeOnRightWheel * -120 * 4 * tapeLengthInMinutes, 12);
 		// positionLeftWheel = centerWheel(tapeOnLeftWheel * 120 * tapeLengthInMinutes);
 		// positionRightWheel = centerWheel(tapeOnRightWheel * -120 * tapeLengthInMinutes);
 	}

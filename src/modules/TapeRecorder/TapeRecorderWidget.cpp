@@ -133,7 +133,6 @@ KnobWheel::KnobWheel() {
 	shadow->box.pos = Vec(0, 0);
 	speed = 0.1f;
 	cursorHand = glfwCreateStandardCursor(GLFW_HAND_CURSOR);
-	lastParamValue = 0;
 }
 
 void KnobWheel::setSvgSmeared (std::shared_ptr<Svg> svg) {
@@ -256,26 +255,25 @@ void KnobWheel::onDoubleClick(const event::DoubleClick& e) {
 void KnobWheel::onChange(const event::Change& e) {
 	// Re-transform the widget::TransformWidget
 	float clampValue = 1 / (9.f * NUM_SMEARED_WHEELS);
+	float frameRate = APP->window->getLastFrameRate();
 	if (paramQuantity && module) {
 		float diff;
 		float paramValue;
+		float radius;
+		float tapeLength = module->params[TapeRecorder::TAPE_LENGTH_PARAM].getValue() * 1.3f;
 		if (paramQuantity->isBounded()) {
 			paramValue = paramQuantity->getScaledValue();
 		} else {
 			paramValue = paramQuantity->getValue();
 		}
-		if (lastParamValue - paramValue > 12) {
-			lastParamValue += 12;
-		} else if (lastParamValue - paramValue < -12) {
-			lastParamValue -= 12;
+		if (paramId == TapeRecorder::WHEEL_LEFT_PARAM) {
+			radius = (TapeDisplay::RADIUS_MAX - TapeDisplay::RADIUS_MIN + tapeLength) * module->tapeOnLeftWheel + TapeDisplay::RADIUS_MIN;
+		} else {
+			radius = (TapeDisplay::RADIUS_MAX - TapeDisplay::RADIUS_MIN + tapeLength) * module->tapeOnRightWheel + TapeDisplay::RADIUS_MIN;
 		}
-		diff = clamp(pow(module->tapeSpeed, 27) / 1000000000000000.f, clampValue * -1.f, clampValue);
-		// diff = 0;//clamp((lastParamValue - paramValue) / NUM_SMEARED_WHEELS, -0.005f, 0.005f);
-		// diff = (lastParamValue - paramValue) / NUM_SMEARED_WHEELS;
+		diff = clamp(pow(module->tapeSpeed * TapeDisplay::RADIUS_MAX / radius, 27) / 1000000000000000.f, clampValue * -1.f, clampValue);
 		for (auto i = 0; i < NUM_SMEARED_WHEELS; ++i) {
-			// smearedWheelsAngle[i] = std::fmod(math::rescale(paramValue - diff * (float) i, -1.f, 1.f, minAngle, maxAngle), 2 * M_PI);
 			smearedWheelsAngle[i] = std::fmod(math::rescale(paramValue - diff * SMEARED_WHEELS_DISTRIBUTION[i], -1.f, 1.f, minAngle, maxAngle), 2 * M_PI);
-			// smearedWheelsAngle[i] = std::fmod(math::rescale(paramValue - diff * (rand() % NUM_SMEARED_WHEELS), -1.f, 1.f, minAngle, maxAngle), 2 * M_PI);
 			smearedWheelsTransform[i]->identity();
 			// Rotate SVG
 			math::Vec center = smearedWheelsSvg[i]->box.getCenter();
@@ -283,7 +281,6 @@ void KnobWheel::onChange(const event::Change& e) {
 			smearedWheelsTransform[i]->rotate(smearedWheelsAngle[i]);
 			smearedWheelsTransform[i]->translate(center.neg());
 		}
-		lastParamValue = paramValue;
 		fb->dirty = true;
 	}
 	Knob::onChange(e);
@@ -689,12 +686,12 @@ TapeRecorderWidget::TapeRecorderWidget(TapeRecorder* module) {
 	
 	KnobWheel* rightWheel = createParam<KnobWheel>(Vec(32, 178), module, TapeRecorder::WHEEL_RIGHT_PARAM);
 	rightWheel->module = module;
-	// rightWheel->paramId = TapeRecorder::WHEEL_RIGHT_PARAM;
+	rightWheel->paramId = TapeRecorder::WHEEL_RIGHT_PARAM;
 	addParam(rightWheel);
 	
 	KnobWheel* leftWheel = createParam<KnobWheel>(Vec(32, 244), module, TapeRecorder::WHEEL_LEFT_PARAM);
 	leftWheel->module = module;
-	// leftWheel->paramId = TapeRecorder::WHEEL_LEFT_PARAM;
+	leftWheel->paramId = TapeRecorder::WHEEL_LEFT_PARAM;
 	addParam(leftWheel);
 	
 	CueBackwardsSwitch* cueBackwardsSwitch = dynamic_cast<CueBackwardsSwitch*>(createParam<CueBackwardsSwitch>(Vec(94, 179.5), module, TapeRecorder::CUE_BACKWARDS_PARAM));

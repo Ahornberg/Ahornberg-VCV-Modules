@@ -51,6 +51,7 @@ struct KnobWheel : SvgKnob {
 	const static int SMEARED_WHEELS_DISTRIBUTION[];
 	
 	TapeRecorder* module;
+	int paramId;
 	Vec* mousePos;
 	// Vec* oldMousePos;
 	GLFWcursor* cursorHand;
@@ -58,7 +59,6 @@ struct KnobWheel : SvgKnob {
 	widget::TransformWidget* smearedWheelsTransform[NUM_SMEARED_WHEELS];
 	widget::SvgWidget* smearedWheelsSvg[NUM_SMEARED_WHEELS];
 	float smearedWheelsAngle[NUM_SMEARED_WHEELS];
-	float lastParamValue;
 	
 	KnobWheel();
 	void setSvgSmeared (std::shared_ptr<Svg> svg);
