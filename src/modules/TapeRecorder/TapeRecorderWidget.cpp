@@ -272,6 +272,7 @@ void KnobWheel::onChange(const event::Change& e) {
 			radius = (TapeDisplay::RADIUS_MAX - TapeDisplay::RADIUS_MIN + tapeLength) * module->tapeOnRightWheel + TapeDisplay::RADIUS_MIN;
 		}
 		diff = clamp(pow(module->tapeSpeed * TapeDisplay::RADIUS_MAX / radius, 27) / 1000000000000000.f, clampValue * -1.f, clampValue);
+		// diff = 0;
 		for (auto i = 0; i < NUM_SMEARED_WHEELS; ++i) {
 			smearedWheelsAngle[i] = std::fmod(math::rescale(paramValue - diff * SMEARED_WHEELS_DISTRIBUTION[i], -1.f, 1.f, minAngle, maxAngle), 2 * M_PI);
 			smearedWheelsTransform[i]->identity();
