@@ -8,7 +8,7 @@ An emulation of a [Microcassette](https://en.wikipedia.org/wiki/Microcassette) r
 
 How to use it:
 
-[![Tape Recorder Manual](https://www.youtube.com/watch?v=4BYcD7gmuQo)
+[![Tape Recorder Manual](https://img.youtube.com/vi/4BYcD7gmuQo/0.jpg)](https://www.youtube.com/watch?v=4BYcD7gmuQo)
 ### Transport
 There are buttons for play (both directions) and fast forward/rewind.
 #### Record is always on!
