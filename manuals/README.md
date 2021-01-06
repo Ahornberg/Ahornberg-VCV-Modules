@@ -5,6 +5,10 @@
 An emulation of a [Microcassette](https://en.wikipedia.org/wiki/Microcassette) recorder.
 
 ![Tape Recorder](TapeRecorder.png)
+
+How to use it:
+
+[![Tape Recorder Manual](https://www.youtube.com/watch?v=4BYcD7gmuQo)
 ### Transport
 There are buttons for play (both directions) and fast forward/rewind.
 #### Record is always on!
