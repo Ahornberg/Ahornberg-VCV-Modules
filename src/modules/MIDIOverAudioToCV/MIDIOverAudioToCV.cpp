@@ -19,6 +19,7 @@ MIDIOverAudioToCV::MIDIOverAudioToCV() {
 }
 
 MIDIOverAudioToCV::~MIDIOverAudioToCV() { 
+// TODO delete device - in driver, mark deleted devices for new assignment - show ID on widget 
 }
 
 void MIDIOverAudioToCV::process(const ProcessArgs& args) {
