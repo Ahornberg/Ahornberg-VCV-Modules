@@ -82,6 +82,18 @@
 		"Polyphonic",
 		"Tuner"
 	  ]
+    },
+    {
+      "slug": "MIDIOverAudioToCV",
+      "name": "MIDI over Audio to CV",
+      "description": "complement to the MIDI over Audio VST",
+ 	  "disabled": false,
+	  "manualUrl": "https://github.com/Ahornberg/Ahornberg-VCV-Modules/blob/master/manuals/README.md#midi-over-audio-to-cv",
+      "tags": [ 
+		"MIDI",
+		"Polyphonic",
+		"Utility"
+	  ]
     }
   ]
 }

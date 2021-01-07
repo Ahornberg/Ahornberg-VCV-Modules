@@ -1,4 +1,4 @@
-#define NDEBUG
+// #define NDEBUG
 #include <assert.h>
 #include "rack.hpp"
 #include <settings.hpp>
@@ -14,6 +14,7 @@ extern Model* modelCVFreqShift;
 extern Model* modelFunWithFrames;
 extern Model* modelMetronome;
 extern Model* modelHarmonizer;
+extern Model* modelMIDIOverAudioToCV;
 // extern Model* modelManual;
 
 #include "util/Manuals.hpp"
@@ -24,7 +25,10 @@ extern Model* modelHarmonizer;
 #include "util/Switches.hpp"
 #include "util/Widgets.hpp"
 #include "util/Displays.hpp"
+#include "util/Drivers.hpp"
 
 #ifndef NDEBUG
 #  include "test/Asserts.hpp"
 #endif
+
+
