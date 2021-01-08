@@ -1,16 +1,16 @@
 constexpr static int AUDIO_OVER_MIDI_DRIVER_ID = -99;
 constexpr static int MIDI_MESSAGE_DATA_MAX_LENGTH = 3;
 
-struct MIDIOverAudioToCVInputDevice : midi::InputDevice {
+struct MIDIOverAudioInputDevice : midi::InputDevice {
 	int deviceId;
 	
-	MIDIOverAudioToCVInputDevice(int id);
+	MIDIOverAudioInputDevice(int id);
 };
 
-struct MIDIOverAudioToCVDriver : midi::Driver {
-	std::vector<MIDIOverAudioToCVInputDevice> devices;
+struct MIDIOverAudioDriver : midi::Driver {
+	std::vector<MIDIOverAudioInputDevice> devices;
 	
-	MIDIOverAudioToCVDriver();
+	MIDIOverAudioDriver();
 	std::string getName() override;
 	std::vector<int> getInputDeviceIds() override;
 	std::string getInputDeviceName(int deviceId) override;

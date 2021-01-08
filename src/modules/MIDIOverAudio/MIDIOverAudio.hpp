@@ -1,6 +1,6 @@
 #include "../../Ahornberg.hpp"
 
-struct MIDIOverAudioToCV : ModuleWithScrews {
+struct MIDIOverAudio : ModuleWithScrews {
 	enum ParamIds {
 		FINE_PARAM = NUM_MAX_SCREWS,
 		STEPS_PARAM,
@@ -23,7 +23,7 @@ struct MIDIOverAudioToCV : ModuleWithScrews {
 	uint8_t messageData[MIDI_MESSAGE_DATA_MAX_LENGTH];
 	int messageDataPos;
 	
-	MIDIOverAudioToCV();
-	~MIDIOverAudioToCV();
+	MIDIOverAudio();
+	~MIDIOverAudio();
 	void process(const ProcessArgs& args) override;
 };

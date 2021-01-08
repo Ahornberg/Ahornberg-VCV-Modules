@@ -14,7 +14,7 @@ extern Model* modelCVFreqShift;
 extern Model* modelFunWithFrames;
 extern Model* modelMetronome;
 extern Model* modelHarmonizer;
-extern Model* modelMIDIOverAudioToCV;
+extern Model* modelMIDIOverAudio;
 // extern Model* modelManual;
 
 #include "util/Manuals.hpp"

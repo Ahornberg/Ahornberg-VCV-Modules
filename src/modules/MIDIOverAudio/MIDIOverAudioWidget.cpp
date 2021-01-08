@@ -1,4 +1,4 @@
-#include "MIDIOverAudioToCVWidget.hpp"
+#include "MIDIOverAudioWidget.hpp"
 
 // IntervalDisplay::IntervalDisplay(Rect box, EqualDivision *equalDivision) : Display(box) {
 	// this->equalDivision = equalDivision;
@@ -26,7 +26,7 @@
 	// nvgText(disp.vg, textPos.x + 40, textPos.y, EqualDivision::INTERVALS[interval].shortName.c_str(), NULL);
 // }
 
-MIDIOverAudioToCVWidget::MIDIOverAudioToCVWidget(MIDIOverAudioToCV* module) {
+MIDIOverAudioWidget::MIDIOverAudioWidget(MIDIOverAudio* module) {
 	setModule(module);
 	setPanel("res/EqualDivision.svg");
 	setSize(Vec(90, 380));
@@ -36,7 +36,7 @@ MIDIOverAudioToCVWidget::MIDIOverAudioToCVWidget(MIDIOverAudioToCV* module) {
 	// addParam(createParam<KnobSmallSnap>(Vec(             10,   124), module, EqualDivision::STEPS_PARAM));
 	// addParam(createParam<KnobSmallSnap>(Vec(box.size.x - 37,   124), module, EqualDivision::INTERVAL_PARAM));
 
-	addInput(createInput<InPort>(Vec( 4, 167),    module, MIDIOverAudioToCV::PITCH_INPUT + 0));
+	addInput(createInput<InPort>(Vec( 4, 167),    module, MIDIOverAudio::PITCH_INPUT + 0));
 	// addInput(createInput<InPort>(Vec(33, 167),    module, EqualDivision::PITCH_INPUT + 1));
 	// addInput(createInput<InPort>(Vec(62, 167),    module, EqualDivision::PITCH_INPUT + 2));
 	// addInput(createInput<InPort>(Vec( 4, 233.5),  module, EqualDivision::PITCH_INPUT + 3));
@@ -59,4 +59,4 @@ MIDIOverAudioToCVWidget::MIDIOverAudioToCVWidget(MIDIOverAudioToCV* module) {
 	// addChild(new IntervalDisplay(Rect(8.5, 98, 74, 18), module));
 }
 
-Model* modelMIDIOverAudioToCV = createModel<MIDIOverAudioToCV, MIDIOverAudioToCVWidget>("MIDIOverAudioToCV");
+Model* modelMIDIOverAudio = createModel<MIDIOverAudio, MIDIOverAudioWidget>("MIDIOverAudio");

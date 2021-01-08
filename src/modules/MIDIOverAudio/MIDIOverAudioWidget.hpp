@@ -1,4 +1,4 @@
-#include "MIDIOverAudioToCV.hpp"
+#include "MIDIOverAudio.hpp"
 
 // struct IntervalDisplay : Display {
 	// EqualDivision *equalDivision;
@@ -9,6 +9,6 @@
 	// void drawText(const DrawArgs& disp) override;
 // };
 
-struct MIDIOverAudioToCVWidget : ModuleWidgetWithScrews {
-	MIDIOverAudioToCVWidget(MIDIOverAudioToCV* module);
+struct MIDIOverAudioWidget : ModuleWidgetWithScrews {
+	MIDIOverAudioWidget(MIDIOverAudio* module);
 };

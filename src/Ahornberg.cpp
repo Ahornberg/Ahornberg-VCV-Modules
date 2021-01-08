@@ -11,6 +11,6 @@ void init(Plugin* plugin) {
 	pluginInstance->addModel(modelFunWithFrames);
 	pluginInstance->addModel(modelMetronome);
 	pluginInstance->addModel(modelHarmonizer);
-	pluginInstance->addModel(modelMIDIOverAudioToCV);
+	pluginInstance->addModel(modelMIDIOverAudio);
 	// pluginInstance->addModel(modelManual);
 }

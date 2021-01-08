@@ -1,19 +1,19 @@
 #include "../Ahornberg.hpp"
 
-MIDIOverAudioToCVInputDevice::MIDIOverAudioToCVInputDevice(int id) {
+MIDIOverAudioInputDevice::MIDIOverAudioInputDevice(int id) {
 	deviceId = id;
 }
 
-MIDIOverAudioToCVDriver::MIDIOverAudioToCVDriver() {
-	MIDIOverAudioToCVInputDevice* device = new MIDIOverAudioToCVInputDevice(0);
+MIDIOverAudioDriver::MIDIOverAudioDriver() {
+	MIDIOverAudioInputDevice* device = new MIDIOverAudioInputDevice(0);
 	devices.push_back(*device);
 }
 
-std::string MIDIOverAudioToCVDriver::getName() {
+std::string MIDIOverAudioDriver::getName() {
 	return "MIDI over Audio";
 }
 
-std::vector<int> MIDIOverAudioToCVDriver::getInputDeviceIds() {
+std::vector<int> MIDIOverAudioDriver::getInputDeviceIds() {
 	std::vector<int> deviceIds;
 	for (auto &i : devices) {
 		deviceIds.push_back(i.deviceId);
@@ -21,11 +21,11 @@ std::vector<int> MIDIOverAudioToCVDriver::getInputDeviceIds() {
 	return deviceIds;
 }
 
-std::string MIDIOverAudioToCVDriver::getInputDeviceName(int deviceId) {
+std::string MIDIOverAudioDriver::getInputDeviceName(int deviceId) {
 	return std::to_string(deviceId);
 }
 
-midi::InputDevice* MIDIOverAudioToCVDriver::subscribeInput(int deviceId, midi::Input* input) {
+midi::InputDevice* MIDIOverAudioDriver::subscribeInput(int deviceId, midi::Input* input) {
 	if (deviceId >= (int) devices.size()) {
 		return NULL;
 	}
@@ -33,16 +33,16 @@ midi::InputDevice* MIDIOverAudioToCVDriver::subscribeInput(int deviceId, midi::I
 	return &devices[deviceId];
 }
 
-void MIDIOverAudioToCVDriver::unsubscribeInput(int deviceId, midi::Input* input) {
+void MIDIOverAudioDriver::unsubscribeInput(int deviceId, midi::Input* input) {
 	if (deviceId >= (int) devices.size()) {
 		return;
 	}
 	devices[deviceId].unsubscribe(input);
 }
 
-int MIDIOverAudioToCVDriver::addInputDevice() {
+int MIDIOverAudioDriver::addInputDevice() {
 	int id = devices.size();
-	MIDIOverAudioToCVInputDevice* device = new MIDIOverAudioToCVInputDevice(id);
+	MIDIOverAudioInputDevice* device = new MIDIOverAudioInputDevice(id);
 	devices.push_back(*device);
 	return id;
 }
