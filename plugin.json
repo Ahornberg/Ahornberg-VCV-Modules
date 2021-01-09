@@ -90,8 +90,9 @@
  	  "disabled": false,
 	  "manualUrl": "https://github.com/Ahornberg/Ahornberg-VCV-Modules/blob/master/manuals/README.md#midi-over-audio-to-cv",
       "tags": [ 
+		"External",
 		"MIDI",
-		"Polyphonic",
+		"Multiple",
 		"Utility"
 	  ]
     }
