@@ -3,6 +3,7 @@
 Plugin* pluginInstance;
 
 void init(Plugin* plugin) {
+	new MIDIOverAudioDriver;
 	pluginInstance = plugin;
 
 	pluginInstance->addModel(modelTapeRecorder);

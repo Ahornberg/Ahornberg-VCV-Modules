@@ -1,5 +1,10 @@
 #include "../../Ahornberg.hpp"
 
+struct MIDIOverAudioMessage {
+	uint8_t messageData[MIDI_MESSAGE_DATA_MAX_LENGTH];
+	int messageDataPos;
+};
+
 struct MIDIOverAudio : ModuleWithScrews {
 	enum ParamIds {
 		FINE_PARAM = NUM_MAX_SCREWS,
@@ -8,22 +13,19 @@ struct MIDIOverAudio : ModuleWithScrews {
 		NUM_PARAMS
 	};
 	enum InputIds {
-		ENUMS(PITCH_INPUT, 9),
+		ENUMS(MIDI_OVER_AUDIO_INPUT, MIDI_OVER_AUDIO_MAX_DEVICES),
 		NUM_INPUTS
 	};
 	enum OutputIds {
-		ENUMS(PITCH_OUTPUT, 9),
 		NUM_OUTPUTS
 	};
 	enum LightIds {
 		NUM_LIGHTS
 	};
 	
-	int deviceId;
-	uint8_t messageData[MIDI_MESSAGE_DATA_MAX_LENGTH];
-	int messageDataPos;
+	MIDIOverAudioMessage midiOverAudioMessages[MIDI_OVER_AUDIO_MAX_DEVICES];
 	
 	MIDIOverAudio();
-	~MIDIOverAudio();
 	void process(const ProcessArgs& args) override;
+	void resetMessageData(int DeviceId);
 };

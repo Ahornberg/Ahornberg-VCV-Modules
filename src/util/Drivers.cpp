@@ -1,12 +1,20 @@
 #include "../Ahornberg.hpp"
 
+extern MIDIOverAudioDriver* MIDIOverAudioDriver::driver;
+
 MIDIOverAudioInputDevice::MIDIOverAudioInputDevice(int id) {
 	deviceId = id;
 }
 
 MIDIOverAudioDriver::MIDIOverAudioDriver() {
-	MIDIOverAudioInputDevice* device = new MIDIOverAudioInputDevice(0);
-	devices.push_back(*device);
+	if (MIDIOverAudioDriver::driver == nullptr) {
+		MIDIOverAudioDriver::driver = this;
+		midi::addDriver(MIDI_OVER_AUDIO_DRIVER_ID, this);
+		for (auto i = 0; i < MIDI_OVER_AUDIO_MAX_DEVICES; ++i) {
+			MIDIOverAudioInputDevice* device = new MIDIOverAudioInputDevice(i);
+			devices.push_back(*device);
+		}
+	}
 }
 
 std::string MIDIOverAudioDriver::getName() {
@@ -22,7 +30,10 @@ std::vector<int> MIDIOverAudioDriver::getInputDeviceIds() {
 }
 
 std::string MIDIOverAudioDriver::getInputDeviceName(int deviceId) {
-	return std::to_string(deviceId);
+	if (deviceId < 0) {
+		return "";
+	}
+	return "Port " + std::to_string(deviceId + 1);
 }
 
 midi::InputDevice* MIDIOverAudioDriver::subscribeInput(int deviceId, midi::Input* input) {

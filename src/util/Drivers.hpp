@@ -1,4 +1,5 @@
-constexpr static int AUDIO_OVER_MIDI_DRIVER_ID = -99;
+constexpr static int MIDI_OVER_AUDIO_DRIVER_ID = -99;
+constexpr static int MIDI_OVER_AUDIO_MAX_DEVICES = 8;
 constexpr static int MIDI_MESSAGE_DATA_MAX_LENGTH = 3;
 
 struct MIDIOverAudioInputDevice : midi::InputDevice {
@@ -8,6 +9,8 @@ struct MIDIOverAudioInputDevice : midi::InputDevice {
 };
 
 struct MIDIOverAudioDriver : midi::Driver {
+	static MIDIOverAudioDriver* driver;
+	
 	std::vector<MIDIOverAudioInputDevice> devices;
 	
 	MIDIOverAudioDriver();
