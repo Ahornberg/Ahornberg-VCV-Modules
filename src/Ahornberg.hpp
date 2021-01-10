@@ -30,5 +30,3 @@ extern Model* modelMIDIOverAudio;
 #ifndef NDEBUG
 #  include "test/Asserts.hpp"
 #endif
-
-

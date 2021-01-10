@@ -12,6 +12,7 @@ struct MIDIOverAudioDriver : midi::Driver {
 	static MIDIOverAudioDriver* driver;
 	
 	std::vector<MIDIOverAudioInputDevice> devices;
+	bool enabled;
 	
 	MIDIOverAudioDriver();
 	std::string getName() override;
@@ -21,3 +22,6 @@ struct MIDIOverAudioDriver : midi::Driver {
 	void unsubscribeInput(int deviceId, midi::Input* input) override;
 	int addInputDevice();
 };
+
+void saveMIDIOverAudioDriverEnabled(bool enabled);
+bool loadMIDIOverAudioDriverEnabled();
