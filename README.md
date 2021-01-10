@@ -1,5 +1,5 @@
 # Ahornberg-VCV-Modules
-
+The latest stable release can be downloaded at https://library.vcvrack.com/?brand=Ahornberg
 ## Manuals
 
 [![Tape Recorder](manuals/TapeRecorder.png)](manuals/README.md#tape-recorder)

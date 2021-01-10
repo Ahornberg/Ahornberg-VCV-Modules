@@ -7,9 +7,7 @@ struct MIDIOverAudioMessage {
 
 struct MIDIOverAudio : ModuleWithScrews {
 	enum ParamIds {
-		FINE_PARAM = NUM_MAX_SCREWS,
-		STEPS_PARAM,
-		INTERVAL_PARAM,
+		ENUMS_WITH_SCREWS(TRIM_PARAM, MIDI_OVER_AUDIO_MAX_DEVICES),
 		NUM_PARAMS
 	};
 	enum InputIds {
@@ -20,6 +18,7 @@ struct MIDIOverAudio : ModuleWithScrews {
 		NUM_OUTPUTS
 	};
 	enum LightIds {
+		ENUMS(RGB_LIGHT, MIDI_OVER_AUDIO_MAX_DEVICES * 3),
 		NUM_LIGHTS
 	};
 	

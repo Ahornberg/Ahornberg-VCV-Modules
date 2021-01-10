@@ -7,6 +7,7 @@ MIDIOverAudio::MIDIOverAudio() {
 	configScrewParams();
 	
 	for (auto i = 0; i < MIDI_OVER_AUDIO_MAX_DEVICES; ++i) {
+		configParam(TRIM_PARAM + i, -5, 5, 0, "Trim Port " + std::to_string(i + 1));
 		resetMessageData(i);
 	}
 }
@@ -16,7 +17,23 @@ void MIDIOverAudio::process(const ProcessArgs& args) {
 		if (!inputs[MIDI_OVER_AUDIO_INPUT + i].isConnected()) {
 			resetMessageData(i);
 		} else {
-			int dataInput = (int) (inputs[MIDI_OVER_AUDIO_INPUT + i].getVoltage() * 51.01f);
+			float dataInputFloat = inputs[MIDI_OVER_AUDIO_INPUT + i].getVoltage() * (params[TRIM_PARAM + i].getValue() * 0.112f + 5.112f * 5);
+			if (dataInputFloat < 0) {
+				if (isNear(dataInputFloat, -255.56f, 0.44f)) {
+					lights[RGB_LIGHT + i * 3 + 0].setBrightness(0);
+					lights[RGB_LIGHT + i * 3 + 1].setBrightness(1);
+				} else if (isNear(dataInputFloat, -255.56f, 1.5f)) {
+					lights[RGB_LIGHT + i * 3 + 0].setBrightness(1);
+					lights[RGB_LIGHT + i * 3 + 1].setBrightness(1);
+				} else  if (isNear(dataInputFloat, -255.56f, 3)) {
+					lights[RGB_LIGHT + i * 3 + 0].setBrightness(1);
+					lights[RGB_LIGHT + i * 3 + 1].setBrightness(0.5f);
+				} else {
+					lights[RGB_LIGHT + i * 3 + 0].setBrightness(1);
+					lights[RGB_LIGHT + i * 3 + 1].setBrightness(0);				
+				}
+			}
+			int dataInput = (int) dataInputFloat;
 			if (dataInput > 0 && midiOverAudioMessages[i].messageDataPos == 0) {
 				midiOverAudioMessages[i].messageData[0] = dataInput;
 				++midiOverAudioMessages[i].messageDataPos;

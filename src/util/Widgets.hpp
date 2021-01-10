@@ -1,3 +1,5 @@
+#define ENUMS_WITH_SCREWS(name, count) name = NUM_MAX_SCREWS, name ## _LAST = name + (count) - 1
+
 struct SizedTransparentWidget : LightWidget {
 	SizedTransparentWidget(Rect box);
 };
