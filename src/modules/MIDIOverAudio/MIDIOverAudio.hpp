@@ -23,8 +23,10 @@ struct MIDIOverAudio : ModuleWithScrews {
 	};
 	
 	MIDIOverAudioMessage midiOverAudioMessages[MIDI_OVER_AUDIO_MAX_DEVICES];
+	dsp::ExponentialSlewLimiter lightsSlewLimiter[MIDI_OVER_AUDIO_MAX_DEVICES * 3];
 	
 	MIDIOverAudio();
 	void process(const ProcessArgs& args) override;
 	void resetMessageData(int DeviceId);
+	void panic();
 };

@@ -15,3 +15,10 @@ struct MIDIOverAudioDriverMenuItem : MenuItem {
 	MIDIOverAudioDriverMenuItem(MIDIOverAudio* midiOverAudio);
 	void onAction(const event::Action& e) override;
 };
+
+struct MIDIOverAudioPanicMenuItem : MenuItem {
+	MIDIOverAudio* midiOverAudio;
+	
+	MIDIOverAudioPanicMenuItem(MIDIOverAudio* midiOverAudio);
+	void onAction(const event::Action& e) override;
+};
