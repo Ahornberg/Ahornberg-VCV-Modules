@@ -22,7 +22,7 @@ void MIDIOverAudioDriverMenuItem::onAction(const event::Action& e) {
 				saveMIDIOverAudioDriverEnabled(true);
 				new MIDIOverAudioDriver();
 				for (auto widget : *MIDIOverAudioWidget::widgets) {
-					widget->setPanel("res/MIDIOverAudioEnabled.svg");
+					widget->setPanel("res/MIDIOverAudio.svg");
 				}
 			}
 		} else {
@@ -50,9 +50,9 @@ MIDIOverAudioWidget::MIDIOverAudioWidget(MIDIOverAudio* module) {
 	init();
 	setModule(module);
 	if (MIDIOverAudioDriver::driver->enabled) {
-		setPanel("res/MIDIOverAudioEnabled.svg");
+		setPanel("res/MIDIOverAudio.svg");
 	} else {
-		setPanel("res/MIDIOverAudioDisabled.svg");
+		setPanel("res/MIDIOverAudio_disabled.svg");
 	}
 	setSize(Vec(30, 380));
 	setScrews(SCREW_TOP_LEFT, NO_SCREW_TOP_RIGHT, NO_SCREW_BOTTOM_LEFT, SCREW_BOTTOM_RIGHT);
