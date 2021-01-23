@@ -6,11 +6,10 @@ extern std::vector<MIDIOverAudioWidget*>* MIDIOverAudioWidget::widgets;
 
 MIDIOverAudioDriverMenuItem::MIDIOverAudioDriverMenuItem(MIDIOverAudio* midiOverAudio) {
 	this->midiOverAudio = midiOverAudio;
-	text = "MIDI over Audio driver";
 	if (MIDIOverAudioDriver::driver->enabled) {
-		rightText = "enabled";
+		text = "disable MIDI over Audio driver";
 	} else {
-		rightText = "disabled";
+		text = "enable MIDI over Audio driver";
 	}
 }
 
@@ -82,7 +81,9 @@ void MIDIOverAudioWidget::appendContextMenu(Menu* menu) {
 	MIDIOverAudio* midiOverAudio = dynamic_cast<MIDIOverAudio*>(this->module);
 	menu->addChild(new MenuEntry);
 	menu->addChild(new MIDIOverAudioDriverMenuItem(midiOverAudio));
-	menu->addChild(new MIDIOverAudioPanicMenuItem(midiOverAudio));
+	if (MIDIOverAudioDriver::driver->enabled) {
+		menu->addChild(new MIDIOverAudioPanicMenuItem(midiOverAudio));
+	}
 }
 
 Model* modelMIDIOverAudio = createModel<MIDIOverAudio, MIDIOverAudioWidget>("MIDIOverAudio");
