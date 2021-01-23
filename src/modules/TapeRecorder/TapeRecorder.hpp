@@ -131,5 +131,5 @@ struct TapeRecorder : ModuleWithScrews {
 	// float valueAtOffset (const float* const inputs, const float offset) noexcept;
 	void setTrackCount(int trackCount);
 	void setTapeLength(int tapeLength);
-	void dataFromJson(json_t* root) override;
+	// void fromJson(json_t* rootJ) override;
 };

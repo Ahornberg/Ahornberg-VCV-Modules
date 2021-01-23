@@ -770,6 +770,9 @@ void TapeRecorderWidget::fromJson(json_t* rootJ) {
 	if (tapeStripeJ) {
 		stripeWidget->setStripe(json_integer_value(tapeStripeJ));
 	}
+	if (module) {
+		dynamic_cast<TapeRecorder*>(this->module)->initTape();
+	}
 }
 
 Model* modelTapeRecorder = createModel<TapeRecorder, TapeRecorderWidget>("TapeRecorder");

@@ -49,6 +49,7 @@ TapeRecorder::~TapeRecorder() {
 
 void TapeRecorder::initTape() {
 	changeTapeInterrupt = true;
+	// DEBUG("length %d, type %d", (int) params[TAPE_LENGTH_PARAM].getValue(), (int) params[TRACK_COUNT_PARAM].getValue());
 	// while (!tapeStoppedAndResetted) {
 		
 	// }
@@ -278,6 +279,7 @@ void TapeRecorder::process(const ProcessArgs& args) {
 		tapeStoppedAndResetted = false;
 	}
 
+	auto trackCount = (int) params[TRACK_COUNT_PARAM].getValue();
 	// tape begin/end reached
 	if (audioBufferPosition <= 0) {
 		tapeStatus = TAPE_BEGIN;
@@ -420,7 +422,10 @@ void TapeRecorder::process(const ProcessArgs& args) {
 	if (audioBufferPosition <= 0) {
 		tapeStatus = TAPE_BEGIN;
 		if (outputs[AUDIO_OUTPUT].isConnected()) {
-			outputs[AUDIO_OUTPUT].setVoltage(inputs[AUDIO_INPUT].getVoltage());
+			outputs[AUDIO_OUTPUT].setChannels(trackCount);
+			for (auto i = 0; i < trackCount; ++i) {
+				outputs[AUDIO_OUTPUT].setVoltage(inputs[AUDIO_INPUT].getVoltage(i), i);
+			}
 		}
 		audioBufferPosition = 0.;
 		lastAudioBufferLocation = -1;
@@ -433,7 +438,10 @@ void TapeRecorder::process(const ProcessArgs& args) {
 	if (audioBufferPosition >= sizeAudioBuffer) {
 		tapeStatus = TAPE_END;
 		if (outputs[AUDIO_OUTPUT].isConnected()) {
-			outputs[AUDIO_OUTPUT].setVoltage(inputs[AUDIO_INPUT].getVoltage());
+			outputs[AUDIO_OUTPUT].setChannels(trackCount);
+			for (auto i = 0; i < trackCount; ++i) {
+				outputs[AUDIO_OUTPUT].setVoltage(inputs[AUDIO_INPUT].getVoltage(i), i);
+			}
 		}
 		audioBufferPosition = sizeAudioBuffer - 1;
 		lastAudioBufferLocation = sizeAudioBuffer;
@@ -451,7 +459,10 @@ void TapeRecorder::process(const ProcessArgs& args) {
 	
 	if (tapeSpeed == 0) {
 		if (outputs[AUDIO_OUTPUT].isConnected()) {
-			outputs[AUDIO_OUTPUT].setVoltage(inputs[AUDIO_INPUT].getVoltage());
+			outputs[AUDIO_OUTPUT].setChannels(trackCount);
+			for (auto i = 0; i < trackCount; ++i) {
+				outputs[AUDIO_OUTPUT].setVoltage(inputs[AUDIO_INPUT].getVoltage(i), i);
+			}
 		}
 		return;
 	}
@@ -459,23 +470,30 @@ void TapeRecorder::process(const ProcessArgs& args) {
 	if (tapeSpeed > 0) {
 		while (lastAudioBufferLocation < audioBufferLocation) {
 			++lastAudioBufferLocation;
-			if (playStatus) {
-				audioBuffer[lastAudioBufferLocation] += inputs[AUDIO_INPUT].getVoltage();
+			for (auto i = 0; i < trackCount; ++i) {
+				if (playStatus) {
+					audioBuffer[lastAudioBufferLocation * trackCount + i] += inputs[AUDIO_INPUT].getVoltage(i);
+				}
 			}
 		}
 	} else {
 		while (lastAudioBufferLocation > audioBufferLocation) {
 			--lastAudioBufferLocation;
-			if (playStatus) {
-				audioBuffer[lastAudioBufferLocation] += inputs[AUDIO_INPUT].getVoltage();
+			for (auto i = 0; i < trackCount; ++i) {
+				if (playStatus) {
+					audioBuffer[lastAudioBufferLocation * trackCount + i] += inputs[AUDIO_INPUT].getVoltage(i);
+				}
 			}
 		}
 	}
 	if (outputs[AUDIO_OUTPUT].isConnected()) {
-		if (playStatus) {
-			outputs[AUDIO_OUTPUT].setVoltage(audioBuffer[audioBufferLocation]);
-		} else {
-			outputs[AUDIO_OUTPUT].setVoltage(inputs[AUDIO_INPUT].getVoltage());
+		outputs[AUDIO_OUTPUT].setChannels(trackCount);
+		for (auto i = 0; i < trackCount; ++i) {
+			if (playStatus) {
+				outputs[AUDIO_OUTPUT].setVoltage(audioBuffer[audioBufferLocation * trackCount + i], i);
+			} else {
+				outputs[AUDIO_OUTPUT].setVoltage(inputs[AUDIO_INPUT].getVoltage(i), i);
+			}
 		}
 	}
 }
@@ -509,11 +527,12 @@ void TapeRecorder::setTapeLength(int tapeLength) {
 	}
 }
 
-void TapeRecorder::dataFromJson(json_t* root) {
-	Module::dataFromJson(root);
-	dataFromJsonCalled = true;
+// void TapeRecorder::fromJson(json_t* rootJ) {
+	// Module::fromJson(rootJ);
+	// dataFromJsonCalled = true;
+	// DEBUG("dataFromJson");
 	// params[PLAY_BACKWARDS_PARAM].setValue(0.);
 	// params[CUE_BACKWARDS_PARAM].setValue(0.);
 	// params[PLAY_FORWARDS_PARAM].setValue(0.);
 	// params[CUE_FORWARDS_PARAM].setValue(0.);
-}
+// }
