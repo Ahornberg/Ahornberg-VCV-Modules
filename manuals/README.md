@@ -14,7 +14,7 @@ There are buttons for play (both directions) and fast forward/rewind.
 
 \[Ctrl\] \+ fast forward/rewind jumps to the next/previous loop point or to the end/start of the tape.
 
-\[Shift\] \+ \[Ctrl\] fast forward/rewind jumps to the end/start of the tape.
+\[Shift\] \+ \[Ctrl\] + fast forward/rewind jumps to the end/start of the tape.
 
 #### Record is always on!
 As long as one of the play buttons is on, the machine will record incoming audio to the tape.
