@@ -1,6 +1,6 @@
 #include "../Ahornberg.hpp"
 
-extern MIDIOverAudioDriver* MIDIOverAudioDriver::driver;
+MIDIOverAudioDriver* MIDIOverAudioDriver::driver;
 
 MIDIOverAudioInputDevice::MIDIOverAudioInputDevice(int id) {
 	deviceId = id;

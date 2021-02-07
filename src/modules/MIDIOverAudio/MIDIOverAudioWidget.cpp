@@ -2,7 +2,7 @@
 #include <osdialog.h>
 #include "MIDIOverAudioWidget.hpp"
 
-extern std::vector<MIDIOverAudioWidget*>* MIDIOverAudioWidget::widgets;
+std::vector<MIDIOverAudioWidget*>* MIDIOverAudioWidget::widgets;
 
 MIDIOverAudioDriverMenuItem::MIDIOverAudioDriverMenuItem(MIDIOverAudio* midiOverAudio) {
 	this->midiOverAudio = midiOverAudio;
