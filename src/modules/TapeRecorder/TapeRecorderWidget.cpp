@@ -42,7 +42,18 @@ CueBackwardsSwitch::CueBackwardsSwitch() {
 void CueBackwardsSwitch::onChange(const event::Change& e) {
 	TransportCueSwitch::onChange(e);
 	if (tapeRecorder && tapeRecorder->params[TapeRecorder::CUE_BACKWARDS_PARAM].getValue()) {
-		tapeRecorder->params[TapeRecorder::CUE_FORWARDS_PARAM].setValue(0.);
+		int mods = APP->window->getMods();
+		if ((mods & RACK_MOD_MASK) == RACK_MOD_CTRL) {
+			tapeRecorder->jumpToTapePosition(TapeRecorder::JUMP_BACKWARDS);
+			tapeRecorder->params[TapeRecorder::CUE_FORWARDS_PARAM].setValue(0.);
+			tapeRecorder->params[TapeRecorder::CUE_BACKWARDS_PARAM].setValue(0.);
+		} else if ((mods & RACK_MOD_MASK) == (RACK_MOD_CTRL | GLFW_MOD_SHIFT)) {
+			tapeRecorder->jumpToTapePosition(TapeRecorder::JUMP_TO_BEGIN);
+			tapeRecorder->params[TapeRecorder::CUE_FORWARDS_PARAM].setValue(0.);
+			tapeRecorder->params[TapeRecorder::CUE_BACKWARDS_PARAM].setValue(0.);
+		} else {
+			tapeRecorder->params[TapeRecorder::CUE_FORWARDS_PARAM].setValue(0.);
+		}	
 	}
 }
 
@@ -54,7 +65,18 @@ CueForwardsSwitch::CueForwardsSwitch() {
 void CueForwardsSwitch::onChange(const event::Change& e) {
 	TransportCueSwitch::onChange(e);
 	if (tapeRecorder && tapeRecorder->params[TapeRecorder::CUE_FORWARDS_PARAM].getValue()) {
-		tapeRecorder->params[TapeRecorder::CUE_BACKWARDS_PARAM].setValue(0.);
+		int mods = APP->window->getMods();
+		if ((mods & RACK_MOD_MASK) == RACK_MOD_CTRL) {
+			tapeRecorder->jumpToTapePosition(TapeRecorder::JUMP_FORWARDS);
+			tapeRecorder->params[TapeRecorder::CUE_FORWARDS_PARAM].setValue(0.);
+			tapeRecorder->params[TapeRecorder::CUE_BACKWARDS_PARAM].setValue(0.);
+		} else if ((mods & RACK_MOD_MASK) == (RACK_MOD_CTRL | GLFW_MOD_SHIFT)) {
+			tapeRecorder->jumpToTapePosition(TapeRecorder::JUMP_TO_END);
+			tapeRecorder->params[TapeRecorder::CUE_FORWARDS_PARAM].setValue(0.);
+			tapeRecorder->params[TapeRecorder::CUE_BACKWARDS_PARAM].setValue(0.);
+		} else {
+			tapeRecorder->params[TapeRecorder::CUE_BACKWARDS_PARAM].setValue(0.);
+		}
 	}
 }
 
@@ -255,7 +277,7 @@ void KnobWheel::onDoubleClick(const event::DoubleClick& e) {
 void KnobWheel::onChange(const event::Change& e) {
 	// Re-transform the widget::TransformWidget
 	float clampValue = 1 / (9.f * NUM_SMEARED_WHEELS);
-	float frameRate = APP->window->getLastFrameRate();
+	// float frameRate = APP->window->getLastFrameRate();
 	if (paramQuantity && module) {
 		float diff;
 		float paramValue;

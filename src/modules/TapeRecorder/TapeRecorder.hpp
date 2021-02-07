@@ -56,6 +56,13 @@ struct TapeRecorder : ModuleWithScrews {
 		TAPE_MIDDLE,
 		TAPE_END
 	};
+	
+	enum TapeJump {
+		JUMP_TO_BEGIN,
+		JUMP_TO_END,
+		JUMP_FORWARDS,
+		JUMP_BACKWARDS
+	};
 
 	bool changeTapeInterrupt;
 	bool tapeStoppedAndResetted;
@@ -132,4 +139,5 @@ struct TapeRecorder : ModuleWithScrews {
 	void setTrackCount(int trackCount);
 	void setTapeLength(int tapeLength);
 	// void fromJson(json_t* rootJ) override;
+	void jumpToTapePosition(TapeJump tapeJump);
 };

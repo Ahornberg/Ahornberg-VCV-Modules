@@ -11,6 +11,11 @@ How to use it:
 [![Tape Recorder Manual](https://img.youtube.com/vi/4BYcD7gmuQo/0.jpg)](https://www.youtube.com/watch?v=4BYcD7gmuQo)
 ### Transport
 There are buttons for play (both directions) and fast forward/rewind.
+
+\[Ctrl\] \+ fast forward/rewind jumps to the next/previous loop point or to the end/start of the tape.
+
+\[Shift\] \+ \[Ctrl\] fast forward/rewind jumps to the end/start of the tape.
+
 #### Record is always on!
 As long as one of the play buttons is on, the machine will record incoming audio to the tape.
 #### Scratching

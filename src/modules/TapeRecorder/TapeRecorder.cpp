@@ -368,7 +368,7 @@ void TapeRecorder::process(const ProcessArgs& args) {
 	
 	processSpeedOutput();
 
-	if (audioBufferPosition > 0 && audioBufferPosition < sizeAudioBuffer) {
+	if (audioBufferPosition >= 0 && audioBufferPosition <= sizeAudioBuffer) {
 		tapeStatus = TAPE_MIDDLE;
 		tapePosition = (args.sampleTime * audioBufferPosition * params[TEMPO_PARAM].getValue()) / (60 * params[BEATS_PER_BAR_PARAM].getValue());
 		int newBar = (int) tapePosition;
@@ -536,3 +536,52 @@ void TapeRecorder::setTapeLength(int tapeLength) {
 	// params[PLAY_FORWARDS_PARAM].setValue(0.);
 	// params[CUE_FORWARDS_PARAM].setValue(0.);
 // }
+
+void TapeRecorder::jumpToTapePosition(TapeJump tapeJump) {
+	switch (tapeJump) {
+		case JUMP_TO_BEGIN:
+			audioBufferPosition = 0.;
+			break;
+		case JUMP_TO_END:
+			audioBufferPosition = sizeAudioBuffer;
+			break;
+		case JUMP_FORWARDS:
+			if (loopStartPosition < loopEndPosition) {
+				if (audioBufferPosition < loopStartPosition) {
+					audioBufferPosition = loopStartPosition;
+				} else if (audioBufferPosition < loopEndPosition) {
+					audioBufferPosition = loopEndPosition;
+				} else {
+					audioBufferPosition = sizeAudioBuffer;
+				}
+			} else {
+				if (audioBufferPosition < loopEndPosition) {
+					audioBufferPosition = loopEndPosition;
+				} else if (audioBufferPosition < loopStartPosition) {
+					audioBufferPosition = loopStartPosition;
+				} else {
+					audioBufferPosition = sizeAudioBuffer;
+				}
+			}
+			break;
+		case JUMP_BACKWARDS:
+			if (loopStartPosition > loopEndPosition) {
+				if (audioBufferPosition > loopStartPosition) {
+					audioBufferPosition = loopStartPosition;
+				} else if (audioBufferPosition > loopEndPosition) {
+					audioBufferPosition = loopEndPosition;
+				} else {
+					audioBufferPosition = 0.;
+				}
+			} else {
+				if (audioBufferPosition > loopEndPosition) {
+					audioBufferPosition = loopEndPosition;
+				} else if (audioBufferPosition > loopStartPosition) {
+					audioBufferPosition = loopStartPosition;
+				} else {
+					audioBufferPosition = 0.;
+				}
+			}
+			break;
+	}
+}
