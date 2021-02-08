@@ -373,11 +373,11 @@ void TapeRecorder::process(const ProcessArgs& args) {
 		tapePosition = (args.sampleTime * audioBufferPosition * params[TEMPO_PARAM].getValue()) / (60 * params[BEATS_PER_BAR_PARAM].getValue());
 		int newBar = (int) tapePosition;
 		int newBeat = (int) ((tapePosition - bar) * params[BEATS_PER_BAR_PARAM].getValue());
-		if (newBar != bar) {
+		if (newBar != bar || tapePosition == 0) {
 			barsPulse.trigger();
 		}
 		bar = newBar;
-		if (newBeat != beat) {
+		if (newBeat != beat || tapePosition == 0) {
 			beatsPulse.trigger();
 		}
 		beat = newBeat;
@@ -392,23 +392,39 @@ void TapeRecorder::process(const ProcessArgs& args) {
 			loopEndPosition = (args.sampleRate * loopEnd * 60 * params[BEATS_PER_BAR_PARAM].getValue()) / params[TEMPO_PARAM].getValue();
 		// }
 	}
-	if (loopStart < loopEnd) {
-		if (audioBufferPosition <= loopStartPosition && playStatus && !playForwardStatus) {
-			toggleParamValue(PLAY_FORWARDS_PARAM);
-			toggleParamValue(PLAY_BACKWARDS_PARAM);
+	if (params[LOOP_MODE_PARAM].getValue() > 0) {
+		if (loopStart < loopEnd) {
+			if (audioBufferPosition <= loopStartPosition && playStatus && !playForwardStatus) {
+				toggleParamValue(PLAY_FORWARDS_PARAM);
+				toggleParamValue(PLAY_BACKWARDS_PARAM);
+			}
+			if (audioBufferPosition > loopEndPosition && playStatus && playForwardStatus) {
+				toggleParamValue(PLAY_FORWARDS_PARAM);
+				toggleParamValue(PLAY_BACKWARDS_PARAM);
+			}
+		} else if (loopStart > loopEnd) {
+			if (audioBufferPosition <= loopEndPosition && playStatus && !playForwardStatus) {
+				toggleParamValue(PLAY_FORWARDS_PARAM);
+				toggleParamValue(PLAY_BACKWARDS_PARAM);
+			}
+			if (audioBufferPosition > loopStartPosition && playStatus && playForwardStatus) {
+				toggleParamValue(PLAY_FORWARDS_PARAM);
+				toggleParamValue(PLAY_BACKWARDS_PARAM);
+			}
 		}
-		if (audioBufferPosition > loopEndPosition && playStatus && playForwardStatus) {
-			toggleParamValue(PLAY_FORWARDS_PARAM);
-			toggleParamValue(PLAY_BACKWARDS_PARAM);
-		}
-	} else if (loopStart > loopEnd) {
-		if (audioBufferPosition <= loopEndPosition && playStatus && !playForwardStatus) {
-			toggleParamValue(PLAY_FORWARDS_PARAM);
-			toggleParamValue(PLAY_BACKWARDS_PARAM);
-		}
-		if (audioBufferPosition > loopStartPosition && playStatus && playForwardStatus) {
-			toggleParamValue(PLAY_FORWARDS_PARAM);
-			toggleParamValue(PLAY_BACKWARDS_PARAM);
+	} else {
+		if (loopStart < loopEnd) {
+			if (audioBufferPosition <= loopStartPosition && playStatus && !playForwardStatus) {
+				audioBufferPosition = loopEndPosition;
+			} else if (audioBufferPosition > loopEndPosition && playStatus && playForwardStatus) {
+				audioBufferPosition = loopStartPosition;
+			}
+		} else if (loopStart > loopEnd) {
+			if (audioBufferPosition <= loopEndPosition && playStatus && !playForwardStatus) {
+				audioBufferPosition = loopStartPosition;
+			} else if (audioBufferPosition > loopStartPosition && playStatus && playForwardStatus) {
+				audioBufferPosition = loopEndPosition;
+			}
 		}
 	}
 	if (audioBufferPosition <= 0) {

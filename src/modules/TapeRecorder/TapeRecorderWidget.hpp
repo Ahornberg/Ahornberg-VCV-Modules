@@ -80,6 +80,7 @@ struct TapePositionDisplay : Display {
 	TapeRecorder* tapeRecorder;
 	double tapePosition;
 	int beatsPerBar;
+	int loopMode;
 	int loopStart;
 	int loopEnd;
 	bool loopStartConnected;
@@ -158,9 +159,19 @@ struct TapeNameMenuItem : TextFieldMenuItem {
 	void onChange(const event::Change& e) override;
 };
 
+struct LoopModeValueItem : TapeRecorderMenuItem {
+	const static std::string LOOP_MODES[];
+	constexpr static int NUM_LOOP_MODES = 2;
+	
+	int loopMode;
+	
+	LoopModeValueItem(TapeRecorder* tapeRecorder, int loopMode);
+	void onAction(const event::Action& e) override;
+};
+
 struct LoopModeMenuItem : TapeRecorderMenuItem {
 	LoopModeMenuItem(TapeRecorder* tapeRecorder);
-	void onAction(const event::Action& e) override;
+	Menu* createChildMenu() override;
 };
 
 struct TrackCountValueItem : TapeRecorderMenuItem {

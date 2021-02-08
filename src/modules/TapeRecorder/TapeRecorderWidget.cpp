@@ -328,6 +328,7 @@ TapePositionDisplay::TapePositionDisplay(Rect box, TapeRecorder* tapeRecorder) :
 	this->tapeRecorder = tapeRecorder;
 	tapePosition = 0;
 	beatsPerBar = 0;
+	loopMode = 0;
 	loopStart = 0;
 	loopEnd = 0;
 	loopStartConnected = false;
@@ -342,6 +343,7 @@ TapePositionDisplay::TapePositionDisplay(Rect box, TapeRecorder* tapeRecorder) :
 
 void TapePositionDisplay::drawText(const DrawArgs& disp) {
 	if (tapeRecorder) {
+		loopMode = tapeRecorder->params[TapeRecorder::LOOP_MODE_PARAM].getValue();
 		loopStartConnected = tapeRecorder->inputs[TapeRecorder::LOOP_START_INPUT].isConnected();
 		loopStart = tapeRecorder->loopStart;
 		loopEndConnected = tapeRecorder->inputs[TapeRecorder::LOOP_END_INPUT].isConnected();
@@ -382,7 +384,11 @@ void TapePositionDisplay::drawText(const DrawArgs& disp) {
 	
 	if (loopStart != loopEnd) {
 		textPos = Vec(33, 28);
-		nvgText(disp.vg, textPos.x, textPos.y, "L", NULL);
+		if (loopMode) {
+			nvgText(disp.vg, textPos.x, textPos.y, "P", NULL);
+		} else {
+			nvgText(disp.vg, textPos.x, textPos.y, "C", NULL);
+		}
 	}
 	// if (cueStatus) {
 		// if (cueForwardStatus) {
@@ -580,21 +586,38 @@ void TapeNameMenuItem::onChange(const event::Change& e) {
 	tapeNameDisplay->text = text;
 }
 
-LoopModeMenuItem::LoopModeMenuItem(TapeRecorder* tapeRecorder) : TapeRecorderMenuItem(tapeRecorder) {
-	text = "Ping-Pong Loop Mode";
+const std::string LoopModeValueItem::LOOP_MODES[] = {
+	"Cycle",
+	"Ping-Pong"
+};
+
+LoopModeValueItem::LoopModeValueItem(TapeRecorder* tapeRecorder, int loopMode) : TapeRecorderMenuItem(tapeRecorder) {
+	this->loopMode = loopMode;
+	text = LOOP_MODES[loopMode];
 	if (tapeRecorder) {
-		rightText = CHECKMARK(tapeRecorder->params[TapeRecorder::LOOP_MODE_PARAM].getValue());
+		rightText = CHECKMARK(loopMode == tapeRecorder->params[TapeRecorder::LOOP_MODE_PARAM].getValue());
 	}
 }
 
-void LoopModeMenuItem::onAction(const event::Action& e) {
+void LoopModeValueItem::onAction(const event::Action& e) {
 	if (tapeRecorder) {
-		if (tapeRecorder->params[TapeRecorder::LOOP_MODE_PARAM].getValue()) {
-			tapeRecorder->params[TapeRecorder::LOOP_MODE_PARAM].setValue(0);
-		} else {
-			tapeRecorder->params[TapeRecorder::LOOP_MODE_PARAM].setValue(1);
-		}
+		tapeRecorder->params[TapeRecorder::LOOP_MODE_PARAM].setValue(loopMode);
 	}
+}
+
+LoopModeMenuItem::LoopModeMenuItem(TapeRecorder* tapeRecorder) : TapeRecorderMenuItem(tapeRecorder) {
+	text = "Loop Mode";
+	if (tapeRecorder) {
+		rightText = LoopModeValueItem::LOOP_MODES[(int) tapeRecorder->params[TapeRecorder::LOOP_MODE_PARAM].getValue()];
+	}
+}
+
+Menu* LoopModeMenuItem::createChildMenu() {
+	Menu* menu = new Menu;
+	for (auto i = 0; i < LoopModeValueItem::NUM_LOOP_MODES; ++i) {
+		menu->addChild(new LoopModeValueItem(tapeRecorder, i));
+	}
+	return menu;
 }
 
 TrackCountValueItem::TrackCountValueItem(TapeRecorder* tapeRecorder, int trackCount, std::string trackCountText) : TapeRecorderMenuItem(tapeRecorder) {
@@ -767,9 +790,9 @@ void TapeRecorderWidget::appendContextMenu(Menu* menu) {
 	menu->addChild(new MenuEntry);
 	menu->addChild(new TapeNameMenuItem(tapeNameDisplay));
 	menu->addChild(new TapeStripesMenuItem(stripeWidget));
-	menu->addChild(new LoopModeMenuItem(tapeRecorder));
 	menu->addChild(new TapeLengthMenuItem(tapeRecorder));
 	menu->addChild(new TrackCountMenuItem(tapeRecorder));
+	menu->addChild(new LoopModeMenuItem(tapeRecorder));
 	menu->addChild(new EraseTapeMenuItem(tapeRecorder));
 }
 
