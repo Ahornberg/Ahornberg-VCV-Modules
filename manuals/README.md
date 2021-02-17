@@ -99,6 +99,12 @@ How to use it:
 ### 9 x Note In/Out
 Nine vertically orientated pairs of Note CV inputs and outputs provide the ability to tune 9 x 16 = 144 different signals simultaneously using only one module.
 
+## Fun With Frames
+
+An utility to enhance the VCV module Regen Modular Frames.
+
+![Fun With Frames](FunWithFrames.png)
+
 ## Metronome
 
 A virtual rebuild of a vintage electronic metronome.
@@ -118,3 +124,24 @@ A virtual rebuild of a vintage electronic metronome.
 How to use it:
 
 [![Harmonizer Manual](https://img.youtube.com/vi/6k2-fbuGoeU/0.jpg)](https://www.youtube.com/watch?v=6k2-fbuGoeU)
+
+## MIDI Over Audio
+
+A way to send out MIDI data from the VCV Host module.
+
+![MIDI Over Audio](MIDIOverAudio.png)
+
+How to use it with Native Instruments Maschine VST:
+
+[![MIDI Over Audio Manual](https://img.youtube.com/vi/LxzyxB9K1DA/0.jpg)](https://www.youtube.com/watch?v=LxzyxB9K1DA)
+
+How to use it with KXStudio Carla VST:
+
+[![MIDI Over Audio Manual](https://img.youtube.com/vi/vvWQOpMmVxU/0.jpg)](https://www.youtube.com/watch?v=vvWQOpMmVxU)
+
+How to use it with Mutools MUX VST:
+
+[![MIDI Over Audio Manual](https://img.youtube.com/vi/WPzz-9QrGzs/0.jpg)](https://www.youtube.com/watch?v=WPzz-9QrGzs)
+
+
+
