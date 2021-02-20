@@ -101,7 +101,7 @@ Nine vertically orientated pairs of Note CV inputs and outputs provide the abili
 
 ## Fun With Frames
 
-An utility to enhance the VCV module Regen Modular Frames.
+A utility to enhance the VCV module Regen Modular Frames.
 
 ![Fun With Frames](FunWithFrames.png)
 
