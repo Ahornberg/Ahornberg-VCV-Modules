@@ -486,18 +486,50 @@ void TapeRecorder::process(const ProcessArgs& args) {
 	if (tapeSpeed > 0) {
 		while (lastAudioBufferLocation < audioBufferLocation) {
 			++lastAudioBufferLocation;
-			for (auto i = 0; i < trackCount; ++i) {
-				if (playStatus) {
-					audioBuffer[lastAudioBufferLocation * trackCount + i] += inputs[AUDIO_INPUT].getVoltage(i);
+			if (playStatus) {
+				for (auto i = 0; i < trackCount; ++i) {
+					float replaceLevel = inputs[AUDIO_INPUT].getVoltage(i + NUM_MAX_TRACKS);
+					if (replaceLevel < 0) {
+						replaceLevel = 0;
+					} else if (replaceLevel > 10) {
+						replaceLevel = 10;
+					}
+					float newSignal = 0.f;
+					if (inputs[AUDIO_INPUT].getVoltage(i + NUM_MAX_TRACKS * 2) < 1) {
+						newSignal = inputs[AUDIO_INPUT].getVoltage(i);
+					}
+					if (replaceLevel == 0) {
+						audioBuffer[lastAudioBufferLocation * trackCount + i] += newSignal;
+					} else if (replaceLevel == 10) {
+						audioBuffer[lastAudioBufferLocation * trackCount + i] = newSignal;
+					} else {
+						audioBuffer[lastAudioBufferLocation * trackCount + i] = audioBuffer[lastAudioBufferLocation * trackCount + i] * (10.f - replaceLevel) * 0.1f + newSignal;
+					}
 				}
 			}
 		}
 	} else {
 		while (lastAudioBufferLocation > audioBufferLocation) {
 			--lastAudioBufferLocation;
-			for (auto i = 0; i < trackCount; ++i) {
-				if (playStatus) {
-					audioBuffer[lastAudioBufferLocation * trackCount + i] += inputs[AUDIO_INPUT].getVoltage(i);
+			if (playStatus) {
+				for (auto i = 0; i < trackCount; ++i) {
+					float replaceLevel = inputs[AUDIO_INPUT].getVoltage(i + NUM_MAX_TRACKS);
+					if (replaceLevel < 0) {
+						replaceLevel = 0;
+					} else if (replaceLevel > 10) {
+						replaceLevel = 10;
+					}
+					float newSignal = 0.f;
+					if (inputs[AUDIO_INPUT].getVoltage(i + NUM_MAX_TRACKS * 2) < 1) {
+						newSignal = inputs[AUDIO_INPUT].getVoltage(i);
+					}
+					if (replaceLevel == 0) {
+						audioBuffer[lastAudioBufferLocation * trackCount + i] += newSignal;
+					} else if (replaceLevel == 10) {
+						audioBuffer[lastAudioBufferLocation * trackCount + i] = newSignal;
+					} else {
+						audioBuffer[lastAudioBufferLocation * trackCount + i] = audioBuffer[lastAudioBufferLocation * trackCount + i] * (10.f - replaceLevel) * 0.1f + newSignal;
+					}
 				}
 			}
 		}

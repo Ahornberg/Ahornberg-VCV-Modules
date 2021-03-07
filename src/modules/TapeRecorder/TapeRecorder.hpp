@@ -9,6 +9,7 @@ struct TapeRecorder : ModuleWithScrews {
 	const static std::string INIT_TAPE_NAME;
 	const static TapeLength TAPE_LENGTHS[];
 	constexpr static int NUM_TAPE_LENGTHS = 11;
+	constexpr static int NUM_MAX_TRACKS = 4;
 
 	enum ParamIds {
 		PAUSE_PARAM = NUM_MAX_SCREWS,
