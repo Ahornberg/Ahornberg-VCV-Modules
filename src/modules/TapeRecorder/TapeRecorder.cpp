@@ -519,7 +519,7 @@ void TapeRecorder::calcAudio(int trackCount) {
 			distortionLevel = 10;
 		}
 		if (distortionLevel < 10) {
-			distortionLevel = pow(2, distortionLevel * 0.35f + 2.6f + (rack::random::uniform() + 0.6f) * 0.1f);
+			distortionLevel = pow(2, distortionLevel * 0.55f + 0.6f + (rack::random::uniform() + 0.6f) * 0.1f);
 		} else {
 			distortionLevel = 0;
 		}
