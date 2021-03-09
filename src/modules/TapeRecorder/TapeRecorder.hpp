@@ -136,6 +136,7 @@ struct TapeRecorder : ModuleWithScrews {
 	void processAudioInput(const ProcessArgs& args);
 	void processAudioOutput(const ProcessArgs& args);
 	void process(const ProcessArgs& args) override;
+	void calcAudio(int trackCount);
 	// float valueAtOffset (const float* const inputs, const float offset) noexcept;
 	void setTrackCount(int trackCount);
 	void setTapeLength(int tapeLength);
