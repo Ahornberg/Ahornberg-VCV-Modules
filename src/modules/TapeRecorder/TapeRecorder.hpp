@@ -79,6 +79,8 @@ struct TapeRecorder : ModuleWithScrews {
 	float positionRightWheel;
 	int lastAudioBufferLocation;
 	TapeStatus tapeStatus;
+	float lastDistortionLevelInput[NUM_MAX_TRACKS];
+	float lastDistortionLevelValue[NUM_MAX_TRACKS];
 
 	dsp::BooleanTrigger playForwardsTrigger;
 	dsp::BooleanTrigger playBackwardsTrigger;
