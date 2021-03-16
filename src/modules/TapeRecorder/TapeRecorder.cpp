@@ -537,8 +537,8 @@ void TapeRecorder::calcAudio(int trackCount) {
 			distortionLevel = 0;
 		}
 		float replaceLevel = inputs[AUDIO_INPUT].getVoltage(i + NUM_MAX_TRACKS);
-		if (replaceLevel < 0) {
-			replaceLevel = 0;
+		if (replaceLevel < -10) {
+			replaceLevel = -10;
 		} else if (replaceLevel > 10) {
 			replaceLevel = 10;
 		}
