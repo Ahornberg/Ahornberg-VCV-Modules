@@ -12,6 +12,14 @@ InPort::InPort() {
 	InPort::setSvg("res/ports/In.svg");
 }	
 
+InPortSmall::InPortSmall() {
+	InPortSmall::setSvg("res/ports/InSmall.svg");
+}	
+
 OutPort::OutPort() {
 	OutPort::setSvg("res/ports/Out.svg");
+}	
+
+OutPortSmall::OutPortSmall() {
+	OutPortSmall::setSvg("res/ports/OutSmall.svg");
 }	

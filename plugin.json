@@ -26,6 +26,20 @@
 		"Sampler"
 	  ]
     },
+    {
+      "slug": "TapeRecorderMixer",
+      "name": "Tape Recorder Mixer",
+      "description": "mixer for micro cassette recorder",
+	  "disabled": false,
+	  "manualUrl": "https://github.com/Ahornberg/Ahornberg-VCV-Modules/blob/master/manuals/README.md#tape-recorder-mixer",
+      "tags": [ 
+	    "Attenuator",
+		"Controller",
+		"Expander",
+		"Mixer",
+		"Utility"
+	  ]
+    },
 	{
       "slug": "EqualDivision",
       "name": "Equal Division",

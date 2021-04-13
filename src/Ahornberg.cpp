@@ -7,6 +7,7 @@ void init(Plugin* plugin) {
 	pluginInstance = plugin;
 
 	pluginInstance->addModel(modelTapeRecorder);
+	pluginInstance->addModel(modelTapeRecorderMixer);
 	pluginInstance->addModel(modelEqualDivision);
 	pluginInstance->addModel(modelCVFreqShift);
 	pluginInstance->addModel(modelFunWithFrames);

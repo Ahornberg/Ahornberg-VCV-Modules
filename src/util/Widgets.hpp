@@ -45,7 +45,8 @@ struct ModuleWidgetWithScrews : ModuleWidget {
 	};
 	enum ScrewBottomLeft {
 		NO_SCREW_BOTTOM_LEFT,
-		SCREW_BOTTOM_LEFT
+		SCREW_BOTTOM_LEFT,
+		SCREW_BOTTOM_LEFT_INDENTED
 	};
 	enum ScrewBottomRight {
 		NO_SCREW_BOTTOM_RIGHT,

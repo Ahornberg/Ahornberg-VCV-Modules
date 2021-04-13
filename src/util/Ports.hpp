@@ -7,6 +7,14 @@ struct InPort : BasicPort {
 	InPort();
 };
 
+struct InPortSmall : BasicPort {
+	InPortSmall();
+};
+
 struct OutPort : BasicPort {
 	OutPort();
+};
+
+struct OutPortSmall : BasicPort {
+	OutPortSmall();
 };

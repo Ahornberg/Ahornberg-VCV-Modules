@@ -517,16 +517,20 @@ void TapeRecorder::process(const ProcessArgs& args) {
 
 void TapeRecorder::calcAudio(int trackCount) {
 	for (auto i = 0; i < trackCount; ++i) {
-		float distortionLevel = 10 - inputs[AUDIO_INPUT].getVoltage(i + NUM_MAX_TRACKS * 2);
+		float distortionLevel = inputs[AUDIO_INPUT].getVoltage(i + NUM_MAX_TRACKS * 2);
+		bool distortionOnInput = true;
 		if (distortionLevel < 0) {
-			distortionLevel = 0;
-		} else if (distortionLevel > 10) {
+			distortionLevel *= -1.f;
+			distortionOnInput = false;
+		}
+		if (distortionLevel > 10) {
 			distortionLevel = 10;
 		}
+		distortionLevel = 10 - distortionLevel;
 		if (distortionLevel < 10 && audioBuffer[lastAudioBufferLocation * trackCount + i] > 0) {
 			if (distortionLevel != lastDistortionLevelInput[i]) {
 				lastDistortionLevelInput[i] = distortionLevel;
-				distortionLevel = pow(2, distortionLevel * 0.55f + 0.6f);
+				distortionLevel = pow(2, distortionLevel * 0.65f + 0.6f);
 				lastDistortionLevelValue[i] = distortionLevel;
 			} else {
 				distortionLevel = lastDistortionLevelValue[i];
@@ -536,25 +540,35 @@ void TapeRecorder::calcAudio(int trackCount) {
 			lastDistortionLevelInput[i] = distortionLevel;
 			distortionLevel = 0;
 		}
-		float replaceLevel = inputs[AUDIO_INPUT].getVoltage(i + NUM_MAX_TRACKS);
+		float replaceLevel = inputs[AUDIO_INPUT].getVoltage(i + NUM_MAX_TRACKS) * -1.f;
 		if (replaceLevel < -10) {
 			replaceLevel = -10;
 		} else if (replaceLevel > 10) {
 			replaceLevel = 10;
 		}
 		if (replaceLevel == 0) {
-			// if (distortionLevel != 0 && audioBuffer[lastAudioBufferLocation * trackCount + i] > 0) {
 			if (distortionLevel != 0) {
-				audioBuffer[lastAudioBufferLocation * trackCount + i] = tanh(audioBuffer[lastAudioBufferLocation * trackCount + i] / distortionLevel) * distortionLevel + inputs[AUDIO_INPUT].getVoltage(i);
+				if (distortionOnInput) {
+					audioBuffer[lastAudioBufferLocation * trackCount + i] = tanh((audioBuffer[lastAudioBufferLocation * trackCount + i] + inputs[AUDIO_INPUT].getVoltage(i)) / distortionLevel) * distortionLevel;
+				} else {
+					audioBuffer[lastAudioBufferLocation * trackCount + i] = tanh(audioBuffer[lastAudioBufferLocation * trackCount + i] / distortionLevel) * distortionLevel + inputs[AUDIO_INPUT].getVoltage(i);
+				}
 			} else {
 				audioBuffer[lastAudioBufferLocation * trackCount + i] += inputs[AUDIO_INPUT].getVoltage(i);
 			}
 		} else if (replaceLevel == 10) {
-			audioBuffer[lastAudioBufferLocation * trackCount + i] = inputs[AUDIO_INPUT].getVoltage(i);
+			if (distortionOnInput) {
+				audioBuffer[lastAudioBufferLocation * trackCount + i] = tanh(inputs[AUDIO_INPUT].getVoltage(i) / distortionLevel) * distortionLevel;
+			} else {
+				audioBuffer[lastAudioBufferLocation * trackCount + i] = inputs[AUDIO_INPUT].getVoltage(i);
+			}
 		} else {
-			// if (distortionLevel != 0 && audioBuffer[lastAudioBufferLocation * trackCount + i] > 0) {
 			if (distortionLevel != 0) {
-				audioBuffer[lastAudioBufferLocation * trackCount + i] = tanh(audioBuffer[lastAudioBufferLocation * trackCount + i] / distortionLevel) * distortionLevel * (10.f - replaceLevel) * 0.1f + inputs[AUDIO_INPUT].getVoltage(i);
+				if (distortionOnInput) {
+					audioBuffer[lastAudioBufferLocation * trackCount + i] = tanh((audioBuffer[lastAudioBufferLocation * trackCount + i] + inputs[AUDIO_INPUT].getVoltage(i)) / distortionLevel) * distortionLevel * (10.f - replaceLevel) * 0.1f;
+				} else {
+					audioBuffer[lastAudioBufferLocation * trackCount + i] = tanh(audioBuffer[lastAudioBufferLocation * trackCount + i] / distortionLevel) * distortionLevel * (10.f - replaceLevel) * 0.1f + inputs[AUDIO_INPUT].getVoltage(i);
+				}
 			} else {
 				audioBuffer[lastAudioBufferLocation * trackCount + i] = audioBuffer[lastAudioBufferLocation * trackCount + i] * (10.f - replaceLevel) * 0.1f + inputs[AUDIO_INPUT].getVoltage(i);
 			}

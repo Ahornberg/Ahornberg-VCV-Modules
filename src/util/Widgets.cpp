@@ -42,7 +42,11 @@ void ModuleWidgetWithScrews::setScrews(ScrewTopLeft topLeft, ScrewTopRight topRi
 		module->params[ModuleWithScrews::SCREW_PARAM + 1].setValue(0);
 	}
 	if (bottomLeft) {
-		addScrew(Vec(0, RACK_GRID_HEIGHT - RACK_GRID_WIDTH), ModuleWithScrews::SCREW_PARAM + 2);
+		if (bottomLeft == SCREW_BOTTOM_LEFT_INDENTED) {
+			addScrew(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH), ModuleWithScrews::SCREW_PARAM + 2);
+		} else {
+			addScrew(Vec(0, RACK_GRID_HEIGHT - RACK_GRID_WIDTH), ModuleWithScrews::SCREW_PARAM + 2);
+		}
 	} else if (module) {
 		module->params[ModuleWithScrews::SCREW_PARAM + 2].setValue(0);
 	}
