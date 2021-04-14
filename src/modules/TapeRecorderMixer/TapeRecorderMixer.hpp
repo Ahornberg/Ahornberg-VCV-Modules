@@ -2,12 +2,12 @@
 
 struct TapeRecorderMixer : ModuleWithScrews {
 	enum ParamIds {
-		TAPE_VOLUME_PARAM = NUM_MAX_SCREWS,
-		// INPUT_VOLUME_PARAM,
-		// MUTE_PARAM,
-		// RECORD_PARAM,
-		// LINK_PARAM,
-		// 
+		INPUT_VOLUME_PARAM = NUM_MAX_SCREWS,
+		SOLO_MUTE_PARAM,
+		RECORD_PARAM,
+		TAPE_VOLUME_PARAM,
+		LINK_PARAM,
+		// delay compensation
 		NUM_PARAMS
 	};
 	enum InputIds {
@@ -15,8 +15,10 @@ struct TapeRecorderMixer : ModuleWithScrews {
 		AUDIO_FX_RETURN,
 		AUDIO_CHAIN_LEFT_INPUT,
 		AUDIO_CHAIN_RIGHT_INPUT,
+		CV_INPUT_VOLUME_INPUT,
+		CV_SOLO_MUTE_INPUT,
+		CV_RECORD_INPUT,
 		CV_TAPE_VOLUME_INPUT,
-		CV_VOLUME_SLIDER_INPUT,
 		NUM_INPUTS
 	};
 	enum OutputIds {

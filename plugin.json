@@ -37,7 +37,8 @@
 		"Controller",
 		"Expander",
 		"Mixer",
-		"Utility"
+		"Utility",
+		"Voltage-controlled amplifier"
 	  ]
     },
 	{

@@ -7,6 +7,10 @@ struct RoundSwitch : BasicSwitch {
 	RoundSwitch();
 };
 
+struct RoundSwitchMedium : BasicSwitch {
+	RoundSwitchMedium();
+};
+
 struct RoundSwitchRed : BasicSwitch {
 	RoundSwitchRed();
 };
