@@ -174,6 +174,7 @@ TapeRecorderMixerWidget::TapeRecorderMixerWidget(TapeRecorderMixer* module) {
 	addInput(createInputCentered<InPortSmall>(Vec(33, 270), module, TapeRecorderMixer::CV_MUTE_INPUT));
 
 	addParam(createParamCentered<KnobSmall>(Vec(16, 289), module, TapeRecorderMixer::INPUT_VOLUME_PARAM));
+	addParam(createParamCentered<RoundSwitch>(Vec(16, 289), module, TapeRecorderMixer::INPUT_MUTE_PARAM));
 	addInput(createInputCentered<InPortSmall>(Vec(33, 307), module, TapeRecorderMixer::CV_INPUT_VOLUME_INPUT));
 
 	addParam(createParamCentered<RoundSwitchMedium>(Vec(12, 316), module, TapeRecorderMixer::LINK_PARAM));

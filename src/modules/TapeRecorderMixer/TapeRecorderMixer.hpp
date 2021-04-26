@@ -1,14 +1,17 @@
 #include "../../Ahornberg.hpp"
 
 struct TapeRecorderMixer : ModuleWithScrews {
+	constexpr static float PLUS_6_DB = 1.41253757f;
+	
 	enum ParamIds {
-		INPUT_VOLUME_PARAM = NUM_MAX_SCREWS,
-		RECORD_PARAM,
+		RECORD_PARAM = NUM_MAX_SCREWS,
 		BYPASS_CHAIN_PARAM,
-		SOLO_PARAM,
-		MUTE_PARAM,
 		TAPE_DUCKING_PARAM,
 		TAPE_ERASE_PARAM,
+		SOLO_PARAM,
+		MUTE_PARAM,
+		INPUT_VOLUME_PARAM,
+		INPUT_MUTE_PARAM,
 		LINK_PARAM,
 		// delay compensation
 		NUM_PARAMS
