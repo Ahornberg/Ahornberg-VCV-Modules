@@ -9,15 +9,15 @@ Harmonizer::Harmonizer() {
 	configParam(VELOCITY_GLOBAL_MODULATION_PARAM,  0, 1, 0, "Velocity Modulation");
 	configParam(PITCH_GLOBAL_MODULATION_PARAM,    -1, 1, 0, "Pitch Modulation");
 	for (auto i = 0; i < NUM_CHANNELS; ++i) {
-		configParam(CHANNEL_ACTIVE_PARAM + i,       0,     1,    0, string::f("Channel %d active", i + 1));
-		configParam(VELOCITY_MODULATION_PARAM + i,  0,     1,    0, string::f("Velocity Modulation Channel %d", i + 1));
-		configParam(VELOCITY_PARAM + i,             0,     1,    1, string::f("Velocity Channel %d", i + 1));
-		configParam(PITCH_MODULATION_PARAM + i,    -1,     1,    0, string::f("Pitch Modulation Channel %d", i + 1));
-		configParam(PITCH_HARMONICS_PARAM + i,      1, NUM_HARMONICS, 1, string::f("Pitch Harmonics Channel %d", i + 1));
-		configParam(PITCH_SUBHARMONICS_PARAM + i,   1, NUM_HARMONICS, 1, string::f("Pitch Subarmonics Channel %d", i + 1));
-		configParam(PITCH_FINE_PARAM + i,           0.97,  1.03, 1, string::f("Pitch Fine Channel %d", i + 1), "%", 0, 100, -100);
+		configParam<OnOff>(CHANNEL_ACTIVE_PARAM + i, 0,     1,    0, string::f("Channel %d", i + 1));
+		configParam(VELOCITY_MODULATION_PARAM + i,   0,     1,    0, string::f("Velocity Modulation Channel %d", i + 1));
+		configParam(VELOCITY_PARAM + i,              0,     1,    1, string::f("Velocity Channel %d", i + 1));
+		configParam(PITCH_MODULATION_PARAM + i,     -1,     1,    0, string::f("Pitch Modulation Channel %d", i + 1));
+		configParam(PITCH_HARMONICS_PARAM + i,       1, NUM_HARMONICS, 1, string::f("Pitch Harmonics Channel %d", i + 1));
+		configParam(PITCH_SUBHARMONICS_PARAM + i,    1, NUM_HARMONICS, 1, string::f("Pitch Subarmonics Channel %d", i + 1));
+		configParam(PITCH_FINE_PARAM + i,            0.97,  1.03, 1, string::f("Pitch Fine Channel %d", i + 1), "%", 0, 100, -100);
 		if (i < NUM_MIXTURES) {
-			configParam(MIXTUR_PARAM + i,           0,     1,    0, string::f("Mixtur %d active", i + 1));
+			configParam<OnOff>(MIXTUR_PARAM + i,     0,     1,    0, string::f("Mixtur %d", i + 1));
 			mixtureTriggers[i].reset();
 		}
 	}

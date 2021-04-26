@@ -13,11 +13,11 @@ Metronome::Metronome() {
 	config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 	configScrewParams();
 	for (auto i = 0; i < NUM_BPM_VALUES; ++i) {
-		configParam(BPM_VALUE_BUTTON_PARAM + i, 0, 1, i == INIT_BPM ? 1 : 0, string::f("%d BPM", BPM_VALUES[i]));
+		configParam<OnOff>(BPM_VALUE_BUTTON_PARAM + i, 0, 1, i == INIT_BPM ? 1 : 0, string::f("%d BPM", BPM_VALUES[i]));
 	}
 	configParam<BpmValues>(BPM_VALUE_PARAM, 0, NUM_BPM_VALUES - 1, INIT_BPM, "BPM");
 	configParam<BpmValues>(BPM_RESET_VALUE_PARAM, 0, NUM_BPM_VALUES - 1, INIT_BPM, "BPM");
-	configParam(PLAY_PARAM, 0, 1, 0, "Play / Stop");
+	configParam<OnOff>(PLAY_PARAM, 0, 1, 0, "Play");
 	pulse.reset();
 	timer.reset();
 	threeStepFasterTrigger.reset();

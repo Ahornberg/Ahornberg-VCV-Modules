@@ -1,5 +1,9 @@
 #include "../Ahornberg.hpp"
 
+std::string OnOff::getDisplayValueString() {
+	return getValue() ? "On" : "Off";
+}
+
 BasicSwitch::BasicSwitch() {
 	momentary = false;
 	shadow->opacity = 0;

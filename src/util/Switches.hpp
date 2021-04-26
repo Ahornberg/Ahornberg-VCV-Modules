@@ -1,3 +1,7 @@
+struct OnOff : ParamQuantity {
+	std::string getDisplayValueString() override;
+};
+
 struct BasicSwitch : SvgSwitch, ManualText {
 	BasicSwitch();
 	void addFrame(const std::string& filename);
