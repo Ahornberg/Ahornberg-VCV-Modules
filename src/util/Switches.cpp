@@ -11,7 +11,23 @@ BasicSwitch::BasicSwitch() {
 
 void BasicSwitch::addFrame(const std::string& filename) {
 	SvgSwitch::addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, filename)));
-}	
+}
+
+void BasicRoundSwitch::onHover(const event::Hover& e) {
+	math::Vec c = box.size.div(2);
+	float dist = e.pos.minus(c).norm();
+	if (dist <= c.x) {
+		SvgSwitch::onHover(e);
+	}
+}
+
+void BasicRoundSwitch::onButton(const event::Button& e) {
+	math::Vec c = box.size.div(2);
+	float dist = e.pos.minus(c).norm();
+	if (dist <= c.x) {
+		SvgSwitch::onButton(e);
+	}
+}
 
 RoundSwitch::RoundSwitch() {
 	addFrame("res/switches/Round_off.svg");

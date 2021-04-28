@@ -7,26 +7,31 @@ struct BasicSwitch : SvgSwitch, ManualText {
 	void addFrame(const std::string& filename);
 };
 
-struct RoundSwitch : BasicSwitch {
+struct BasicRoundSwitch : BasicSwitch {
+	void onHover(const event::Hover& e) override;
+	void onButton(const event::Button& e) override;
+};
+
+struct RoundSwitch : BasicRoundSwitch {
 	RoundSwitch();
 };
 
-struct RoundSwitchMedium : BasicSwitch {
+struct RoundSwitchMedium : BasicRoundSwitch {
 	RoundSwitchMedium();
 };
 
-struct RoundSwitchRed : BasicSwitch {
+struct RoundSwitchRed : BasicRoundSwitch {
 	RoundSwitchRed();
 };
 
-struct RoundSwitchLinearJump : BasicSwitch {
+struct RoundSwitchLinearJump : BasicRoundSwitch {
 	RoundSwitchLinearJump();
 };
 
-struct RoundLargeSwitch : BasicSwitch {
+struct RoundLargeSwitch : BasicRoundSwitch {
 	RoundLargeSwitch();
 };
 
-struct PauseSwitch : BasicSwitch {
+struct PauseSwitch : BasicRoundSwitch {
 	PauseSwitch();
 };
