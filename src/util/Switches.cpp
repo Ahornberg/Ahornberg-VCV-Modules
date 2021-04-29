@@ -1,5 +1,13 @@
 #include "../Ahornberg.hpp"
 
+void toggleParamValue(Param& param) {
+	param.getValue() ? param.setValue(0) : param.setValue(1);
+}
+
+float rescaleInput(Input& port, int channel) {
+	return rescale(port.getVoltage(channel), 0.1, 2, 0, 1);
+}
+
 std::string OnOff::getDisplayValueString() {
 	return getValue() ? "On" : "Off";
 }

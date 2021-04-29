@@ -129,10 +129,10 @@ struct TapeRecorder : ModuleWithScrews {
 	void processSpeedOutput();
 	void processLoopInput();
 	// void processLoopOutput(const ProcessArgs& args);
-	void toggleParamValue(int param);
+	// void toggleParamValue(int param);
 	bool isTransportCueSwitchMomentary();
-	float rescaleInput(int port, int channel = 0);
-	float rescaleInverseInput(int port, int channel = 0);
+	// float rescaleInput(int port, int channel = 0);
+	// float rescaleInverseInput(int port, int channel = 0);
 	void processTransportInput();
 	void processTransportOutput();
 	void processAudioInput(const ProcessArgs& args);

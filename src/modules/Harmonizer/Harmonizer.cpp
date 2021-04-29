@@ -43,7 +43,7 @@ void Harmonizer::setMixture(int mixture) {
 int Harmonizer::processMixtureTriggers() {
 	for (auto i = 0; i < NUM_MIXTURES; ++i) {
 		if (inputs[MIXTUR_INPUT + i].isConnected()) {
-			if (mixtureTriggers[i].process(rescale(inputs[MIXTUR_INPUT + i].getVoltage(), 0.1, 2, 0, 1))) {
+			if (mixtureTriggers[i].process(rescaleInput(inputs[MIXTUR_INPUT + i]))) {
 				setMixture(i);
 			}
 		}

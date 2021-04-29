@@ -45,7 +45,7 @@ void Metronome::process(const ProcessArgs& args) {
 		
 	}
 	if (inputs[THREE_STEP_FASTER_INPUT].isConnected()) {
-		if (threeStepFasterTrigger.process(rescale(inputs[THREE_STEP_FASTER_INPUT].getVoltage(), 0.1, 2, 0, 1))) {
+		if (threeStepFasterTrigger.process(rescaleInput(inputs[THREE_STEP_FASTER_INPUT]))) {
 			int bpmIndex = params[BPM_VALUE_PARAM].getValue() + 3;
 			while (bpmIndex >= NUM_BPM_VALUES) {
 				bpmIndex -= NUM_BPM_VALUES;
@@ -54,7 +54,7 @@ void Metronome::process(const ProcessArgs& args) {
 		}
 	}
 	if (inputs[TWO_STEP_FASTER_INPUT].isConnected()) {
-		if (twoStepFasterTrigger.process(rescale(inputs[TWO_STEP_FASTER_INPUT].getVoltage(), 0.1, 2, 0, 1))) {
+		if (twoStepFasterTrigger.process(rescaleInput(inputs[TWO_STEP_FASTER_INPUT]))) {
 			int bpmIndex = params[BPM_VALUE_PARAM].getValue() + 2;
 			while (bpmIndex >= NUM_BPM_VALUES) {
 				bpmIndex -= NUM_BPM_VALUES;
@@ -63,7 +63,7 @@ void Metronome::process(const ProcessArgs& args) {
 		}
 	}
 	if (inputs[ONE_STEP_FASTER_INPUT].isConnected()) {
-		if (oneStepFasterTrigger.process(rescale(inputs[ONE_STEP_FASTER_INPUT].getVoltage(), 0.1, 2, 0, 1))) {
+		if (oneStepFasterTrigger.process(rescaleInput(inputs[ONE_STEP_FASTER_INPUT]))) {
 			int bpmIndex = params[BPM_VALUE_PARAM].getValue();
 			if (++bpmIndex >= NUM_BPM_VALUES) {
 				bpmIndex = 0;
@@ -72,7 +72,7 @@ void Metronome::process(const ProcessArgs& args) {
 		}
 	}
 	if (inputs[ONE_STEP_SLOWER_INPUT].isConnected()) {
-		if (oneStepSlowerTrigger.process(rescale(inputs[ONE_STEP_SLOWER_INPUT].getVoltage(), 0.1, 2, 0, 1))) {
+		if (oneStepSlowerTrigger.process(rescaleInput(inputs[ONE_STEP_SLOWER_INPUT]))) {
 			int bpmIndex = params[BPM_VALUE_PARAM].getValue();
 			if (--bpmIndex <= 0) {
 				bpmIndex = NUM_BPM_VALUES - 1;
@@ -81,12 +81,12 @@ void Metronome::process(const ProcessArgs& args) {
 		}
 	}
 	if (inputs[BPM_RESET_INPUT].isConnected()) {
-		if (bpmResetTrigger.process(rescale(inputs[BPM_RESET_INPUT].getVoltage(), 0.1, 2, 0, 1))) {
+		if (bpmResetTrigger.process(rescaleInput(inputs[BPM_RESET_INPUT]))) {
 			params[BPM_VALUE_PARAM].setValue(params[BPM_RESET_VALUE_PARAM].getValue());
 		}
 	}
 	if (inputs[PLAY_INPUT].isConnected()) {
-		if (playTrigger.process(rescale(inputs[PLAY_INPUT].getVoltage(), 0.1, 2, 0, 1))) {
+		if (playTrigger.process(rescaleInput(inputs[PLAY_INPUT]))) {
 			params[PLAY_PARAM].getValue() ? params[PLAY_PARAM].setValue(0) : params[PLAY_PARAM].setValue(1);
 			timer.reset();
 		}

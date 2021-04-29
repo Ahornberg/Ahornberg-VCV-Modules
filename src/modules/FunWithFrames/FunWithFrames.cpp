@@ -37,7 +37,7 @@ void FunWithFrames::process(const ProcessArgs& args) {
 	if (outputs[NOTE_OUTPUT].isConnected()) {
 		if (arpeggio) {
 			outputs[NOTE_OUTPUT].setChannels(1);
-			if (clockInputTrigger.process(rescale(inputs[CLOCK_INPUT].getVoltage(), 0.1, 2, 0, 1))) {
+			if (clockInputTrigger.process(rescaleInput(inputs[CLOCK_INPUT]))) {
 				++arpeggioPosition;
 				if (arpeggioPosition > params[MAX_CHORD_SIZE_PARAM].getValue() || !inputs[GATE_INPUT].getVoltage()) {
 					arpeggioPosition = 0;

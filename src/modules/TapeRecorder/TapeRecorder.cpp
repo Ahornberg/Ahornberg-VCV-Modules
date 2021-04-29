@@ -182,45 +182,45 @@ void TapeRecorder::processLoopInput() {
 	
 // }
 
-void TapeRecorder::toggleParamValue(int param) {
-	params[param].getValue() ? params[param].setValue(0) : params[param].setValue(1);
-}
+// void TapeRecorder::toggleParamValue(int param) {
+	// params[param].getValue() ? params[param].setValue(0) : params[param].setValue(1);
+// }
 
 bool TapeRecorder::isTransportCueSwitchMomentary() {
 	return params[PLAY_FORWARDS_PARAM].getValue() || params[PLAY_BACKWARDS_PARAM].getValue();
 }
 
-float TapeRecorder::rescaleInput(int port, int channel) {
-	return rescale(inputs[port].getVoltage(channel), 0.1, 2, 0, 1);
-}
+// float TapeRecorder::rescaleInput(int port, int channel) {
+	// return rescale(inputs[port].getVoltage(channel), 0.1, 2, 0, 1);
+// }
 
-float TapeRecorder::rescaleInverseInput(int port, int channel) {
-	return rescale(inputs[port].getVoltage(channel), 2, 0.1, 0, 1);
-}
+// float TapeRecorder::rescaleInverseInput(int port, int channel) {
+	// return rescale(inputs[port].getVoltage(channel), 2, 0.1, 0, 1);
+// }
 
 void TapeRecorder::processTransportInput() {
 	// TODO loop input
 	if (inputs[TRANSPORT_INPUT].isConnected()) {
-		if (pauseInputTrigger.process(rescaleInput(TRANSPORT_INPUT, 0))) {
+		if (pauseInputTrigger.process(rescaleInput(inputs[TRANSPORT_INPUT], 0))) {
 			// pause is independend from all other transport keys
-			toggleParamValue(PAUSE_PARAM);
+			toggleParamValue(params[PAUSE_PARAM]);
 		}
 		// if (playBackwardsInputTrigger.process(rescaleInput(TRANSPORT_INPUT, 1))) {
-			// toggleParamValue(PLAY_BACKWARDS_PARAM);
+			// toggleParamValue(params[PLAY_BACKWARDS_PARAM]);
 			// if (params[PLAY_BACKWARDS_PARAM].getValue()) {
 				// // only one play direction active at a time
 				// params[PLAY_FORWARDS_PARAM].setValue(0);
 			// }
 		// }
 		// if (playForwardsInputTrigger.process(rescaleInput(TRANSPORT_INPUT, 3))) {
-			// toggleParamValue(PLAY_FORWARDS_PARAM);
+			// toggleParamValue(params[PLAY_FORWARDS_PARAM]);
 			// if (params[PLAY_FORWARDS_PARAM].getValue()) {
 				// // only one play direction active at a time
 				// params[PLAY_BACKWARDS_PARAM].setValue(0);
 			// }
 		// }
 		// if (cueBackwardsInputTrigger.process(rescaleInput(TRANSPORT_INPUT, 0))) {
-			// toggleParamValue(CUE_BACKWARDS_PARAM);
+			// toggleParamValue(params[CUE_BACKWARDS_PARAM]);
 			// if (params[CUE_BACKWARDS_PARAM].getValue()) {
 				// // only one cue direction active at a time
 				// params[CUE_FORWARDS_PARAM].setValue(0);
@@ -232,7 +232,7 @@ void TapeRecorder::processTransportInput() {
 			// }
 		// }
 		// if (cueForwardsInputTrigger.process(rescaleInput(TRANSPORT_INPUT, 4))) {
-			// toggleParamValue(CUE_FORWARDS_PARAM);
+			// toggleParamValue(params[CUE_FORWARDS_PARAM]);
 			// if (params[CUE_FORWARDS_PARAM].getValue()) {
 				// // only one cue direction active at a time
 				// params[CUE_BACKWARDS_PARAM].setValue(0);
@@ -400,21 +400,21 @@ void TapeRecorder::process(const ProcessArgs& args) {
 	if (params[LOOP_MODE_PARAM].getValue() > 0) {
 		if (loopStart < loopEnd) {
 			if (audioBufferPosition <= loopStartPosition && playStatus && !playForwardStatus) {
-				toggleParamValue(PLAY_FORWARDS_PARAM);
-				toggleParamValue(PLAY_BACKWARDS_PARAM);
+				toggleParamValue(params[PLAY_FORWARDS_PARAM]);
+				toggleParamValue(params[PLAY_BACKWARDS_PARAM]);
 			}
 			if (audioBufferPosition > loopEndPosition && playStatus && playForwardStatus) {
-				toggleParamValue(PLAY_FORWARDS_PARAM);
-				toggleParamValue(PLAY_BACKWARDS_PARAM);
+				toggleParamValue(params[PLAY_FORWARDS_PARAM]);
+				toggleParamValue(params[PLAY_BACKWARDS_PARAM]);
 			}
 		} else if (loopStart > loopEnd) {
 			if (audioBufferPosition <= loopEndPosition && playStatus && !playForwardStatus) {
-				toggleParamValue(PLAY_FORWARDS_PARAM);
-				toggleParamValue(PLAY_BACKWARDS_PARAM);
+				toggleParamValue(params[PLAY_FORWARDS_PARAM]);
+				toggleParamValue(params[PLAY_BACKWARDS_PARAM]);
 			}
 			if (audioBufferPosition > loopStartPosition && playStatus && playForwardStatus) {
-				toggleParamValue(PLAY_FORWARDS_PARAM);
-				toggleParamValue(PLAY_BACKWARDS_PARAM);
+				toggleParamValue(params[PLAY_FORWARDS_PARAM]);
+				toggleParamValue(params[PLAY_BACKWARDS_PARAM]);
 			}
 		}
 	} else {

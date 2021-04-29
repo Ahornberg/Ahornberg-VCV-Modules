@@ -1,3 +1,6 @@
+void toggleParamValue(Param& param);
+float rescaleInput(Input& port, int channel = 0);
+
 struct OnOff : ParamQuantity {
 	std::string getDisplayValueString() override;
 };
@@ -32,6 +35,6 @@ struct RoundLargeSwitch : BasicRoundSwitch {
 	RoundLargeSwitch();
 };
 
-struct PauseSwitch : BasicRoundSwitch {
+struct PauseSwitch : BasicSwitch {
 	PauseSwitch();
 };
