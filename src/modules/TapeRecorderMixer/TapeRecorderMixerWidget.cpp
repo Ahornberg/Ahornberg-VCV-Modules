@@ -158,7 +158,7 @@ TapeRecorderMixerWidget::TapeRecorderMixerWidget(TapeRecorderMixer* module) {
 	
 	addChild(new VolumeDisplay(Rect(3, 85, 39, 29), module));
 
-	addParam(createParamCentered<RoundSwitchMedium>(Vec(12, 136), module, TapeRecorderMixer::RECORD_PARAM));
+	addParam(createParamCentered<RoundSwitchMediumRed>(Vec(12, 136), module, TapeRecorderMixer::RECORD_PARAM));
 	addInput(createInputCentered<InPortSmall>(Vec(12, 157), module, TapeRecorderMixer::CV_RECORD_INPUT));
 	addParam(createParamCentered<RoundSwitchMedium>(Vec(33, 143), module, TapeRecorderMixer::BYPASS_CHAIN_PARAM));
 	addInput(createInputCentered<InPortSmall>(Vec(33, 164), module, TapeRecorderMixer::CV_BYPASS_CHAIN_INPUT));
@@ -179,7 +179,7 @@ TapeRecorderMixerWidget::TapeRecorderMixerWidget(TapeRecorderMixer* module) {
 	// addParam(createParamCentered<RoundSwitch>(Vec(12, 189), module, TapeRecorderMixer::INPUT_MUTE_PARAM));
 	addInput(createInputCentered<InPortSmall>(Vec(33, 307), module, TapeRecorderMixer::CV_INPUT_VOLUME_INPUT));
 
-	addParam(createParamCentered<RoundSwitchMedium>(Vec(12, 316), module, TapeRecorderMixer::LINK_PARAM));
+	addParam(createParamCentered<RoundSwitchMediumLink>(Vec(12, 316), module, TapeRecorderMixer::LINK_PARAM));
 
 
 }

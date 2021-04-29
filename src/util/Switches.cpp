@@ -52,9 +52,19 @@ RoundSwitchRed::RoundSwitchRed() {
 	addFrame("res/switches/Round_red.svg");
 }
 
+RoundSwitchMediumRed::RoundSwitchMediumRed() {
+	addFrame("res/switches/RoundMedium_off.svg");
+	addFrame("res/switches/RoundMedium_red.svg");
+}
+
 RoundSwitchLinearJump::RoundSwitchLinearJump() {
 	addFrame("res/switches/Round_linear.svg");
 	addFrame("res/switches/Round_linear_jump.svg");
+}
+
+RoundSwitchMediumLink::RoundSwitchMediumLink() {
+	addFrame("res/switches/RoundMedium_unlinked.svg");
+	addFrame("res/switches/RoundMedium_linked.svg");
 }
 
 RoundLargeSwitch::RoundLargeSwitch() {
