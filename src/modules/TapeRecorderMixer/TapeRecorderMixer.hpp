@@ -13,6 +13,7 @@ struct TapeRecorderMixer : ModuleWithScrews {
 		MUTE_PARAM,
 		INPUT_VOLUME_PARAM,
 		INPUT_MUTE_PARAM,
+		INPUT_MUTE_ENABLED_PARAM,
 		LINK_PARAM,
 		// delay compensation
 		NUM_PARAMS
@@ -46,6 +47,7 @@ struct TapeRecorderMixer : ModuleWithScrews {
 	dsp::ExponentialSlewLimiter inputMuteSlewLimiter;
 	dsp::ExponentialSlewLimiter fxReturnSlewLimiter;
 	dsp::ExponentialSlewLimiter fxBypassSlewLimiter;
+	dsp::ExponentialSlewLimiter cvInputVolumeSlewLimiter;
 	dsp::SchmittTrigger recordInputTrigger;
 	dsp::SchmittTrigger fxBypassInputTrigger;
 	dsp::SchmittTrigger soloInputTrigger;

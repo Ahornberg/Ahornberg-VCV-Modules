@@ -140,6 +140,24 @@ void VolumeDisplay::drawText(const DrawArgs& disp) {
 	// nvgText(disp.vg, textPos.x, textPos.y, text.c_str(), NULL);
 }
 
+TapeRecorderMixerMenuItem::TapeRecorderMixerMenuItem(TapeRecorderMixer* tapeRecorderMixer, TapeRecorderMixerWidget* tapeRecorderMixerWidget) {
+	this->tapeRecorderMixer = tapeRecorderMixer;
+	this->tapeRecorderMixerWidget = tapeRecorderMixerWidget;
+}
+
+ChangeInputMuteModeMenuItem::ChangeInputMuteModeMenuItem(TapeRecorderMixer* tapeRecorderMixer, TapeRecorderMixerWidget* tapeRecorderMixerWidget) : TapeRecorderMixerMenuItem(tapeRecorderMixer, tapeRecorderMixerWidget) {
+	text = "Enable Input Mute";
+	if (tapeRecorderMixer && tapeRecorderMixer->params[TapeRecorderMixer::INPUT_MUTE_ENABLED_PARAM].getValue()) {
+		text = "Disable Input Mute";
+	}
+}
+
+void ChangeInputMuteModeMenuItem::onAction(const event::Action& e) {
+	if (tapeRecorderMixer) {
+		toggleParamValue(tapeRecorderMixer->params[TapeRecorderMixer::INPUT_MUTE_ENABLED_PARAM]);
+	}
+}
+
 TapeRecorderMixerWidget::TapeRecorderMixerWidget(TapeRecorderMixer* module) {
 	setModule(module);
 	setPanel("res/TapeRecorderMixer.svg");
@@ -182,6 +200,24 @@ TapeRecorderMixerWidget::TapeRecorderMixerWidget(TapeRecorderMixer* module) {
 	addParam(createParamCentered<RoundSwitchMediumLink>(Vec(12, 316), module, TapeRecorderMixer::LINK_PARAM));
 
 
+}
+
+void TapeRecorderMixerWidget::appendContextMenu(Menu* menu) {
+	TapeRecorderMixer* tapeRecorderMixer = dynamic_cast<TapeRecorderMixer*>(this->module);
+	menu->addChild(new MenuEntry);
+	menu->addChild(new ChangeInputMuteModeMenuItem(tapeRecorderMixer, this));
+}
+
+void TapeRecorderMixerWidget::step() {
+	ModuleWidget::step();
+	if (module) {
+		ParamWidget* inputMuteParamWidget = getParam(TapeRecorderMixer::INPUT_MUTE_PARAM);
+		if (module->params[TapeRecorderMixer::INPUT_MUTE_ENABLED_PARAM].getValue()) {
+			inputMuteParamWidget->show();
+		} else {
+			inputMuteParamWidget->hide();
+		}
+	}
 }
 
 Model* modelTapeRecorderMixer = createModel<TapeRecorderMixer, TapeRecorderMixerWidget>("TapeRecorderMixer");

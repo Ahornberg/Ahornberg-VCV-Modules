@@ -218,7 +218,6 @@ struct EraseTapeMenuItem : TapeRecorderMenuItem {
 	void onAction(const event::Action& e) override;
 };
 
-
 struct TapeRecorderWidget : ModuleWidgetWithScrews {
 	TapeNameDisplay* tapeNameDisplay;
 	StripeWidget* stripeWidget;

@@ -5,12 +5,13 @@ TapeRecorderMixer::TapeRecorderMixer() {
 	configScrewParams();
 	configParam<OnOff>(RECORD_PARAM, 0, 1, 0, "Record");
 	configParam<OnOff>(BYPASS_CHAIN_PARAM, 0, 1, 0, "Bypass Insert");
-	configParam(TAPE_DUCKING_PARAM, PLUS_6_DB, 0, 1, "Tape Ducking", " dB", -10, 40);
-	configParam(TAPE_ERASE_PARAM, PLUS_6_DB, 0, 1, "Tape Erase Amount", " dB", -10, 40);
+	configParam(TAPE_DUCKING_PARAM, 0, PLUS_6_DB, 1, "Tape Ducking", " dB", -10, 40);
+	configParam(TAPE_ERASE_PARAM, 0, PLUS_6_DB, 1, "Tape Erase Amount", " dB", -10, 40);
 	configParam<OnOff>(SOLO_PARAM, 0, 1, 0, "Solo");
 	configParam<OnOff>(MUTE_PARAM, 0, 1, 0, "Mute");
 	configParam(INPUT_VOLUME_PARAM, 0, PLUS_6_DB, 1, "Input Volume", " dB", -10, 40);
 	configParam<OnOff>(INPUT_MUTE_PARAM, 0, 1, 0, "Input Mute");
+	configParam<OnOff>(INPUT_MUTE_ENABLED_PARAM, 0, 1, 0, "Input Mute Enabled");
 	configParam<OnOff>(LINK_PARAM, 0, 1, 0, "Link To Left Module");
 	muteSlewLimiter.setRiseFall(AUDIO_MUTE_SLEW, AUDIO_MUTE_SLEW);
 	muteSlewLimiter.reset();
@@ -20,6 +21,8 @@ TapeRecorderMixer::TapeRecorderMixer() {
 	fxReturnSlewLimiter.reset();
 	fxBypassSlewLimiter.setRiseFall(AUDIO_MUTE_SLEW, AUDIO_MUTE_SLEW);
 	fxBypassSlewLimiter.reset();
+	cvInputVolumeSlewLimiter.setRiseFall(AUDIO_MUTE_SLEW, AUDIO_MUTE_SLEW);
+	cvInputVolumeSlewLimiter.reset();
 	recordInputTrigger.reset();
 	fxBypassInputTrigger.reset();
 	soloInputTrigger.reset();
@@ -54,7 +57,22 @@ void TapeRecorderMixer::process(const ProcessArgs& args) {
 
 	float audio = 0;
 	if (inputs[AUDIO_INPUT].isConnected()) {
-		audio = inputs[AUDIO_INPUT].getVoltage() * pow(params[INPUT_VOLUME_PARAM].getValue(), 2.f) * inputMuteSlewLimiter.process(args.sampleTime, !params[INPUT_MUTE_PARAM].getValue());
+		float cvInputVolume = 1;
+		if (inputs[CV_INPUT_VOLUME_INPUT].isConnected()) {
+			if (params[INPUT_MUTE_ENABLED_PARAM].getValue()) {
+				cvInputVolume = clamp(inputs[CV_INPUT_VOLUME_INPUT].getVoltage(), -5.f, 5.f) / 5.f;
+				if (cvInputVolume      < 0) {
+					params[INPUT_MUTE_PARAM].setValue(1);
+					cvInputVolume = abs(cvInputVolume);
+				} else {
+					params[INPUT_MUTE_PARAM].setValue(0);
+				}
+			} else {
+				cvInputVolume = clamp(inputs[CV_INPUT_VOLUME_INPUT].getVoltage(), 0.f, 10.f) / 10.f;
+			}
+			cvInputVolume = cvInputVolumeSlewLimiter.process(args.sampleTime, cvInputVolume);
+		}
+		audio = inputs[AUDIO_INPUT].getVoltage() * pow(params[INPUT_VOLUME_PARAM].getValue() * cvInputVolume, 2.f) * inputMuteSlewLimiter.process(args.sampleTime, !(params[INPUT_MUTE_ENABLED_PARAM].getValue() && params[INPUT_MUTE_PARAM].getValue()));
 	}
 	if (inputs[AUDIO_CHAIN_RIGHT_INPUT].isConnected()) {
 		audio += inputs[AUDIO_CHAIN_RIGHT_INPUT].getVoltage() * pow(params[TAPE_ERASE_PARAM].getValue(), 2.f);
