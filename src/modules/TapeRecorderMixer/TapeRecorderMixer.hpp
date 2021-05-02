@@ -42,6 +42,9 @@ struct TapeRecorderMixer : ModuleWithScrews {
 	enum LightIds {
 		NUM_LIGHTS
 	};
+	
+	int channelNumber;
+	int maxChannels;
 
 	dsp::ExponentialSlewLimiter muteSlewLimiter;
 	dsp::ExponentialSlewLimiter inputMuteSlewLimiter;
@@ -52,6 +55,8 @@ struct TapeRecorderMixer : ModuleWithScrews {
 	dsp::SchmittTrigger fxBypassInputTrigger;
 	dsp::SchmittTrigger soloInputTrigger;
 	dsp::SchmittTrigger muteInputTrigger;
+	
+	dsp::ClockDivider testDivider;
 	
 	TapeRecorderMixer();
 	void process(const ProcessArgs& args) override;

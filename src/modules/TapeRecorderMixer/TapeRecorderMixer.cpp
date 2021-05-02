@@ -13,6 +13,10 @@ TapeRecorderMixer::TapeRecorderMixer() {
 	configParam<OnOff>(INPUT_MUTE_PARAM, 0, 1, 0, "Input Mute");
 	configParam<OnOff>(INPUT_MUTE_ENABLED_PARAM, 0, 1, 0, "Input Mute Enabled");
 	configParam<OnOff>(LINK_PARAM, 0, 1, 0, "Link To Left Module");
+	
+	channelNumber = 0;
+	maxChannels = PORT_MAX_CHANNELS;
+	
 	muteSlewLimiter.setRiseFall(AUDIO_MUTE_SLEW, AUDIO_MUTE_SLEW);
 	muteSlewLimiter.reset();
 	inputMuteSlewLimiter.setRiseFall(AUDIO_MUTE_SLEW, AUDIO_MUTE_SLEW);
@@ -27,9 +31,38 @@ TapeRecorderMixer::TapeRecorderMixer() {
 	fxBypassInputTrigger.reset();
 	soloInputTrigger.reset();
 	muteInputTrigger.reset();
+	
+	testDivider.setDivision(1024);
+	testDivider.reset();
 }
 
 void TapeRecorderMixer::process(const ProcessArgs& args) {
+	
+	if (testDivider.process()) {
+		
+	}
+	auto countChannels = inputs[AUDIO_CHAIN_RIGHT_INPUT].getChannels();
+	if (countChannels) {
+		if (countChannels == 16) {
+			channelNumber = inputs[AUDIO_CHAIN_RIGHT_INPUT].getVoltage(15);
+		} else {
+			channelNumber = countChannels;
+		}
+	} else {
+		channelNumber = 0;
+	}
+	if (outputs[AUDIO_CHAIN_LEFT_OUTPUT].isConnected()) {
+		outputs[AUDIO_CHAIN_LEFT_OUTPUT].setChannels(maxChannels);
+		for (auto i = 0; i < countChannels; ++i) {
+			outputs[AUDIO_CHAIN_LEFT_OUTPUT].setVoltage(inputs[AUDIO_CHAIN_RIGHT_INPUT].getVoltage(i), i);
+		}
+		if (channelNumber) {
+			outputs[AUDIO_CHAIN_LEFT_OUTPUT].setVoltage(channelNumber - 1, 15);
+		} else {
+			outputs[AUDIO_CHAIN_LEFT_OUTPUT].setVoltage(0, 15);
+		}
+	}
+	
 	// if bus not connected then in -> fx -> meter -> out
 	// duck is a 3-band multicompressor in the tape, sidechained by the input
 	// duck: half of duck works inverse (boost)
@@ -103,3 +136,4 @@ void TapeRecorderMixer::process(const ProcessArgs& args) {
 		// }
 	// }
 }
+

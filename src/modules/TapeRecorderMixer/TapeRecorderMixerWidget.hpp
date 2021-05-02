@@ -2,6 +2,8 @@
 
 struct VolumeDisplay : Display {
 	TapeRecorderMixer* tapeRecorderMixer;
+	int channelNumber;
+	std::string trackName;
 	// double tapePosition;
 	// int beatsPerBar;
 	// int loopMode;
@@ -21,9 +23,13 @@ struct VolumeDisplay : Display {
 };
 
 struct TapeRecorderMixerWidget : ModuleWidgetWithScrews {
+	VolumeDisplay* volumeDisplay;
+	
 	TapeRecorderMixerWidget(TapeRecorderMixer* module);
 	void appendContextMenu(Menu* menu) override;
 	void step() override;
+	json_t* toJson() override;
+	void fromJson(json_t* rootJ) override;
 };
 
 struct TapeRecorderMixerMenuItem : MenuItem {
@@ -31,6 +37,13 @@ struct TapeRecorderMixerMenuItem : MenuItem {
 	TapeRecorderMixerWidget* tapeRecorderMixerWidget;
 	
 	TapeRecorderMixerMenuItem(TapeRecorderMixer* tapeRecorderMixer, TapeRecorderMixerWidget* tapeRecorderMixerWidget);
+};
+
+struct TrackNameMenuItem : TextFieldMenuItem {
+	VolumeDisplay* volumeDisplay;
+	
+	TrackNameMenuItem(VolumeDisplay* volumeDisplay);
+	void onChange(const event::Change& e) override;
 };
 
 struct ChangeInputMuteModeMenuItem : TapeRecorderMixerMenuItem {

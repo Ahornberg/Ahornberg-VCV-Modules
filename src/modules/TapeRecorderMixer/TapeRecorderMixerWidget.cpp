@@ -2,61 +2,39 @@
 
 VolumeDisplay::VolumeDisplay(Rect box, TapeRecorderMixer* tapeRecorderMixer) : Display(box) {
 	this->tapeRecorderMixer = tapeRecorderMixer;
-	// tapePosition = 0;
-	// beatsPerBar = 0;
-	// loopMode = 0;
-	// loopStart = 0;
-	// loopEnd = 0;
-	// loopStartConnected = false;
-	// loopEndConnected = false;
-	// // loopStartOnTapePosition = false;
-	// // loopEndOnTapePosition = false;
-	// playStatus = false;
-	// cueStatus = false;
-	// playForwardStatus = false;
-	// cueForwardStatus = false;
+	channelNumber = 0;
+	trackName = "";
 }
 
 void VolumeDisplay::drawText(const DrawArgs& disp) {
 	if (tapeRecorderMixer) {
-		// loopMode = tapeRecorder->params[TapeRecorder::LOOP_MODE_PARAM].getValue();
-		// loopStartConnected = tapeRecorder->inputs[TapeRecorder::LOOP_START_INPUT].isConnected();
-		// loopStart = tapeRecorder->loopStart;
-		// loopEndConnected = tapeRecorder->inputs[TapeRecorder::LOOP_END_INPUT].isConnected();
-		// // loopEndConnected = (tapeRecorder->inputs[TapeRecorder::LOOP_INPUT].isConnected() && tapeRecorder->inputs[TapeRecorder::LOOP_INPUT].getChannels() > 1);
-		// loopEnd = tapeRecorder->loopEnd;
-		// beatsPerBar = tapeRecorder->params[TapeRecorder::BEATS_PER_BAR_PARAM].getValue();
-		// tapePosition = tapeRecorder->tapePosition;
-		// playForwardStatus = tapeRecorder->playForwardStatus;
-		// playStatus = tapeRecorder->playStatus;
-		// cueForwardStatus = tapeRecorder->cueForwardStatus;
-		// cueStatus = tapeRecorder->cueStatus;
-		// // loopStartOnTapePosition = (tapeRecorder->params[TapeRecorder::LOOP_START_BUTTON_PARAM].getValue() == 1.0f);
-		// // loopEndOnTapePosition = (tapeRecorder->params[TapeRecorder::LOOP_END_BUTTON_PARAM].getValue() == 1.0f);
+		channelNumber = tapeRecorderMixer->channelNumber;
 	}
-	// Vec textPos = Vec(4, 14);
-	// nvgFillColor(disp.vg, textColorLight);
-	// int bar = (int) tapePosition;
-	// int beat = (int) ((tapePosition - bar) * beatsPerBar);
-	// if (bar > 9999) {
-		// bar = 9999;
-	// }
-	// std::string text = std::to_string(bar);
-	// if (bar < 1000) {
-		// text = " " + text;
-	// } 
-	// if (bar < 100) {
-		// text = " " + text;
-	// } 
-	// if (bar < 10) {
-		// text = " " + text;
-	// }
-	// if (beat < 10) {
-		// text += "/ " + std::to_string(beat);
-	// } else {
-		// text += "/" + std::to_string(beat);
-	// }
-	// nvgText(disp.vg, textPos.x, textPos.y, text.c_str(), NULL);
+	Vec textPos = Vec(30.5, 25);
+	nvgFillColor(disp.vg, textColorLight);
+	nvgFontSize(disp.vg, 8);
+	std::string text = std::to_string(channelNumber);
+	
+	if (!channelNumber) {
+		nvgText(disp.vg, textPos.x, textPos.y, "-", NULL);
+	} else if (channelNumber < 10) {
+		nvgText(disp.vg, textPos.x, textPos.y, (std::to_string(channelNumber)).c_str(), NULL);
+	} else {
+		nvgText(disp.vg, textPos.x, textPos.y, (std::to_string(channelNumber - 10)).c_str(), NULL);
+		textPos = Vec(26, 25);
+		nvgText(disp.vg, textPos.x, textPos.y, "1", NULL);
+	}
+	
+	for (auto i = 0; i < std::min(3, (int) trackName.size()); ++i) {
+		textPos = Vec(3 + i * 7, 25);
+		nvgText(disp.vg, textPos.x, textPos.y, trackName.substr(i, 1).c_str(), NULL);
+	}
+	
+	
+		// textPos = Vec(10, 25);
+		// nvgText(disp.vg, textPos.x, textPos.y, trackName.substr(1, 1).c_str(), NULL);
+		// textPos = Vec(17, 25);
+		// nvgText(disp.vg, textPos.x, textPos.y, trackName.substr(2, 1).c_str(), NULL);
 	
 	// if (loopStart != loopEnd) {
 		// textPos = Vec(33, 28);
@@ -145,6 +123,16 @@ TapeRecorderMixerMenuItem::TapeRecorderMixerMenuItem(TapeRecorderMixer* tapeReco
 	this->tapeRecorderMixerWidget = tapeRecorderMixerWidget;
 }
 
+TrackNameMenuItem::TrackNameMenuItem(VolumeDisplay* volumeDisplay) {
+	this->volumeDisplay = volumeDisplay;
+	text = volumeDisplay->trackName;
+}
+
+void TrackNameMenuItem::onChange(const event::Change& e) {
+	TextFieldMenuItem::onChange(e);
+	volumeDisplay->trackName = text;
+}
+
 ChangeInputMuteModeMenuItem::ChangeInputMuteModeMenuItem(TapeRecorderMixer* tapeRecorderMixer, TapeRecorderMixerWidget* tapeRecorderMixerWidget) : TapeRecorderMixerMenuItem(tapeRecorderMixer, tapeRecorderMixerWidget) {
 	text = "Enable Input Mute";
 	if (tapeRecorderMixer && tapeRecorderMixer->params[TapeRecorderMixer::INPUT_MUTE_ENABLED_PARAM].getValue()) {
@@ -174,7 +162,8 @@ TapeRecorderMixerWidget::TapeRecorderMixerWidget(TapeRecorderMixer* module) {
 	addOutput(createOutputCentered<OutPortSmall>(Vec(33, 338), module,  TapeRecorderMixer::AUDIO_CHAIN_RIGHT_OUTPUT));
 	addOutput(createOutputCentered<OutPortSmall>(Vec(12, 359), module,  TapeRecorderMixer::AUDIO_CHAIN_LEFT_OUTPUT));
 	
-	addChild(new VolumeDisplay(Rect(3, 85, 39, 29), module));
+	volumeDisplay = new VolumeDisplay(Rect(3, 85, 39, 29), module);
+	addChild(volumeDisplay);
 
 	addParam(createParamCentered<RoundSwitchMediumRed>(Vec(12, 136), module, TapeRecorderMixer::RECORD_PARAM));
 	addInput(createInputCentered<InPortSmall>(Vec(12, 157), module, TapeRecorderMixer::CV_RECORD_INPUT));
@@ -205,6 +194,7 @@ TapeRecorderMixerWidget::TapeRecorderMixerWidget(TapeRecorderMixer* module) {
 void TapeRecorderMixerWidget::appendContextMenu(Menu* menu) {
 	TapeRecorderMixer* tapeRecorderMixer = dynamic_cast<TapeRecorderMixer*>(this->module);
 	menu->addChild(new MenuEntry);
+	menu->addChild(new TrackNameMenuItem(volumeDisplay));
 	menu->addChild(new ChangeInputMuteModeMenuItem(tapeRecorderMixer, this));
 }
 
@@ -217,6 +207,22 @@ void TapeRecorderMixerWidget::step() {
 		} else {
 			inputMuteParamWidget->hide();
 		}
+	}
+}
+
+json_t* TapeRecorderMixerWidget::toJson() {
+	json_t* rootJ = ModuleWidget::toJson();
+	
+	json_object_set_new(rootJ, "track-name", json_string(volumeDisplay->trackName.c_str()));
+	return rootJ;
+}
+
+void TapeRecorderMixerWidget::fromJson(json_t* rootJ) {
+	ModuleWidget::fromJson(rootJ);
+	
+	json_t* trackNameJ = json_object_get(rootJ, "track-name");
+	if (trackNameJ) {
+		volumeDisplay->trackName = json_string_value(trackNameJ);
 	}
 }
 
