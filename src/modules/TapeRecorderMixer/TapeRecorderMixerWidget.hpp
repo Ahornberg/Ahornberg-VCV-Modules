@@ -2,6 +2,7 @@
 
 struct VolumeDisplay : Display {
 	TapeRecorderMixer* tapeRecorderMixer;
+	std::shared_ptr<Font> vuMeterFont;
 	int channelNumber;
 	std::string trackName;
 	// double tapePosition;

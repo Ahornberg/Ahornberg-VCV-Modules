@@ -2,35 +2,63 @@
 
 VolumeDisplay::VolumeDisplay(Rect box, TapeRecorderMixer* tapeRecorderMixer) : Display(box) {
 	this->tapeRecorderMixer = tapeRecorderMixer;
+	vuMeterFont = APP->window->loadFont(asset::plugin(pluginInstance, FONT_VU_METER));
 	channelNumber = 0;
 	trackName = "";
 }
 
 void VolumeDisplay::drawText(const DrawArgs& disp) {
+	nvgFillColor(disp.vg, textColorLight);
 	if (tapeRecorderMixer) {
 		channelNumber = tapeRecorderMixer->channelNumber;
+		if (tapeRecorderMixer->params[TapeRecorderMixer::RECORD_PARAM].getValue()) {
+			nvgFillColor(disp.vg, textColorRed);
+		}
 	}
-	Vec textPos = Vec(30.5, 25);
-	nvgFillColor(disp.vg, textColorLight);
 	nvgFontSize(disp.vg, 8);
-	std::string text = std::to_string(channelNumber);
-	
-	if (!channelNumber) {
-		nvgText(disp.vg, textPos.x, textPos.y, "-", NULL);
-	} else if (channelNumber < 10) {
-		nvgText(disp.vg, textPos.x, textPos.y, (std::to_string(channelNumber)).c_str(), NULL);
-	} else {
-		nvgText(disp.vg, textPos.x, textPos.y, (std::to_string(channelNumber - 10)).c_str(), NULL);
-		textPos = Vec(26, 25);
-		nvgText(disp.vg, textPos.x, textPos.y, "1", NULL);
+	Vec textPos = Vec(30.75, 25);
+	if (trackName.size() <= 3) {
+		std::string text = std::to_string(channelNumber);
+		if (!channelNumber) {
+			nvgText(disp.vg, textPos.x, textPos.y, "-", NULL);
+		} else if (channelNumber < 10) {
+			nvgText(disp.vg, textPos.x, textPos.y, (std::to_string(channelNumber)).c_str(), NULL);
+		} else {
+			nvgText(disp.vg, textPos.x, textPos.y, (std::to_string(channelNumber - 10)).c_str(), NULL);
+			textPos = Vec(26.25, 25);
+			nvgText(disp.vg, textPos.x, textPos.y, "1", NULL);
+		}
 	}
-	
-	for (auto i = 0; i < std::min(3, (int) trackName.size()); ++i) {
-		textPos = Vec(3 + i * 7, 25);
+	for (auto i = 0; i < std::min(5, (int) trackName.size()); ++i) {
+		textPos = Vec(2.75 + i * 7, 25);
 		nvgText(disp.vg, textPos.x, textPos.y, trackName.substr(i, 1).c_str(), NULL);
 	}
 	
+	nvgFontFaceId(disp.vg, vuMeterFont->handle);
+	nvgFontSize(disp.vg, 36);
+	nvgFillColor(disp.vg, textColorDark);
+	textPos = Vec(2, 19.5);
+	int rnd = random::uniform() * 24;
+	for (auto i = 0; i < 24; ++i) {
+		if (i > 15) {
+			nvgFillColor(disp.vg, nvgRGB(0xff, 0x00, 0x00));
+		} else if (i > 7) {
+			nvgFillColor(disp.vg, textColorLight);
+		} else {
+			nvgFillColor(disp.vg, textColorDark);
+		}
+		if (i == rnd) {
+			nvgFillColor(disp.vg, COLOR_WHITE);
+		}
+		nvgText(disp.vg, textPos.x, textPos.y, std::string(1, 97 + i).c_str(), NULL);
+	}
 	
+nvgFillColor(disp.vg, COLOR_WHITE);
+	nvgText(disp.vg, textPos.x, textPos.y, std::string(1, 65 + rnd).c_str(), NULL);
+
+	
+	
+
 		// textPos = Vec(10, 25);
 		// nvgText(disp.vg, textPos.x, textPos.y, trackName.substr(1, 1).c_str(), NULL);
 		// textPos = Vec(17, 25);
