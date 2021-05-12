@@ -16,6 +16,8 @@ TapeRecorderMixer::TapeRecorderMixer() {
 	
 	channelNumber = 0;
 	maxChannels = PORT_MAX_CHANNELS;
+	vuMeter = 0;
+	linked = false;
 	
 	muteSlewLimiter.setRiseFall(AUDIO_MUTE_SLEW, AUDIO_MUTE_SLEW);
 	muteSlewLimiter.reset();
@@ -27,40 +29,49 @@ TapeRecorderMixer::TapeRecorderMixer() {
 	fxBypassSlewLimiter.reset();
 	cvInputVolumeSlewLimiter.setRiseFall(AUDIO_MUTE_SLEW, AUDIO_MUTE_SLEW);
 	cvInputVolumeSlewLimiter.reset();
+	vuMeterSlewLimiter.setRiseFall(1000, 10);
+	vuMeterSlewLimiter.reset();
 	recordInputTrigger.reset();
 	fxBypassInputTrigger.reset();
 	soloInputTrigger.reset();
 	muteInputTrigger.reset();
 	
-	testDivider.setDivision(1024);
-	testDivider.reset();
+	// testDivider.setDivision(1024);
+	// testDivider.reset();
 }
 
 void TapeRecorderMixer::process(const ProcessArgs& args) {
 	
-	if (testDivider.process()) {
+	// if (testDivider.process()) {
 		
-	}
-	auto countChannels = inputs[AUDIO_CHAIN_RIGHT_INPUT].getChannels();
+	// }
+	linked = false;
+	auto countChannels = inputs[AUDIO_CHAIN_FROM_TAPE_INPUT].getChannels();
 	if (countChannels) {
 		if (countChannels == 16) {
-			channelNumber = inputs[AUDIO_CHAIN_RIGHT_INPUT].getVoltage(15);
+			channelNumber = (int) (inputs[AUDIO_CHAIN_FROM_TAPE_INPUT].getVoltage(15) * CHANNEL_16_CONVERT_FACTOR) & TRACK_NUMBER_BITMASK;
+			linked = (int) (inputs[AUDIO_CHAIN_FROM_TAPE_INPUT].getVoltage(15) * CHANNEL_16_CONVERT_FACTOR) & LINK_BITMASK;
 		} else {
 			channelNumber = countChannels;
 		}
 	} else {
 		channelNumber = 0;
 	}
-	if (outputs[AUDIO_CHAIN_LEFT_OUTPUT].isConnected()) {
-		outputs[AUDIO_CHAIN_LEFT_OUTPUT].setChannels(maxChannels);
-		for (auto i = 0; i < countChannels; ++i) {
-			outputs[AUDIO_CHAIN_LEFT_OUTPUT].setVoltage(inputs[AUDIO_CHAIN_RIGHT_INPUT].getVoltage(i), i);
+	if (outputs[AUDIO_CHAIN_FROM_TAPE_OUTPUT].isConnected()) {
+		outputs[AUDIO_CHAIN_FROM_TAPE_OUTPUT].setChannels(maxChannels);
+		for (auto i = 0; i < channelNumber; ++i) {
+			outputs[AUDIO_CHAIN_FROM_TAPE_OUTPUT].setVoltage(inputs[AUDIO_CHAIN_FROM_TAPE_INPUT].getVoltage(i), i);
 		}
-		if (channelNumber) {
-			outputs[AUDIO_CHAIN_LEFT_OUTPUT].setVoltage(channelNumber - 1, 15);
-		} else {
-			outputs[AUDIO_CHAIN_LEFT_OUTPUT].setVoltage(0, 15);
-		}
+		float channel_16_out = std::max(channelNumber - 1, 0) + params[LINK_PARAM].getValue() * LINK_BITMASK;
+		outputs[AUDIO_CHAIN_FROM_TAPE_OUTPUT].setVoltage(channel_16_out / CHANNEL_16_CONVERT_FACTOR, 15);
+		// if (channelNumber) {
+			// outputs[AUDIO_CHAIN_FROM_TAPE_OUTPUT].setVoltage(channelNumber - 1, 15);
+		// } else {
+			// outputs[AUDIO_CHAIN_FROM_TAPE_OUTPUT].setVoltage(0, 15);
+		// }
+		// if (params[LINK_PARAM].getValue()) {
+			// outputs[AUDIO_CHAIN_FROM_TAPE_OUTPUT].setVoltage(1, 15);
+		// }
 	}
 	
 	// if bus not connected then in -> fx -> meter -> out
@@ -107,30 +118,31 @@ void TapeRecorderMixer::process(const ProcessArgs& args) {
 		}
 		audio = inputs[AUDIO_INPUT].getVoltage() * pow(params[INPUT_VOLUME_PARAM].getValue() * cvInputVolume, 2.f) * inputMuteSlewLimiter.process(args.sampleTime, !(params[INPUT_MUTE_ENABLED_PARAM].getValue() && params[INPUT_MUTE_PARAM].getValue()));
 	}
-	if (inputs[AUDIO_CHAIN_RIGHT_INPUT].isConnected()) {
-		audio += inputs[AUDIO_CHAIN_RIGHT_INPUT].getVoltage() * pow(params[TAPE_ERASE_PARAM].getValue(), 2.f);
+	if (inputs[AUDIO_CHAIN_FROM_TAPE_INPUT].isConnected()) {
+		audio += inputs[AUDIO_CHAIN_FROM_TAPE_INPUT].getVoltage() * pow(params[TAPE_ERASE_PARAM].getValue(), 2.f);
 	}
 	if (outputs[AUDIO_FX_SEND].isConnected()) {
-		// outputs[AUDIO_FX_SEND].setVoltage(audio * fxSendSlewLimiter.process(args.sampleTime, !params[BYPASS_CHAIN_PARAM].getValue()));
 		outputs[AUDIO_FX_SEND].setVoltage(audio);
 	}
 	if (inputs[AUDIO_FX_RETURN].isConnected()) {
 		audio = audio * fxBypassSlewLimiter.process(args.sampleTime, params[BYPASS_CHAIN_PARAM].getValue()) + inputs[AUDIO_FX_RETURN].getVoltage() * fxReturnSlewLimiter.process(args.sampleTime, !params[BYPASS_CHAIN_PARAM].getValue());
 	}
-	if (outputs[AUDIO_CHAIN_RIGHT_OUTPUT].isConnected()) {
+	if (outputs[AUDIO_CHAIN_TO_TAPE_OUTPUT].isConnected()) {
 		if (params[RECORD_PARAM].getValue()) {
-			outputs[AUDIO_CHAIN_RIGHT_OUTPUT].setVoltage(audio);
+			outputs[AUDIO_CHAIN_TO_TAPE_OUTPUT].setVoltage(audio);
 		} else {
-			outputs[AUDIO_CHAIN_RIGHT_OUTPUT].setVoltage(inputs[AUDIO_CHAIN_LEFT_INPUT].getVoltage());
+			outputs[AUDIO_CHAIN_TO_TAPE_OUTPUT].setVoltage(inputs[AUDIO_CHAIN_TO_TAPE_INPUT].getVoltage());
 		}
 	}
+
+	vuMeter = vuMeterSlewLimiter.process(args.sampleTime, std::abs(audio));
 	if (outputs[AUDIO_OUTPUT].isConnected()) {
 		outputs[AUDIO_OUTPUT].setVoltage(audio * muteSlewLimiter.process(args.sampleTime, !params[MUTE_PARAM].getValue()));
 	}
 	
 	
-	// if (outputs[AUDIO_CHAIN_LEFT_OUTPUT].isConnected()) {
-		// int channels = inputs[AUDIO_CHAIN_LEFT_INPUT].getChannels() + 1;
+	// if (outputs[AUDIO_CHAIN_FROM_TAPE_OUTPUT].isConnected()) {
+		// int channels = inputs[AUDIO_CHAIN_TO_TAPE_INPUT].getChannels() + 1;
 		// for (int channel = 0; channel < channels; ++channel) {
 			
 		// }

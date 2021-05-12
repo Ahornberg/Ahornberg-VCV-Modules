@@ -5,12 +5,14 @@ VolumeDisplay::VolumeDisplay(Rect box, TapeRecorderMixer* tapeRecorderMixer) : D
 	vuMeterFont = APP->window->loadFont(asset::plugin(pluginInstance, FONT_VU_METER));
 	channelNumber = 0;
 	trackName = "";
+	vuMeter = 0;
 }
 
 void VolumeDisplay::drawText(const DrawArgs& disp) {
 	nvgFillColor(disp.vg, textColorLight);
 	if (tapeRecorderMixer) {
 		channelNumber = tapeRecorderMixer->channelNumber;
+		vuMeter = std::min(tapeRecorderMixer->vuMeter * 4.8f, 23.f);
 		if (tapeRecorderMixer->params[TapeRecorderMixer::RECORD_PARAM].getValue()) {
 			nvgFillColor(disp.vg, textColorRed);
 		}
@@ -38,7 +40,6 @@ void VolumeDisplay::drawText(const DrawArgs& disp) {
 	nvgFontSize(disp.vg, 36);
 	nvgFillColor(disp.vg, textColorDark);
 	textPos = Vec(2, 19.5);
-	int rnd = random::uniform() * 24;
 	for (auto i = 0; i < 24; ++i) {
 		if (i > 15) {
 			nvgFillColor(disp.vg, nvgRGB(0xff, 0x00, 0x00));
@@ -47,103 +48,57 @@ void VolumeDisplay::drawText(const DrawArgs& disp) {
 		} else {
 			nvgFillColor(disp.vg, textColorDark);
 		}
-		if (i == rnd) {
+		if (i == vuMeter) {
 			nvgFillColor(disp.vg, COLOR_WHITE);
 		}
 		nvgText(disp.vg, textPos.x, textPos.y, std::string(1, 97 + i).c_str(), NULL);
 	}
 	
-nvgFillColor(disp.vg, COLOR_WHITE);
-	nvgText(disp.vg, textPos.x, textPos.y, std::string(1, 65 + rnd).c_str(), NULL);
+	nvgFillColor(disp.vg, COLOR_WHITE);
+	nvgText(disp.vg, textPos.x, textPos.y, std::string(1, 65 + vuMeter).c_str(), NULL);
+}
 
-	
-	
+RoundSwitchMediumLink::RoundSwitchMediumLink() {
+	addFrame("res/switches/RoundMedium_unlinked.svg");
+	addFrame("res/switches/RoundMedium_linked_to_right.svg");
+	addFrame("res/switches/RoundMedium_unlinked_linked_from_left.svg");
+}
 
-		// textPos = Vec(10, 25);
-		// nvgText(disp.vg, textPos.x, textPos.y, trackName.substr(1, 1).c_str(), NULL);
-		// textPos = Vec(17, 25);
-		// nvgText(disp.vg, textPos.x, textPos.y, trackName.substr(2, 1).c_str(), NULL);
-	
-	// if (loopStart != loopEnd) {
-		// textPos = Vec(33, 28);
-		// if (loopMode) {
-			// nvgText(disp.vg, textPos.x, textPos.y, "P", NULL);
-		// } else {
-			// nvgText(disp.vg, textPos.x, textPos.y, "C", NULL);
-		// }
-	// }
-	// // if (cueStatus) {
-		// // if (cueForwardStatus) {
-			// // textPos = Vec(33, 28);
-			// // nvgText(disp.vg, textPos.x, textPos.y, ")", NULL);
-			// // textPos = Vec(35.5, 28);
-			// // nvgText(disp.vg, textPos.x, textPos.y, ")", NULL);
-		// // } else {
-			// // textPos = Vec(33, 28);
-			// // nvgText(disp.vg, textPos.x, textPos.y, "(", NULL);
-			// // textPos = Vec(35.5, 28);
-			// // nvgText(disp.vg, textPos.x, textPos.y, "(", NULL);
-		// // }
-	// // } else if (playStatus) {
-		// // // if ((playForwardStatus && position < loopEnd) || (!playForwardStatus && position < loopStart)) {
-		// // if (playForwardStatus) {
-			// // textPos = Vec(33, 28);
-			// // nvgText(disp.vg, textPos.x, textPos.y, "-", NULL);
-			// // textPos = Vec(35.5, 28);
-			// // nvgText(disp.vg, textPos.x, textPos.y, ")", NULL);
-		// // } else {
-			// // textPos = Vec(33, 28);
-			// // nvgText(disp.vg, textPos.x, textPos.y, "(", NULL);
-			// // textPos = Vec(35.5, 28);
-			// // nvgText(disp.vg, textPos.x, textPos.y, "-", NULL);
-		// // }
-	// // }
-	
-	// // textPos = Vec(34, 14);
-	// // if (speedConnected) {
-		// // nvgFillColor(disp.vg, textColorDark);
-	// // } else {
-		// // nvgFillColor(disp.vg, textColorLight);
-	// // }
-	// // nvgText(disp.vg, textPos.x, textPos.y, (std::to_string(tempo)).c_str(), NULL);
-	
-	// nvgFontSize(disp.vg, 8);
+void RoundSwitchMediumLink::step() {
+	// BasicRoundSwitch::step();
+	if (tapeRecorderMixer && !tapeRecorderMixer->params[TapeRecorderMixer::LINK_PARAM].getValue()) {
+		if (tapeRecorderMixer->linked) {
+			sw->setSvg(frames[2]);
+			fb->dirty = true;
+		} else {
+			sw->setSvg(frames[0]);
+			fb->dirty = true;
+			
+		}
+	}
+	BasicRoundSwitch::step();
+}
 
-	// textPos = Vec(4, 28);
-	// // if (loopStartOnTapePosition) {
-		// // nvgFillColor(disp.vg, textColorRed);
-	// // } else 
-	// if (loopStartConnected) {
-		// nvgFillColor(disp.vg, textColorDark);
-	// } else {
-		// nvgFillColor(disp.vg, textColorLight);
-	// }
-	// text = std::to_string(loopStart);
-	// if (loopStart < 100) {
-		// text = " " + text;
-	// } 
-	// if (loopStart < 10) {
-		// text = " " + text;
-	// }
-	// nvgText(disp.vg, textPos.x, textPos.y, text.c_str(), NULL);
-	
-	// textPos = Vec(46, 28);
-	// // if (loopEndOnTapePosition) {
-		// // nvgFillColor(disp.vg, textColorRed);
-	// // } else 
-	// if (loopEndConnected) {
-		// nvgFillColor(disp.vg, textColorDark);
-	// } else {
-		// nvgFillColor(disp.vg, textColorLight);
-	// }
-	// text = std::to_string(loopEnd);
-	// if (loopEnd < 100) {
-		// text = " " + text;
-	// } 
-	// if (loopEnd < 10) {
-		// text = " " + text;
-	// }
-	// nvgText(disp.vg, textPos.x, textPos.y, text.c_str(), NULL);
+void RoundSwitchMediumLink::onChange(const event::Change& e) {
+	if (!frames.empty() && paramQuantity) {
+		int index = (int) std::round(paramQuantity->getValue() - paramQuantity->getMinValue());
+		index = math::clamp(index, 0, (int) frames.size() - 1);
+		if (tapeRecorderMixer && !index) {
+			if (tapeRecorderMixer->linked) {
+				sw->setSvg(frames[2]);
+				fb->dirty = true;
+			} else {
+				sw->setSvg(frames[0]);
+				fb->dirty = true;
+				
+			}
+		} else {
+			sw->setSvg(frames[index]);
+			fb->dirty = true;
+
+		}
+	}
+	ParamWidget::onChange(e);
 }
 
 TapeRecorderMixerMenuItem::TapeRecorderMixerMenuItem(TapeRecorderMixer* tapeRecorderMixer, TapeRecorderMixerWidget* tapeRecorderMixerWidget) {
@@ -182,13 +137,13 @@ TapeRecorderMixerWidget::TapeRecorderMixerWidget(TapeRecorderMixer* module) {
 
 	addInput(createInputCentered<InPort>(Vec(31, 14), module,  TapeRecorderMixer::AUDIO_INPUT));
 	addInput(createInputCentered<InPort>(Vec(14, 71), module,  TapeRecorderMixer::AUDIO_FX_RETURN));
-	addInput(createInputCentered<InPortSmall>(Vec(12, 338), module,  TapeRecorderMixer::AUDIO_CHAIN_LEFT_INPUT));
-	addInput(createInputCentered<InPortSmall>(Vec(33, 359), module,  TapeRecorderMixer::AUDIO_CHAIN_RIGHT_INPUT));
+	addInput(createInputCentered<InPortSmall>(Vec(12, 338), module,  TapeRecorderMixer::AUDIO_CHAIN_TO_TAPE_INPUT));
+	addInput(createInputCentered<InPortSmall>(Vec(33, 359), module,  TapeRecorderMixer::AUDIO_CHAIN_FROM_TAPE_INPUT));
 
 	addOutput(createOutputCentered<OutPort>(Vec(14, 32), module,  TapeRecorderMixer::AUDIO_OUTPUT));
 	addOutput(createOutputCentered<OutPort>(Vec(31, 53), module,  TapeRecorderMixer::AUDIO_FX_SEND));
-	addOutput(createOutputCentered<OutPortSmall>(Vec(33, 338), module,  TapeRecorderMixer::AUDIO_CHAIN_RIGHT_OUTPUT));
-	addOutput(createOutputCentered<OutPortSmall>(Vec(12, 359), module,  TapeRecorderMixer::AUDIO_CHAIN_LEFT_OUTPUT));
+	addOutput(createOutputCentered<OutPortSmall>(Vec(33, 338), module,  TapeRecorderMixer::AUDIO_CHAIN_TO_TAPE_OUTPUT));
+	addOutput(createOutputCentered<OutPortSmall>(Vec(12, 359), module,  TapeRecorderMixer::AUDIO_CHAIN_FROM_TAPE_OUTPUT));
 	
 	volumeDisplay = new VolumeDisplay(Rect(3, 85, 39, 29), module);
 	addChild(volumeDisplay);
@@ -211,10 +166,11 @@ TapeRecorderMixerWidget::TapeRecorderMixerWidget(TapeRecorderMixer* module) {
 
 	addParam(createParamCentered<KnobSmall>(Vec(16, 289), module, TapeRecorderMixer::INPUT_VOLUME_PARAM));
 	addParam(createParamCentered<RoundSwitch>(Vec(16, 289), module, TapeRecorderMixer::INPUT_MUTE_PARAM));
-	// addParam(createParamCentered<RoundSwitch>(Vec(12, 189), module, TapeRecorderMixer::INPUT_MUTE_PARAM));
 	addInput(createInputCentered<InPortSmall>(Vec(33, 307), module, TapeRecorderMixer::CV_INPUT_VOLUME_INPUT));
 
-	addParam(createParamCentered<RoundSwitchMediumLink>(Vec(12, 316), module, TapeRecorderMixer::LINK_PARAM));
+	RoundSwitchMediumLink* roundSwitchMediumLink = dynamic_cast<RoundSwitchMediumLink*>(createParamCentered<RoundSwitchMediumLink>(Vec(12, 316), module, TapeRecorderMixer::LINK_PARAM));
+	roundSwitchMediumLink->tapeRecorderMixer = module;
+	addParam(roundSwitchMediumLink);
 
 
 }

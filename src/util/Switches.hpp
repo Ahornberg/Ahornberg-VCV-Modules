@@ -35,10 +35,6 @@ struct RoundSwitchLinearJump : BasicRoundSwitch {
 	RoundSwitchLinearJump();
 };
 
-struct RoundSwitchMediumLink : BasicRoundSwitch {
-	RoundSwitchMediumLink();
-};
-
 struct RoundLargeSwitch : BasicRoundSwitch {
 	RoundLargeSwitch();
 };

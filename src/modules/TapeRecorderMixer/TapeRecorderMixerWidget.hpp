@@ -5,6 +5,7 @@ struct VolumeDisplay : Display {
 	std::shared_ptr<Font> vuMeterFont;
 	int channelNumber;
 	std::string trackName;
+	int vuMeter;
 	// double tapePosition;
 	// int beatsPerBar;
 	// int loopMode;
@@ -21,6 +22,14 @@ struct VolumeDisplay : Display {
 
 	VolumeDisplay(Rect box, TapeRecorderMixer* tapeRecorderMixer);
 	void drawText(const DrawArgs& disp) override;
+};
+
+struct RoundSwitchMediumLink : BasicRoundSwitch {
+	TapeRecorderMixer* tapeRecorderMixer;
+	
+	RoundSwitchMediumLink();
+	void step() override;
+	void onChange(const event::Change& e) override;
 };
 
 struct TapeRecorderMixerWidget : ModuleWidgetWithScrews {

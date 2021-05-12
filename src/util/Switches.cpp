@@ -62,11 +62,6 @@ RoundSwitchLinearJump::RoundSwitchLinearJump() {
 	addFrame("res/switches/Round_linear_jump.svg");
 }
 
-RoundSwitchMediumLink::RoundSwitchMediumLink() {
-	addFrame("res/switches/RoundMedium_unlinked.svg");
-	addFrame("res/switches/RoundMedium_linked.svg");
-}
-
 RoundLargeSwitch::RoundLargeSwitch() {
 	addFrame("res/switches/RoundLarge_off.svg");
 	addFrame("res/switches/RoundLarge_on.svg");
