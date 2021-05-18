@@ -63,3 +63,11 @@ KnobLarge::KnobLarge() {
 	maxAngle = 0.95f * M_PI;
 	snap = true;
 }
+
+void BasicSlider::setBackgroundSvg(const std::string& filename) {
+	SvgSlider::setBackgroundSvg(APP->window->loadSvg(asset::plugin(pluginInstance, filename)));
+}	
+
+void BasicSlider::setHandleSvg(const std::string& filename) {
+	SvgSlider::setHandleSvg(APP->window->loadSvg(asset::plugin(pluginInstance, filename)));
+}

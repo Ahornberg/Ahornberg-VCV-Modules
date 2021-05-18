@@ -1,3 +1,5 @@
+constexpr static float PLUS_6_DB = 1.41253757f;
+
 struct BasicKnob : SvgKnob, ManualText {
 	BasicKnob();
 	void setSvg(const std::string& filename);
@@ -37,4 +39,9 @@ struct KnobBig : BasicKnob {
 
 struct KnobLarge : BasicKnob {
 	KnobLarge();
+};
+
+struct BasicSlider : SvgSlider, ManualText {
+	void setBackgroundSvg(const std::string& filename);
+	void setHandleSvg(const std::string& filename);
 };

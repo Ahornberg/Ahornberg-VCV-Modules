@@ -1,7 +1,6 @@
 #include "../../Ahornberg.hpp"
 
 struct TapeRecorderMixer : ModuleWithScrews {
-	constexpr static float PLUS_6_DB = 1.41253757f;
 	constexpr static float AUDIO_MUTE_SLEW = 350;
 	constexpr static int TRACK_NUMBER_BITMASK = 15;
 	constexpr static int LINK_BITMASK = 16;

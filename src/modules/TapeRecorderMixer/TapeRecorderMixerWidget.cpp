@@ -18,8 +18,8 @@ void VolumeDisplay::drawText(const DrawArgs& disp) {
 		}
 	}
 	nvgFontSize(disp.vg, 8);
-	Vec textPos = Vec(30.75, 25);
-	if (trackName.size() <= 3) {
+	Vec textPos = Vec(45.25, 28);
+	if (trackName.size() <= 5) {
 		std::string text = std::to_string(channelNumber);
 		if (!channelNumber) {
 			nvgText(disp.vg, textPos.x, textPos.y, "-", NULL);
@@ -27,19 +27,19 @@ void VolumeDisplay::drawText(const DrawArgs& disp) {
 			nvgText(disp.vg, textPos.x, textPos.y, (std::to_string(channelNumber)).c_str(), NULL);
 		} else {
 			nvgText(disp.vg, textPos.x, textPos.y, (std::to_string(channelNumber - 10)).c_str(), NULL);
-			textPos = Vec(26.25, 25);
+			textPos = Vec(40.75, 28);
 			nvgText(disp.vg, textPos.x, textPos.y, "1", NULL);
 		}
 	}
-	for (auto i = 0; i < std::min(5, (int) trackName.size()); ++i) {
-		textPos = Vec(2.75 + i * 7, 25);
+	for (auto i = 0; i < std::min(7, (int) trackName.size()); ++i) {
+		textPos = Vec(3.25 + i * 7, 28);
 		nvgText(disp.vg, textPos.x, textPos.y, trackName.substr(i, 1).c_str(), NULL);
 	}
 	
 	nvgFontFaceId(disp.vg, vuMeterFont->handle);
-	nvgFontSize(disp.vg, 36);
+	nvgFontSize(disp.vg, 51.25);
 	nvgFillColor(disp.vg, textColorDark);
-	textPos = Vec(2, 19.5);
+	textPos = Vec(2, 25.5);
 	for (auto i = 0; i < 24; ++i) {
 		if (i > 15) {
 			nvgFillColor(disp.vg, nvgRGB(0xff, 0x00, 0x00));
@@ -132,7 +132,7 @@ void ChangeInputMuteModeMenuItem::onAction(const event::Action& e) {
 TapeRecorderMixerWidget::TapeRecorderMixerWidget(TapeRecorderMixer* module) {
 	setModule(module);
 	setPanel("res/TapeRecorderMixer.svg");
-	setSize(Vec(45, 380));
+	setSize(Vec(60, 380));
 	setScrews(SCREW_TOP_LEFT, NO_SCREW_TOP_RIGHT, SCREW_BOTTOM_LEFT_INDENTED, NO_SCREW_BOTTOM_RIGHT);
 
 	addInput(createInputCentered<InPort>(Vec(31, 14), module,  TapeRecorderMixer::AUDIO_INPUT));
@@ -145,7 +145,7 @@ TapeRecorderMixerWidget::TapeRecorderMixerWidget(TapeRecorderMixer* module) {
 	addOutput(createOutputCentered<OutPortSmall>(Vec(33, 338), module,  TapeRecorderMixer::AUDIO_CHAIN_TO_TAPE_OUTPUT));
 	addOutput(createOutputCentered<OutPortSmall>(Vec(12, 359), module,  TapeRecorderMixer::AUDIO_CHAIN_FROM_TAPE_OUTPUT));
 	
-	volumeDisplay = new VolumeDisplay(Rect(3, 85, 39, 29), module);
+	volumeDisplay = new VolumeDisplay(Rect(3, 82, 54, 32), module);
 	addChild(volumeDisplay);
 
 	addParam(createParamCentered<RoundSwitchMediumRed>(Vec(12, 136), module, TapeRecorderMixer::RECORD_PARAM));

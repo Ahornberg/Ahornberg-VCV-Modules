@@ -8,6 +8,7 @@ void init(Plugin* plugin) {
 
 	pluginInstance->addModel(modelTapeRecorder);
 	pluginInstance->addModel(modelTapeRecorderMixer);
+	pluginInstance->addModel(modelFlyingFader);
 	pluginInstance->addModel(modelEqualDivision);
 	pluginInstance->addModel(modelCVFreqShift);
 	pluginInstance->addModel(modelFunWithFrames);

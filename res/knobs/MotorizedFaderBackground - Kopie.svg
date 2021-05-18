@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="20"
+   height="272"
+   viewBox="0 0 5.2916663 71.966661"
+   version="1.1"
+   id="svg16908"
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
+   sodipodi:docname="MotorizedFaderBackground.svg">
+  <defs
+     id="defs16902">
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath6367">
+      <path
+         d="M 0,3193 H 2089 V 0 H 0 Z"
+         id="path6365"
+         inkscape:connector-curvature="0" />
+    </clipPath>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="43.179084"
+     inkscape:cx="0.33794"
+     inkscape:cy="271.31806"
+     inkscape:document-units="px"
+     inkscape:current-layer="g960"
+     showgrid="true"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:window-width="3674"
+     inkscape:window-height="1894"
+     inkscape:window-x="0"
+     inkscape:window-y="18"
+     inkscape:window-maximized="0"
+     units="px"
+     inkscape:snap-global="true"
+     showguides="true"
+     inkscape:snap-bbox="true"
+     inkscape:guide-bbox="true"
+     inkscape:bbox-nodes="true"
+     inkscape:snap-object-midpoints="true"
+     inkscape:snap-center="true"
+     inkscape:snap-bbox-midpoints="true"
+     inkscape:snap-bbox-edge-midpoints="true">
+    <inkscape:grid
+       type="xygrid"
+       id="grid2095" />
+    <sodipodi:guide
+       position="14.287499,-2.3812498"
+       orientation="1,0"
+       id="guide853"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="38.893747,14.816666"
+       orientation="0,1"
+       id="guide855"
+       inkscape:locked="false" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata16905">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-230.09585,-60.791172)">
+    <g
+       id="g960"
+       transform="matrix(0.9818182,0,0,0.9818182,4.183557,2.4137764)">
+      <rect
+         style="opacity:1;fill:#999999;fill-opacity:1;stroke:none;stroke-width:0.10268681;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect821"
+         width="1.6168979"
+         height="64.675919"
+         x="231.98222"
+         y="63.770187"
+         ry="0.80844897"
+         rx="0.80844897" />
+      <rect
+         rx="0.538966"
+         ry="0.538966"
+         y="64.039665"
+         x="232.25171"
+         height="64.136955"
+         width="1.077932"
+         id="rect822"
+         style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.08349335;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <g
+         transform="matrix(0.25394975,0,0,-0.25394954,96.758306,223.73484)"
+         id="g18792"
+         style="stroke-width:1.14853203">
+        <path
+           d="m 535.6665,631.5 c -3.511,0 -6.367,2.855 -6.367,6.366 0,3.511 2.856,6.367 6.367,6.367 3.511,0 6.367,-2.856 6.367,-6.367 0,-3.511 -2.856,-6.366 -6.367,-6.366"
+           style="fill:#bcbcbc;fill-opacity:1;fill-rule:nonzero;stroke:#acacac;stroke-width:1.061167;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="path6833"
+           inkscape:connector-curvature="0" />
+        <path
+           inkscape:connector-curvature="0"
+           id="path6843"
+           style="fill:#727272;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.14853203"
+           d="m 536.448,633.741 h -1.562 v 8.25 h 1.562 z" />
+        <path
+           inkscape:connector-curvature="0"
+           id="path6845"
+           style="fill:#727272;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.14853203"
+           d="m 539.792,637.085 h -8.25 v 1.562 h 8.25 z" />
+      </g>
+      <g
+         style="stroke-width:1.14853203"
+         id="g842"
+         transform="matrix(0.25394975,0,0,-0.25394954,96.758306,292.45326)">
+        <path
+           inkscape:connector-curvature="0"
+           id="path836"
+           style="fill:#bcbcbc;fill-opacity:1;fill-rule:nonzero;stroke:#acacac;stroke-width:1.061167;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="m 535.6665,631.5 c -3.511,0 -6.367,2.855 -6.367,6.366 0,3.511 2.856,6.367 6.367,6.367 3.511,0 6.367,-2.856 6.367,-6.367 0,-3.511 -2.856,-6.366 -6.367,-6.366" />
+        <path
+           d="m 536.448,633.741 h -1.562 v 8.25 h 1.562 z"
+           style="fill:#727272;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.14853203"
+           id="path838"
+           inkscape:connector-curvature="0" />
+        <path
+           d="m 539.792,637.085 h -8.25 v 1.562 h 8.25 z"
+           style="fill:#727272;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.14853203"
+           id="path840"
+           inkscape:connector-curvature="0" />
+      </g>
+    </g>
+  </g>
+</svg>
