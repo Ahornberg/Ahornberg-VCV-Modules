@@ -221,7 +221,7 @@ struct EraseTapeMenuItem : TapeRecorderMenuItem {
 struct TapeRecorderWidget : ModuleWidgetWithScrews {
 	TapeNameDisplay* tapeNameDisplay;
 	StripeWidget* stripeWidget;
-	TextField* tapeName;
+	// TextField* tapeName;
 	
 	TapeRecorderWidget(TapeRecorder* module);
 	void appendContextMenu(Menu* menu) override;
