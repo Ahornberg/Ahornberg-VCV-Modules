@@ -7,10 +7,15 @@ struct FaderCapColor {
 
 struct MotorizedFader : BasicSlider {
 	FlyingFader* flyingFader;
+	bool displayContextMenu;
+	// float oldValue;
 	
 	MotorizedFader();
+	void onButton(const event::Button& e) override;
+	// void onChange(const event::Change& e) override;
 	void onDragStart(const event::DragStart& e) override;
 	void onDragEnd(const event::DragEnd& e) override;
+	void step() override;
 };
 
 struct FlyingFaderWidget : ModuleWidgetWithScrews {

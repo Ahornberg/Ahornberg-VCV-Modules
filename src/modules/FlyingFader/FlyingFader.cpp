@@ -12,11 +12,12 @@ FlyingFader::FlyingFader() {
 
 void FlyingFader::process(const ProcessArgs& args) {
 	if (!faderDragged && inputs[CV_INPUT].isConnected()) {
-		if (inputs[CV_INPUT].getVoltage() && !params[CV_INPUT_WAS_CONNECTED].getValue()) {
-			params[FADER_VALUE_BEFORE_CONNECTED].setValue(params[FADER_VALUE_BEFORE_CONNECTED].getValue() / (inputs[CV_INPUT].getVoltage() / 10.f));
+		float cvInputNormalized = inputs[CV_INPUT].getVoltage() * .1 + 1e-37;
+		if (cvInputNormalized && !params[CV_INPUT_WAS_CONNECTED].getValue()) {
+			params[FADER_VALUE_BEFORE_CONNECTED].setValue(params[FADER_VALUE_BEFORE_CONNECTED].getValue() / cvInputNormalized);
 			params[CV_INPUT_WAS_CONNECTED].setValue(1);
 		}
-		params[FADER_PARAM].setValue(clamp(params[FADER_VALUE_BEFORE_CONNECTED].getValue() * inputs[CV_INPUT].getVoltage() / 10.f, 0.f, PLUS_6_DB));
+		params[FADER_PARAM].setValue(clamp((params[FADER_VALUE_BEFORE_CONNECTED].getValue()) * (cvInputNormalized), 0.f, PLUS_6_DB));
 	} else {
 		params[CV_INPUT_WAS_CONNECTED].setValue(0);
 		params[FADER_VALUE_BEFORE_CONNECTED].setValue(params[FADER_PARAM].getValue());
@@ -25,7 +26,7 @@ void FlyingFader::process(const ProcessArgs& args) {
 	if (outputs[CV_OUTPUT].isConnected()) {
 		outputs[CV_OUTPUT].setVoltage(params[FADER_PARAM].getValue() * 10.f);
 	}
-
+	
 	// test
 	// bool is_connected = inputs[CV_INPUT].isConnected();
 	// float input_voltage = inputs[CV_INPUT].getVoltage();

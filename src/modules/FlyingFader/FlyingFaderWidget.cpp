@@ -14,10 +14,24 @@ const FaderCapColor FlyingFaderWidget::FADER_CAP_COLORS[] = {
 };
 
 MotorizedFader::MotorizedFader() {
+	displayContextMenu = false;
+	// oldValue = -1;
 	minHandlePos = Vec(0, 230);
 	maxHandlePos = Vec(0, 2);
 	setBackgroundSvg("res/knobs/MotorizedFaderBackground.svg");
 	setHandleSvg("res/knobs/MotorizedFaderHandle_white.svg");
+}
+
+void MotorizedFader::onButton(const event::Button& e) {
+	if (e.action == GLFW_PRESS && e.button == GLFW_MOUSE_BUTTON_RIGHT && (e.mods & RACK_MOD_MASK) == 0) {
+		if (flyingFader) {
+			flyingFader->faderDragged = true;
+			displayContextMenu = true;
+			// oldValue = paramQuantity->getValue();
+		}
+	}
+	ParamWidget::onButton(e);
+	
 }
 
 void MotorizedFader::onDragStart(const event::DragStart& e) {
@@ -36,6 +50,21 @@ void MotorizedFader::onDragEnd(const event::DragEnd& e) {
 		}
 		Knob::onDragEnd(e);
 	}
+}
+
+void MotorizedFader::step() {
+	if (flyingFader && displayContextMenu) {
+		MenuOverlay* overlay = NULL;
+		for (Widget* child : APP->scene->children) {
+			overlay = dynamic_cast<MenuOverlay*>(child);
+			if (overlay) break;
+		}
+		if (!overlay) {
+			flyingFader->faderDragged = false;
+			displayContextMenu = false;
+		}
+	}
+	SvgSlider::step();
 }
 
 FlyingFaderWidget::FlyingFaderWidget(FlyingFader* module) {
