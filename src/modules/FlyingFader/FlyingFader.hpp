@@ -18,6 +18,7 @@ struct FlyingFader : ModuleWithScrews {
 		NUM_OUTPUTS
 	};
 	enum LightIds {
+		// VU_LIGHT,
 		NUM_LIGHTS
 	};
 

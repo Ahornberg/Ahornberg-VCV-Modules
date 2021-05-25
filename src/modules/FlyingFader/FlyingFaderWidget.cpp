@@ -37,6 +37,7 @@ void MotorizedFader::onButton(const event::Button& e) {
 void MotorizedFader::onDragStart(const event::DragStart& e) {
 	if (e.button == GLFW_MOUSE_BUTTON_LEFT) {
 		Knob::onDragStart(e);
+		// APP->window->cursorUnlock();
 		if (flyingFader) {
 			flyingFader->faderDragged = true;
 		}
@@ -71,17 +72,49 @@ FlyingFaderWidget::FlyingFaderWidget(FlyingFader* module) {
 	setModule(module);
 	setPanel("res/FlyingFader.svg");
 	setSize(Vec(60, 380));
+	setScrews(SCREW_TOP_LEFT, NO_SCREW_TOP_RIGHT, NO_SCREW_BOTTOM_LEFT, SCREW_BOTTOM_RIGHT);
 	faderCapColorIndex = 0;
 
-	fader = dynamic_cast<MotorizedFader*>(createParam<MotorizedFader>(Vec(18, 50), module, FlyingFader::FADER_PARAM));
+	fader = dynamic_cast<MotorizedFader*>(createParam<MotorizedFader>(Vec(18, 40.5), module, FlyingFader::FADER_PARAM));
 	fader->flyingFader = module;
 	addParam(fader);
 
-	addInput(createInputCentered<InPort>(Vec(15, 350), module, FlyingFader::AUDIO_INPUT));
-	addInput(createInputCentered<InPort>(Vec(45, 350), module, FlyingFader::CV_INPUT));
+	addInput(createInputCentered<InPort>(Vec(15.5, 357), module, FlyingFader::CV_INPUT));
+	addInput(createInputCentered<InPort>(Vec(44.5, 349.5), module, FlyingFader::AUDIO_INPUT));
 	
-	addOutput(createOutputCentered<OutPort>(Vec(15, 30), module, FlyingFader::AUDIO_OUTPUT));
-	addOutput(createOutputCentered<OutPort>(Vec(45, 30), module, FlyingFader::CV_OUTPUT));
+	addOutput(createOutputCentered<OutPort>(Vec(15.5, 330), module, FlyingFader::CV_OUTPUT));
+	addOutput(createOutputCentered<OutPort>(Vec(44.5, 23), module, FlyingFader::AUDIO_OUTPUT));
+
+	// addChild(createLightCentered<SmallLight<RedLight>>(Vec(11, 72), module, FlyingFader::VU_LIGHT));
+	// addChild(createLightCentered<SmallLight<RedLight>>(Vec(11, 84.75), module, FlyingFader::VU_LIGHT));
+	// addChild(createLightCentered<SmallLight<YellowLight>>(Vec(11, 96.8), module, FlyingFader::VU_LIGHT));
+	// addChild(createLightCentered<SmallLight<YellowLight>>(Vec(11, 108.5), module, FlyingFader::VU_LIGHT));
+	// addChild(createLightCentered<SmallLight<YellowLight>>(Vec(11, 118.75), module, FlyingFader::VU_LIGHT));
+	// addChild(createLightCentered<SmallLight<YellowLight>>(Vec(11, 129.25), module, FlyingFader::VU_LIGHT));
+	// addChild(createLightCentered<SmallLight<YellowLight>>(Vec(11, 138.25), module, FlyingFader::VU_LIGHT));
+	// addChild(createLightCentered<SmallLight<YellowLight>>(Vec(11, 147.75), module, FlyingFader::VU_LIGHT));
+	// addChild(createLightCentered<SmallLight<YellowLight>>(Vec(11, 156.25), module, FlyingFader::VU_LIGHT));
+	// // addChild(createLightCentered<SmallLight<YellowLight>>(Vec(11, 164.5), module, FlyingFader::VU_LIGHT));
+	// addChild(createLightCentered<SmallLight<YellowLight>>(Vec(11, 171.75), module, FlyingFader::VU_LIGHT));
+	// // addChild(createLightCentered<SmallLight<GreenLight>>(Vec(11, 179.25), module, FlyingFader::VU_LIGHT));
+	// addChild(createLightCentered<SmallLight<GreenLight>>(Vec(11, 185.75), module, FlyingFader::VU_LIGHT));
+	// // addChild(createLightCentered<SmallLight<GreenLight>>(Vec(11, 195.5), module, FlyingFader::VU_LIGHT));
+	// addChild(createLightCentered<SmallLight<GreenLight>>(Vec(11, 203.75), module, FlyingFader::VU_LIGHT));
+	// // addChild(createLightCentered<SmallLight<GreenLight>>(Vec(11, 212), module, FlyingFader::VU_LIGHT));
+	// addChild(createLightCentered<SmallLight<GreenLight>>(Vec(11, 219), module, FlyingFader::VU_LIGHT));
+	// addChild(createLightCentered<SmallLight<GreenLight>>(Vec(11, 232), module, FlyingFader::VU_LIGHT));
+	// addChild(createLightCentered<SmallLight<GreenLight>>(Vec(11, 242.75), module, FlyingFader::VU_LIGHT));
+	// // addChild(createLightCentered<SmallLight<GreenLight>>(Vec(11, 252), module, FlyingFader::VU_LIGHT));
+	// addChild(createLightCentered<SmallLight<GreenLight>>(Vec(11, 259.5), module, FlyingFader::VU_LIGHT));
+	// // addChild(createLightCentered<SmallLight<GreenLight>>(Vec(11, 271.25), module, FlyingFader::VU_LIGHT));
+	// addChild(createLightCentered<SmallLight<GreenLight>>(Vec(11, 279.5), module, FlyingFader::VU_LIGHT));
+	// addChild(createLightCentered<SmallLight<GreenLight>>(Vec(11, 289.75), module, FlyingFader::VU_LIGHT));
+	// addChild(createLightCentered<SmallLight<GreenLight>>(Vec(11, 300), module, FlyingFader::VU_LIGHT));
+	
+	// // red 308
+	// // yellow 283.2, 261.25, 241.5, 223.75, 208.25
+	// // green 194.25
+
 }
 
 void FlyingFaderWidget::appendContextMenu(Menu* menu) {
