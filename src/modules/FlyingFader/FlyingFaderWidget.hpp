@@ -8,9 +8,10 @@ struct FaderCapColor {
 struct MotorizedFader : BasicSlider {
 	FlyingFader* flyingFader;
 	bool displayContextMenu;
-	// float oldValue;
+	float oldFaderValueBeforeConnected;
 	
 	MotorizedFader();
+	void setFlyingFader(FlyingFader* flyingFader);
 	void onButton(const event::Button& e) override;
 	// void onChange(const event::Change& e) override;
 	void onDragStart(const event::DragStart& e) override;
@@ -18,11 +19,36 @@ struct MotorizedFader : BasicSlider {
 	void step() override;
 };
 
+struct TextOnFaderModule {
+	std::shared_ptr<Font> font;
+	NVGcolor textColor;
+	std::string text;
+	int fontSize;
+	int textAlign;
+	bool useScissor;
+	Vec textPos;
+	
+	void drawText(const Widget::DrawArgs& disp, Rect box);
+};
+
+struct FaderNameDisplay : SizedTransparentWidget, TextOnFaderModule {
+	FaderNameDisplay(Rect box);
+	void draw(const DrawArgs& disp) override;
+};
+
+struct FaderNameMenuItem : TextFieldMenuItem {
+	FaderNameDisplay* faderNameDisplay;
+	
+	FaderNameMenuItem(FaderNameDisplay* faderNameDisplay);
+	void onChange(const event::Change& e) override;
+};
+
 struct FlyingFaderWidget : ModuleWidgetWithScrews {
 	const static FaderCapColor FADER_CAP_COLORS[];
 	constexpr static int NUM_FADER_CAP_COLORS = 10;
 	
 	MotorizedFader* fader;
+	FaderNameDisplay* faderNameDisplay;
 	// FaderDisplay* faderDisplay;
 	int faderCapColorIndex;
 	

@@ -105,7 +105,7 @@ void TapeRecorderMixer::process(const ProcessArgs& args) {
 		if (inputs[CV_INPUT_VOLUME_INPUT].isConnected()) {
 			if (params[INPUT_MUTE_ENABLED_PARAM].getValue()) {
 				cvInputVolume = clamp(inputs[CV_INPUT_VOLUME_INPUT].getVoltage(), -5.f, 5.f) / 5.f;
-				if (cvInputVolume      < 0) {
+				if (cvInputVolume < 0) {
 					params[INPUT_MUTE_PARAM].setValue(1);
 					cvInputVolume = abs(cvInputVolume);
 				} else {

@@ -25,9 +25,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2.0721625"
-     inkscape:cx="45.46932"
-     inkscape:cy="314.3661"
+     inkscape:zoom="39.457167"
+     inkscape:cx="31.367318"
+     inkscape:cy="233.84088"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -56,9 +56,9 @@
      inkscape:snap-midpoints="true"
      inkscape:snap-text-baseline="true"
      inkscape:snap-grids="false"
-     inkscape:snap-to-guides="false">
+     inkscape:snap-to-guides="true">
     <sodipodi:guide
-       position="75.63902,63.896878"
+       position="7.2487362,63.495174"
        orientation="0,1"
        id="guide898"
        inkscape:locked="false"
@@ -140,7 +140,7 @@
        inkscape:label=""
        inkscape:color="rgb(0,0,255)" />
     <sodipodi:guide
-       position="46.016302,74.930004"
+       position="16.803265,74.34792"
        orientation="0,1"
        id="guide880"
        inkscape:locked="false"
@@ -349,9 +349,9 @@
     <path
        style="display:inline;opacity:1;fill:#c2eec2;fill-opacity:1;stroke-width:2.69026756"
        d="M 43.994141,33.232422 V 335.91211 h 9.710937 L 60,312.0293 V 60.080078 L 52.806641,33.232422 Z"
-       transform="matrix(0.26458333,0,0,0.26458333,0,196.45832)"
        id="path925"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       transform="matrix(0.26458333,0,0,0.26458333,0,196.45832)" />
     <g
        aria-label="6"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:3.17499995px;line-height:1.25;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:end;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:end;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
@@ -537,7 +537,7 @@
        aria-label="24"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:3.17499995px;line-height:1.25;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:end;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:end;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
        id="text1106"
-       transform="translate(1.3523875,-2.4473958)">
+       transform="translate(1.3523875,-2.5135416)">
       <path
          d="m 12.184643,266.36121 h -0.962732 v -0.11473 l 0.74259,-1.54254 v -0.57826 h -0.494543 v 0.54571 h -0.217041 v -0.56431 q 0,-0.076 0.04806,-0.12402 0.04806,-0.0481 0.124023,-0.0481 h 0.584461 q 0.07596,0 0.124023,0.0481 0.04806,0.0481 0.04806,0.12402 v 0.5147 q 0,0.093 -0.05736,0.21239 l -0.641821,1.33635 h 0.702283 z"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:3.17499995px;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:end;writing-mode:lr-tb;text-anchor:end;stroke-width:0.26458332"
@@ -550,7 +550,7 @@
          inkscape:connector-curvature="0" />
     </g>
     <rect
-       y="262.53799"
+       y="262.47186"
        x="9.3927088"
        height="0.26458332"
        width="2.6959696"
@@ -560,7 +560,7 @@
        aria-label="36"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:3.17499995px;line-height:1.25;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:end;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:end;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
        id="text1117"
-       transform="translate(1.2323294,-2.5135417)">
+       transform="translate(1.2323294,-2.4473959)">
       <path
          d="m 12.286447,271.48099 q 0,0.076 -0.04806,0.12403 -0.04806,0.0481 -0.124023,0.0481 h -0.624768 q -0.07597,0 -0.124024,-0.0481 -0.04806,-0.0481 -0.04806,-0.12403 v -0.61546 h 0.215491 v 0.59686 h 0.536401 v -0.74259 l -0.427881,-0.32091 v -0.0481 l 0.424781,-0.31626 v -0.61702 h -0.5302 v 0.54571 h -0.215491 v -0.56431 q 0,-0.076 0.04806,-0.12402 0.04806,-0.0481 0.124023,-0.0481 h 0.618567 q 0.07597,0 0.124024,0.0481 0.04806,0.0481 0.04806,0.12402 v 0.59066 q 0,0.11627 -0.09302,0.18139 l -0.288354,0.20308 0.291455,0.20309 q 0.09302,0.0636 0.09302,0.18449 z"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:3.17499995px;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:end;writing-mode:lr-tb;text-anchor:end;stroke-width:0.26458332"
@@ -578,7 +578,7 @@
        width="2.6959696"
        height="0.26458332"
        x="9.3927088"
-       y="267.76364" />
+       y="267.82977" />
     <g
        transform="rotate(-90,12.944427,272.43861)"
        id="g1125"
@@ -603,9 +603,9 @@
        width="1.984375"
        height="0.26458332"
        x="9.3927088"
-       y="222.51978" />
+       y="222.45363" />
     <rect
-       y="228.00987"
+       y="227.94374"
        x="9.3927088"
        height="0.26458332"
        width="1.984375"
@@ -675,5 +675,14 @@
        id="path947"
        d="m 0,201.63783 15.875,-4.25348 v -0.92604 H 0 Z"
        style="opacity:1;fill:#c2eec2;fill-opacity:1;stroke:none;stroke-width:0.14552084;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <rect
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.15527062;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect907"
+       width="5.5562501"
+       height="40.547421"
+       x="0.92604166"
+       y="232.90465"
+       ry="0"
+       rx="0" />
   </g>
 </svg>

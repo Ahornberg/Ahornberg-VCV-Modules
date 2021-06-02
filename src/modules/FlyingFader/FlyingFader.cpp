@@ -1,5 +1,7 @@
 #include "FlyingFader.hpp"
 
+const std::string FlyingFader::INIT_FADER_NAME = "My Flying Fader";
+
 FlyingFader::FlyingFader() { 
 	config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 	configScrewParams();
@@ -8,6 +10,8 @@ FlyingFader::FlyingFader() {
 	configParam(FADER_VALUE_BEFORE_CONNECTED, 0, PLUS_6_DB, 1);
 	
 	faderDragged = false;
+	audioSlewLimiter.setRiseFall(AUDIO_MUTE_SLEW, AUDIO_MUTE_SLEW);
+	audioSlewLimiter.reset();
 }
 
 void FlyingFader::process(const ProcessArgs& args) {
@@ -25,6 +29,10 @@ void FlyingFader::process(const ProcessArgs& args) {
 	
 	if (outputs[CV_OUTPUT].isConnected()) {
 		outputs[CV_OUTPUT].setVoltage(params[FADER_PARAM].getValue() * 10.f);
+	}
+	
+	if (outputs[AUDIO_OUTPUT].isConnected() && inputs[AUDIO_INPUT].isConnected()) {
+		outputs[AUDIO_OUTPUT].setVoltage(inputs[AUDIO_INPUT].getVoltage() * pow(audioSlewLimiter.process(args.sampleTime, params[FADER_PARAM].getValue()), 2.f));
 	}
 	
 	// test

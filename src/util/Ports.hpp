@@ -1,3 +1,5 @@
+constexpr static float AUDIO_MUTE_SLEW = 350;
+
 struct BasicPort : SvgPort, ManualText {
 	BasicPort();
 	void setSvg(const std::string& filename);

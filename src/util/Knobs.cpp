@@ -69,5 +69,6 @@ void BasicSlider::setBackgroundSvg(const std::string& filename) {
 }	
 
 void BasicSlider::setHandleSvg(const std::string& filename) {
-	SvgSlider::setHandleSvg(APP->window->loadSvg(asset::plugin(pluginInstance, filename)));
+	// SvgSlider::setHandleSvg(APP->window->loadSvg(asset::plugin(pluginInstance, filename)));
+	handle->setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, filename)));
 }

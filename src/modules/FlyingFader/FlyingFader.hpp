@@ -1,6 +1,8 @@
 #include "../../Ahornberg.hpp"
 
 struct FlyingFader : ModuleWithScrews {
+	const static std::string INIT_FADER_NAME;
+	
 	enum ParamIds {
 		FADER_PARAM = NUM_MAX_SCREWS,
 		CV_INPUT_WAS_CONNECTED,
@@ -26,6 +28,7 @@ struct FlyingFader : ModuleWithScrews {
 	void process(const ProcessArgs& args) override;
 	
 	bool faderDragged;
+	dsp::ExponentialSlewLimiter audioSlewLimiter;
 	
 	// test
 	// bool last_is_connected = false;
