@@ -33,6 +33,14 @@ As long as loop start and loop end show the same value, loop mode is turned off.
 #### Loop inputs
 Loop start and loop end points can be changed by providing a CV signal (1/12 Volts per Bar). This signal will be added to the corresponding knob value.
 
+## Flying Fader
+
+A motorized volume fader.
+
+How to use it:
+
+[![Flying Fader Manual](https://img.youtube.com/vi/gYIOpFdwcMU/0.jpg)](https://www.youtube.com/watch?v=gYIOpFdwcMU)
+
 ## Equal Division
 
 Module for VCV-Rack to convert Note CV in Standard Western Tuning (12ed2 = 1 step equals 100 cents) to several Equal Division Tunings.

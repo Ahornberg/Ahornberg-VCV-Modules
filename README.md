@@ -3,6 +3,7 @@ The latest stable release can be downloaded at https://library.vcvrack.com/?bran
 ## Manuals
 
 [![Tape Recorder](manuals/TapeRecorder.png)](manuals/README.md#tape-recorder)
+[![Flying Fader](manuals/FlyingFader.png)](manuals/README.md#flying-fader)
 [![EqualDivision](manuals/EqualDivision.png)](manuals/README.md#equal-division)
 [![CV-Frequency Shift](manuals/CVFreqShift.png)](manuals/README.md#cv-frequency-shift)
 [![Fun With Frames](manuals/FunWithFrames.png)](manuals/README.md#fun-with-frames)
