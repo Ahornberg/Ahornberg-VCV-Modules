@@ -1,6 +1,6 @@
 {
   "slug": "Ahornberg",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "license": "GPL-3.0-only",
   "name": "Ahornberg",
   "brand": "Ahornberg",
@@ -44,7 +44,7 @@
       "slug": "TapeRecorderMixer",
       "name": "Tape Recorder Mixer",
       "description": "mixer for micro cassette recorder",
-	  "disabled": false,
+	  "disabled": true,
 	  "manualUrl": "https://github.com/Ahornberg/Ahornberg-VCV-Modules/blob/master/manuals/README.md#tape-recorder-mixer",
       "tags": [ 
 	    "Attenuator",
