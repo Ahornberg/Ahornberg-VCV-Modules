@@ -33,7 +33,8 @@ void FlyingFader::process(const ProcessArgs& args) {
 	}
 	
 	if (outputs[AUDIO_OUTPUT].isConnected() && inputs[AUDIO_INPUT].isConnected()) {
-		outputs[AUDIO_OUTPUT].setVoltage(inputs[AUDIO_INPUT].getVoltage() * pow(audioSlewLimiter.process(args.sampleTime, params[FADER_PARAM].getValue()), 2.f));
+		// TODO poly in to poly out switch in context menu
+		outputs[AUDIO_OUTPUT].setVoltage(inputs[AUDIO_INPUT].getVoltageSum() * pow(audioSlewLimiter.process(args.sampleTime, params[FADER_PARAM].getValue()), 2.f));
 	}
 	
 	// test

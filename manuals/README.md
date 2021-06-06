@@ -37,6 +37,8 @@ Loop start and loop end points can be changed by providing a CV signal (1/12 Vol
 
 A motorized volume fader.
 
+![Flying Fader](FlyingFader.png)
+
 How to use it:
 
 [![Flying Fader Manual](https://img.youtube.com/vi/gYIOpFdwcMU/0.jpg)](https://www.youtube.com/watch?v=gYIOpFdwcMU)
