@@ -29,7 +29,7 @@ TapeRecorderMixer::TapeRecorderMixer() {
 	fxBypassSlewLimiter.reset();
 	cvInputVolumeSlewLimiter.setRiseFall(AUDIO_MUTE_SLEW, AUDIO_MUTE_SLEW);
 	cvInputVolumeSlewLimiter.reset();
-	vuMeterSlewLimiter.setRiseFall(1000, 10);
+	vuMeterSlewLimiter.setRiseFall(AUDIO_MUTE_SLEW, AUDIO_MUTE_SLEW / 100.f);
 	vuMeterSlewLimiter.reset();
 	recordInputTrigger.reset();
 	fxBypassInputTrigger.reset();

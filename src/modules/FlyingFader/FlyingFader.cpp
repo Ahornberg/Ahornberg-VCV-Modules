@@ -16,11 +16,12 @@ FlyingFader::FlyingFader() {
 
 void FlyingFader::process(const ProcessArgs& args) {
 	if (!faderDragged && inputs[CV_INPUT].isConnected()) {
-		float cvInputNormalized = inputs[CV_INPUT].getVoltage() * .1 + 1e-37;
+		float cvInputNormalized = inputs[CV_INPUT].getVoltage() * .1;
 		if (cvInputNormalized && !params[CV_INPUT_WAS_CONNECTED].getValue()) {
 			params[FADER_VALUE_BEFORE_CONNECTED].setValue(params[FADER_VALUE_BEFORE_CONNECTED].getValue() / cvInputNormalized);
 			params[CV_INPUT_WAS_CONNECTED].setValue(1);
 		}
+		cvInputNormalized += 1e-37;
 		params[FADER_PARAM].setValue(clamp((params[FADER_VALUE_BEFORE_CONNECTED].getValue()) * (cvInputNormalized), 0.f, PLUS_6_DB));
 	} else {
 		params[CV_INPUT_WAS_CONNECTED].setValue(0);
