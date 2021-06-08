@@ -43,6 +43,10 @@ How to use it:
 
 [![Flying Fader Manual](https://img.youtube.com/vi/gYIOpFdwcMU/0.jpg)](https://www.youtube.com/watch?v=gYIOpFdwcMU)
 
+How to control a fader on the [MindMeld MixMaster](https://library.vcvrack.com/MindMeldModular/MixMaster) correctly by using the CV-Scale Mode "MindMeld MixMaster":
+
+[![Flying Fader Manual](https://img.youtube.com/vi/RYbj7irqB9g/0.jpg)](https://www.youtube.com/watch?v=RYbj7irqB9g)
+
 ## Equal Division
 
 Module for VCV-Rack to convert Note CV in Standard Western Tuning (12ed2 = 1 step equals 100 cents) to several Equal Division Tunings.
