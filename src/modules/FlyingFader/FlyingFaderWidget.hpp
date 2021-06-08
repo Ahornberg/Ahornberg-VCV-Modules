@@ -74,3 +74,33 @@ struct FaderCapColorMenuItem : MenuItem {
 	FaderCapColorMenuItem(FlyingFaderWidget* flyingFaderWidget, int faderCapColorIndex);
 	Menu* createChildMenu() override;
 };
+
+struct AudioPolyModeValueItem : MenuItem {
+	FlyingFader* flyingFader;
+	bool audioPolyMode;
+	
+	AudioPolyModeValueItem(FlyingFader* flyingFader, bool audioPolyMode);
+	void onAction(const event::Action& e) override;
+};
+
+struct AudioPolyModeMenuItem : MenuItem {
+	FlyingFader* flyingFader;
+	
+	AudioPolyModeMenuItem(FlyingFader* flyingFader);
+	Menu* createChildMenu() override;
+};
+
+struct CvScaleModeValueItem : MenuItem {
+	FlyingFader* flyingFader;
+	bool cvScaleMode;
+	
+	CvScaleModeValueItem(FlyingFader* flyingFader, bool cvScaleMode);
+	void onAction(const event::Action& e) override;
+};
+
+struct CvScaleModeMenuItem : MenuItem {
+	FlyingFader* flyingFader;
+	
+	CvScaleModeMenuItem(FlyingFader* flyingFader);
+	Menu* createChildMenu() override;
+};

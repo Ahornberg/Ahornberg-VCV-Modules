@@ -7,6 +7,8 @@ struct FlyingFader : ModuleWithScrews {
 		FADER_PARAM = NUM_MAX_SCREWS,
 		CV_INPUT_WAS_CONNECTED,
 		FADER_VALUE_BEFORE_CONNECTED,
+		AUDIO_POLY_MODE,
+		CV_SCALE_MODE,
 		NUM_PARAMS
 	};
 	enum InputIds {

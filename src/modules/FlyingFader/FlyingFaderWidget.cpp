@@ -160,10 +160,12 @@ FlyingFaderWidget::FlyingFaderWidget(FlyingFader* module) {
 }
 
 void FlyingFaderWidget::appendContextMenu(Menu* menu) {
-	// TapeRecorder* tapeRecorder = dynamic_cast<TapeRecorder*>(this->module);
+	FlyingFader* flyingFader = dynamic_cast<FlyingFader*>(this->module);
 	menu->addChild(new MenuEntry);
 	menu->addChild(new FaderNameMenuItem(faderNameDisplay));
 	menu->addChild(new FaderCapColorMenuItem(this, faderCapColorIndex));
+	menu->addChild(new AudioPolyModeMenuItem(flyingFader));
+	menu->addChild(new CvScaleModeMenuItem(flyingFader));
 }
 
 void FlyingFaderWidget::changeFaderCapColor(int faderCapColorIndex) {
@@ -221,6 +223,84 @@ Menu* FaderCapColorMenuItem::createChildMenu() {
 	for (auto i = 0; i < FlyingFaderWidget::NUM_FADER_CAP_COLORS; ++i) {
 		menu->addChild(new FaderCapColorValueItem(flyingFaderWidget, i));
 	}
+	return menu;
+}
+
+AudioPolyModeValueItem::AudioPolyModeValueItem(FlyingFader* flyingFader, bool audioPolyMode) {
+	this->flyingFader = flyingFader;
+	this->audioPolyMode = audioPolyMode;
+	if (audioPolyMode) {
+		text = "Poly In - Mono Out";
+	} else {
+		text = "Poly In - Poly Out";
+	}
+	if (flyingFader) {
+		rightText = CHECKMARK(audioPolyMode == flyingFader->params[FlyingFader::AUDIO_POLY_MODE].getValue());
+	}
+}
+
+void AudioPolyModeValueItem::onAction(const event::Action& e) {
+	if (flyingFader) {
+		flyingFader->params[FlyingFader::AUDIO_POLY_MODE].setValue(audioPolyMode);
+	}
+}
+
+AudioPolyModeMenuItem::AudioPolyModeMenuItem(FlyingFader* flyingFader) {
+	this->flyingFader = flyingFader;
+	text = "Audio Polyphony Mode";
+	if (flyingFader) {
+		if (flyingFader->params[FlyingFader::AUDIO_POLY_MODE].getValue()) {
+			rightText = "Poly In - Mono Out ";
+		} else {
+			rightText = "Poly In - Poly Out ";
+		}
+		rightText += RIGHT_ARROW;
+	}
+}
+
+Menu* AudioPolyModeMenuItem::createChildMenu() {
+	Menu* menu = new Menu;
+	menu->addChild(new AudioPolyModeValueItem(flyingFader, 0));
+	menu->addChild(new AudioPolyModeValueItem(flyingFader, 1));
+	return menu;
+}
+
+CvScaleModeValueItem::CvScaleModeValueItem(FlyingFader* flyingFader, bool cvScaleMode) {
+	this->flyingFader = flyingFader;
+	this->cvScaleMode = cvScaleMode;
+	if (cvScaleMode) {
+		text = "MindMeld MixMaster";
+	} else {
+		text = "VCV Standard";
+	}
+	if (flyingFader) {
+		rightText = CHECKMARK(cvScaleMode == flyingFader->params[FlyingFader::CV_SCALE_MODE].getValue());
+	}
+}
+
+void CvScaleModeValueItem::onAction(const event::Action& e) {
+	if (flyingFader) {
+		flyingFader->params[FlyingFader::CV_SCALE_MODE].setValue(cvScaleMode);
+	}
+}
+
+CvScaleModeMenuItem::CvScaleModeMenuItem(FlyingFader* flyingFader) {
+	this->flyingFader = flyingFader;
+	text = "CV-Scale Mode";
+	if (flyingFader) {
+		if (flyingFader->params[FlyingFader::CV_SCALE_MODE].getValue()) {
+			rightText = "MindMeld MixMaster ";
+		} else {
+			rightText = "VCV Standard ";
+		}
+		rightText += RIGHT_ARROW;
+	}
+}
+
+Menu* CvScaleModeMenuItem::createChildMenu() {
+	Menu* menu = new Menu;
+	menu->addChild(new CvScaleModeValueItem(flyingFader, 0));
+	menu->addChild(new CvScaleModeValueItem(flyingFader, 1));
 	return menu;
 }
 

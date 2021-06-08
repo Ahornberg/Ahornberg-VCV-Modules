@@ -6,8 +6,12 @@ FlyingFader::FlyingFader() {
 	config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 	configScrewParams();
 	configParam(FADER_PARAM, 0, PLUS_6_DB, 1, "Volume", " dB", -10, 40);
+	// configParam(FADER_PARAM, 0, PLUS_6_DB, 1, "Volume", " dB", -10.f, 60.f * PLUS_6_DB);
+	// configParam(FADER_PARAM, 0, PLUS_6_DB, 1, "Volume", " dB", -10.f, 60.f);
 	configParam(CV_INPUT_WAS_CONNECTED, 0, 1, 0);
 	configParam(FADER_VALUE_BEFORE_CONNECTED, 0, PLUS_6_DB, 1);
+	configParam(AUDIO_POLY_MODE, 0, 1, 0);
+	configParam(CV_SCALE_MODE, 0, 1, 0);
 	
 	faderDragged = false;
 	audioSlewLimiter.setRiseFall(AUDIO_MUTE_SLEW, AUDIO_MUTE_SLEW);
@@ -29,12 +33,29 @@ void FlyingFader::process(const ProcessArgs& args) {
 	}
 	
 	if (outputs[CV_OUTPUT].isConnected()) {
-		outputs[CV_OUTPUT].setVoltage(params[FADER_PARAM].getValue() * 10.f);
+		if (params[CV_SCALE_MODE].getValue()) {
+			outputs[CV_OUTPUT].setVoltage(pow(params[FADER_PARAM].getValue() * 22.3606765f, 1.f / 1.5f));
+		} else {
+			outputs[CV_OUTPUT].setVoltage(params[FADER_PARAM].getValue() * 10.f);
+		}
 	}
 	
 	if (outputs[AUDIO_OUTPUT].isConnected() && inputs[AUDIO_INPUT].isConnected()) {
-		// TODO poly in to poly out switch in context menu
-		outputs[AUDIO_OUTPUT].setVoltage(inputs[AUDIO_INPUT].getVoltageSum() * pow(audioSlewLimiter.process(args.sampleTime, params[FADER_PARAM].getValue()), 2.f));
+		float multiplier = pow(audioSlewLimiter.process(args.sampleTime, params[FADER_PARAM].getValue()), 2.f);
+		int channels = inputs[AUDIO_INPUT].getChannels();
+		if (channels < 2) {
+			outputs[AUDIO_OUTPUT].setChannels(1);
+			outputs[AUDIO_OUTPUT].setVoltage(inputs[AUDIO_INPUT].getVoltage() * multiplier);
+		} else if (params[AUDIO_POLY_MODE].getValue()) {
+			outputs[AUDIO_OUTPUT].setChannels(1);
+			outputs[AUDIO_OUTPUT].setVoltage(inputs[AUDIO_INPUT].getVoltageSum() * multiplier);
+		} else {
+			
+			outputs[AUDIO_OUTPUT].setChannels(channels);
+			for (int channel = 0; channel < channels; channel += 4) {
+				outputs[AUDIO_OUTPUT].setVoltageSimd(inputs[AUDIO_INPUT].getPolyVoltageSimd<float_4>(channel) * multiplier, channel);
+			}
+		}
 	}
 	
 	// test

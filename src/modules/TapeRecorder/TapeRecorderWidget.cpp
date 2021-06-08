@@ -608,7 +608,7 @@ void LoopModeValueItem::onAction(const event::Action& e) {
 LoopModeMenuItem::LoopModeMenuItem(TapeRecorder* tapeRecorder) : TapeRecorderMenuItem(tapeRecorder) {
 	text = "Loop Mode";
 	if (tapeRecorder) {
-		rightText = LoopModeValueItem::LOOP_MODES[(int) tapeRecorder->params[TapeRecorder::LOOP_MODE_PARAM].getValue()];
+		rightText = LoopModeValueItem::LOOP_MODES[(int) tapeRecorder->params[TapeRecorder::LOOP_MODE_PARAM].getValue()] + " " + RIGHT_ARROW;
 	}
 }
 
