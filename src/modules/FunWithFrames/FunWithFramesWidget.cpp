@@ -3,7 +3,7 @@
 FunWithFramesWidget::FunWithFramesWidget(FunWithFrames* module) {
 	setModule(module);
 	setPanel("res/FunWithFrames.svg");
-	setSize(Vec(90, 380));
+	setWidthInHP(6);
 	setScrews(SCREW_TOP_LEFT, NO_SCREW_TOP_RIGHT, NO_SCREW_BOTTOM_LEFT, SCREW_BOTTOM_RIGHT);
 
 	for (auto i = 0; i < FunWithFrames::NUM_VALUE_IO; ++i) {

@@ -132,7 +132,7 @@ void ChangeInputMuteModeMenuItem::onAction(const event::Action& e) {
 TapeRecorderMixerWidget::TapeRecorderMixerWidget(TapeRecorderMixer* module) {
 	setModule(module);
 	setPanel("res/TapeRecorderMixer.svg");
-	setSize(Vec(60, 380));
+	setWidthInHP(4);
 	setScrews(SCREW_TOP_LEFT, NO_SCREW_TOP_RIGHT, SCREW_BOTTOM_LEFT_INDENTED, NO_SCREW_BOTTOM_RIGHT);
 
 	addInput(createInputCentered<InPort>(Vec(31, 14), module,  TapeRecorderMixer::AUDIO_INPUT));

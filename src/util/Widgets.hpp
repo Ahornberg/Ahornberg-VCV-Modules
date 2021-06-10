@@ -54,6 +54,7 @@ struct ModuleWidgetWithScrews : ModuleWidget {
 	};
 	
 	void setPanel(const std::string& filename);
+	void setWidthInHP(int hp);
 	void setScrews(ScrewTopLeft topLeft, ScrewTopRight topRight, ScrewBottomLeft bottomLeft, ScrewBottomRight bottomRight);
 	void addScrew(Vec pos, int screwParam);
 	void step() override;

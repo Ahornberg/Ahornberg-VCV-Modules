@@ -57,6 +57,10 @@ void ModuleWidgetWithScrews::setScrews(ScrewTopLeft topLeft, ScrewTopRight topRi
 	}
 }
 
+void ModuleWidgetWithScrews::setWidthInHP(int hp) {
+	setSize(Vec(hp * 15, 380));
+}
+
 void ModuleWidgetWithScrews::addScrew(Vec pos, int screwParam) {
 	KnobScrewMountModule* screw = dynamic_cast<KnobScrewMountModule*>(createParam<KnobScrewMountModule>(pos, module, screwParam));
 	screw->module = module;

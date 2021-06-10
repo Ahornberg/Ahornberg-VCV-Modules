@@ -720,7 +720,7 @@ void EraseTapeMenuItem::onAction(const event::Action& e) {
 TapeRecorderWidget::TapeRecorderWidget(TapeRecorder* module) {
 	setModule(module);
 	setPanel("res/TapeRecorder.svg");
-	setSize(Vec(120, 380));
+	setWidthInHP(8);
 	setScrews(SCREW_TOP_LEFT, SCREW_TOP_RIGHT, NO_SCREW_BOTTOM_LEFT, SCREW_BOTTOM_RIGHT);
 
 	addParam(createParam<KnobBig>(Vec(      43,  42),   module, TapeRecorder::TEMPO_PARAM));

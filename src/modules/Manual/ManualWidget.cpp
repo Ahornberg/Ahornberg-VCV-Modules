@@ -3,7 +3,7 @@
 ManualWidget::ManualWidget(Manual* module) {
 	setModule(module);
 	setPanel("res/Manual.svg");
-	setSize(Vec(90, 380));
+	setWidthInHP(6);
 	setScrews(SCREW_TOP_LEFT, NO_SCREW_TOP_RIGHT, NO_SCREW_BOTTOM_LEFT, SCREW_BOTTOM_RIGHT);
 
 

@@ -44,7 +44,7 @@ void MixtureSwitch::onChange(const event::Change& e) {
 HarmonizerWidget::HarmonizerWidget(Harmonizer* module) {
 	setModule(module);
 	setPanel("res/Harmonizer.svg");
-	setSize(Vec(885, 380));
+	setWidthInHP(59);
 	setScrews(SCREW_TOP_LEFT, SCREW_TOP_RIGHT, SCREW_BOTTOM_LEFT, SCREW_BOTTOM_RIGHT);
 
 	addInput(createInputCentered<InPort>(Vec(   385,  30), module, Harmonizer::GATE_INPUT));

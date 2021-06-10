@@ -141,7 +141,7 @@ void FaderNameMenuItem::onChange(const event::Change& e) {
 FlyingFaderWidget::FlyingFaderWidget(FlyingFader* module) {
 	setModule(module);
 	setPanel("res/FlyingFader.svg");
-	setSize(Vec(60, 380));
+	setWidthInHP(4);
 	setScrews(SCREW_TOP_LEFT, NO_SCREW_TOP_RIGHT, NO_SCREW_BOTTOM_LEFT, SCREW_BOTTOM_RIGHT);
 	faderCapColorIndex = 0;
 
