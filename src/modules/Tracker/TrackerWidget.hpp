@@ -1,0 +1,14 @@
+#include "Tracker.hpp"
+
+struct TrackerScreen : SizedTransparentWidget {
+	std::shared_ptr<Font> font;
+	Tracker* module;
+		
+	
+	TrackerScreen(Rect box, Tracker* module);
+	void draw(const DrawArgs& disp) override;
+};
+
+struct TrackerWidget : ModuleWidgetWithScrews {
+	TrackerWidget(Tracker* module);
+};

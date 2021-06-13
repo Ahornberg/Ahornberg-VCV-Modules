@@ -8,6 +8,7 @@ using simd::float_4;
 
 extern Plugin* pluginInstance;
 
+extern Model* modelTracker;
 extern Model* modelTapeRecorder;
 extern Model* modelTapeRecorderMixer;
 extern Model* modelFlyingFader;

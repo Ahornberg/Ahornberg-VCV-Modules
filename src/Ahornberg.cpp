@@ -6,6 +6,7 @@ void init(Plugin* plugin) {
 	new MIDIOverAudioDriver();
 	pluginInstance = plugin;
 
+	pluginInstance->addModel(modelTracker);
 	pluginInstance->addModel(modelTapeRecorder);
 	pluginInstance->addModel(modelTapeRecorderMixer);
 	pluginInstance->addModel(modelFlyingFader);

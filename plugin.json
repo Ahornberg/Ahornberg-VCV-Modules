@@ -14,6 +14,21 @@
   "donateUrl": "",
   "modules": [
     {
+      "slug": "Tracker",
+      "name": "Tracker",
+      "description": "sequencer with tracker interface",
+	  "disabled": false,
+	  "manualUrl": "https://github.com/Ahornberg/Ahornberg-VCV-Modules/blob/master/manuals/README.md#tracker",
+      "tags": [
+		"Arpeggiator",
+		"Envelope generator",
+	    "Clock generator",
+		"Polyphonic",
+		"Recording",
+		"Sequencer"
+	  ]
+    },
+    {
       "slug": "TapeRecorder",
       "name": "Tape Recorder",
       "description": "micro cassette recorder",

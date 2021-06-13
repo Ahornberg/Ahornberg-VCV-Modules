@@ -26,6 +26,10 @@ void ModuleWithScrews::configScrewParams() {
 	}
 }
 
+ModuleWidgetWithScrews::ModuleWidgetWithScrews() {
+	hasScrews = false;
+}
+
 void ModuleWidgetWithScrews::setPanel(const std::string& filename) {
 	ModuleWidget::setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, filename)));
 }
@@ -66,11 +70,12 @@ void ModuleWidgetWithScrews::addScrew(Vec pos, int screwParam) {
 	screw->module = module;
 	screw->param = screwParam;
 	addParam(screw);
+	hasScrews = true;
 }
 
 void ModuleWidgetWithScrews::step() {
 	ModuleWidget::step();
-	if (module) {
+	if (hasScrews && module) {
 		for (auto i = 0; i < NUM_MAX_SCREWS; ++i) {
 			if (module->params[ModuleWithScrews::SCREW_PARAM + i].getValue()) {
 				return;
