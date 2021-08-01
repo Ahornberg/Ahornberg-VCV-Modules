@@ -1,0 +1,206 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<script src="Tone.js"></script>
+<style>
+
+body {
+    background-color: #000000;
+}
+table {
+	width: 100%;
+	height: 110%;
+}
+td {
+	width: 33%;
+}
+button {
+	width: 100%;
+	font-size: 32pt;
+}
+td button {
+	height: 100%;
+	background-color: #ffffff;
+	border-width: 0;
+	border-color: #990000;
+}
+
+#play-button {
+	background-color: #eeeeee;
+}
+
+</style>
+</head>
+<body onload="setBPM(60)">
+<table>
+	<tr>
+		<td><button id="button_11" onclick="setBPM(this.textContent)"></button></td>
+		<td><button id="button_12" onclick="setBPM(this.textContent)"></button></td>
+		<td><button id="button_13" onclick="setBPM(this.textContent)"></button></td>
+	</tr>
+	<tr>
+		<td><button id="button_21" onclick="setBPM(this.textContent)"></button></td>
+		<td><button id="button_22" onclick="setBPM(this.textContent)"></button></td>
+		<td><button id="button_23" onclick="setBPM(this.textContent)"></button></td>
+	</tr>
+	<tr>
+		<td><button id="button_31" onclick="setBPM(this.textContent)"></button></td>
+		<td><button id="button_32" onclick="setBPM(this.textContent)"></button></td>
+		<td><button id="button_33" onclick="setBPM(this.textContent)"></button></td>
+	</tr>
+	<tr>
+		<td><button id="button_41" onclick="setBPM(this.textContent)"></button></td>
+		<td><button id="button_42" onclick="setBPM(this.textContent)"></button></td>
+		<td><button id="button_43" onclick="setBPM(this.textContent)"></button></td>
+	</tr>
+	<tr>
+		<td><button id="button_51" onclick="setBPM(this.textContent)"></button></td>
+		<td><button id="button_52" onclick="setBPM(this.textContent)"></button></td>
+		<td><button id="button_53" onclick="setBPM(this.textContent)"></button></td>
+	</tr>
+	<tr>
+		<td><button id="button_61" onclick="setBPM(this.textContent)"></button></td>
+		<td><button id="button_62" onclick="setBPM(this.textContent)"></button></td>
+		<td><button id="button_63" onclick="setBPM(this.textContent)"></button></td>
+	</tr>
+	<tr>
+		<td><button id="button_71" onclick="setBPM(this.textContent)"></button></td>
+		<td><button id="button_72" onclick="setBPM(this.textContent)"></button></td>
+		<td><button id="button_73" onclick="setBPM(this.textContent)"></button></td>
+	</tr>
+	<tr>
+		<td colspan="3"><button id="play-button">Start</button></td>
+	</tr>
+
+</table>
+<script type="text/javascript">
+
+const bpmValues = [
+	48, 50, 52,
+	54, 56, 58,
+	60, 63, 66,
+	69, 72, 76,
+	80, 84, 88,
+	92, 96, 100,
+	104, 108, 112,
+	116, 120, 126,
+	132, 138, 144,
+	152, 160, 168,
+	176
+];
+
+var started = false;
+
+function setupTable(bpm) {
+	var bpmIndex = -1;
+	for (var i = 0; i < bpmValues.length; i++) {
+		if (bpmValues[i] == bpm) {
+			bpmIndex = i;
+			break;
+		}
+	}
+	for (var col = 0; col < 3; col++) {
+		for (var row = 0; row < 7; row++) {
+			var buttonId = "button_" + (row + 1) + (col + 1);
+			var bpmIndexToSet = -1;
+			var color = 0;
+			if (col == 1) {
+				// BPM
+				bpmIndexToSet = bpmIndex + 3 - row;
+			} else if (col == 0) {
+				// BPM/3
+				bpmIndexToSet = bpmIndex - 22 - row;
+			} else {
+				// BPM/2
+				bpmIndexToSet = bpmIndex - 13 - row;
+			}
+			var bpmValue = bpmValues[bpmIndexToSet];
+			document.getElementById(buttonId).textContent = bpmValue;
+			if (!bpmValue) {
+				document.getElementById(buttonId).innerHTML = "&nbsp;";
+			}
+			if (bpmIndexToSet < 0 || bpmIndexToSet >= bpmValues.length) {
+				document.getElementById(buttonId).style.backgroundColor = "#000000";
+			} else {
+				if (bpmIndexToSet % 3) {
+					document.getElementById(buttonId).style.backgroundColor = "#eeeeee";
+				} else {
+					if (bpmValue == 54 || bpmValue == 152) {
+						document.getElementById(buttonId).style.backgroundColor = "#ff9966";
+					} else if (bpmValue == 60 || bpmValue == 116) {
+						document.getElementById(buttonId).style.backgroundColor = "#ffcc33";
+					} else {
+						document.getElementById(buttonId).style.backgroundColor = "#99ff66";
+					}
+				}
+				if (bpmValue == bpm) {
+					document.getElementById(buttonId).style.color = "#990000";
+					document.getElementById(buttonId).style.borderWidth = "1";
+				} else if (bpmValue < 54 || bpmValue > 152) {
+					document.getElementById(buttonId).style.color = "#999999";
+				} else {
+					document.getElementById(buttonId).style.color = "#000000";
+				}
+			}
+		}
+	}
+}
+
+function setupSound() {
+	if (!started) {
+		//var xhr = new XMLHttpRequest();
+		//xhr.withCredentials = true;
+		//xhr.open("GET", "metronome.wav", true);
+		//xhr.open("GET", "https://tonejs.github.io/audio/casio/A1.mp3", true);
+		//xhr.responseType = 'blob';
+		//xhr.onload = function() {
+			//var blob = URL.createObjectURL(this.response);
+			//console.log('pressed');
+			var osc = new Tone.Player("metronome.wav").toDestination();
+			//var pitchShift = new Tone.PitchShift({pitch: 2});
+			//pitchShift.toMaster();
+			//player.connect(pitchShift);
+			osc.autostart = true;
+		//};
+		//xhr.send();
+		
+		//const osc = new Tone.Player("file://metronome.wav").toDestination();
+		//const osc = new Tone.MembraneSynth().toDestination();
+		//osc.octaves = 4;
+
+		//const osc = new Tone.Oscillator(660, "sine2").toDestination();
+		// repeated event every 8th note
+		Tone.Transport.scheduleRepeat((time) => {
+			// use the callback time to schedule events
+			//osc.triggerAttackRelease("C2", "8n", time, 1);
+			osc.start(time);
+		}, "4n");
+	}
+	started = true;
+}
+
+function setBPM(bpm) {
+	if (bpm > 0) {
+		Tone.Transport.bpm.value = bpm;
+		setupTable(bpm);
+	}
+}
+
+document.getElementById("play-button").addEventListener("click", function() {
+	//Tone.start();
+	setupSound();
+	if (Tone.Transport.state !== 'started') {
+		Tone.Transport.start();
+		document.getElementById("play-button").textContent = "Stop";
+		document.getElementById("play-button").style.color = "#990000";
+	} else {
+		Tone.Transport.stop();
+		document.getElementById("play-button").textContent = "Start";
+		document.getElementById("play-button").style.color = "#000000";
+	}
+});
+
+</script>
+
+</body>
+</html>
