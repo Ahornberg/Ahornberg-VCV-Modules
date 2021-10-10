@@ -116,7 +116,7 @@ struct TapeDisplay : ModuleLinkedWidget {
 };
 
 struct TextOnCassette {
-	std::shared_ptr<Font> font;
+	std::string fontPath;
 	NVGcolor textColor;
 	std::string text;
 	int fontSize;
@@ -142,7 +142,9 @@ struct TrackCountDisplay : ModuleLinkedWidget, TextOnCassette, TrackCountText {
 };
 
 struct TapeNameDisplay : SizedTransparentWidget, TextOnCassette {
-	TapeNameDisplay(Rect box);
+	TapeRecorder* tapeRecorder;
+	
+	TapeNameDisplay(Rect box, TapeRecorder* tapeRecorder);
 	void draw(const DrawArgs& disp) override;
 };
 
@@ -153,9 +155,9 @@ struct TapeRecorderMenuItem : MenuItem {
 };
 
 struct TapeNameMenuItem : TextFieldMenuItem {
-	TapeNameDisplay* tapeNameDisplay;
+	TapeRecorder* tapeRecorder;
 	
-	TapeNameMenuItem(TapeNameDisplay* tapeNameDisplay);
+	TapeNameMenuItem(TapeRecorder* tapeRecorder);
 	void onChange(const event::Change& e) override;
 };
 
@@ -199,17 +201,17 @@ struct TapeLengthMenuItem : TapeRecorderMenuItem {
 };
 
 struct TapeStripesValueItem : MenuItem {
-	StripeWidget* stripeWidget;
+	TapeRecorder* tapeRecorder;
 	int stripe;
 	
-	TapeStripesValueItem(StripeWidget* stripeWidget, int stripe);
+	TapeStripesValueItem(TapeRecorder* tapeRecorder, int stripe);
 	void onAction(const event::Action& e) override;
 };
 
 struct TapeStripesMenuItem : MenuItem {
-	StripeWidget* stripeWidget;
+	TapeRecorder* tapeRecorder;
 	
-	TapeStripesMenuItem(StripeWidget* stripeWidget);
+	TapeStripesMenuItem(TapeRecorder* tapeRecorder);
 	Menu* createChildMenu() override;
 };
 
@@ -219,12 +221,11 @@ struct EraseTapeMenuItem : TapeRecorderMenuItem {
 };
 
 struct TapeRecorderWidget : ModuleWidgetWithScrews {
-	TapeNameDisplay* tapeNameDisplay;
+	// TapeNameDisplay* tapeNameDisplay;
 	StripeWidget* stripeWidget;
 	// TextField* tapeName;
 	
 	TapeRecorderWidget(TapeRecorder* module);
 	void appendContextMenu(Menu* menu) override;
-	json_t* toJson() override;
-	void fromJson(json_t* rootJ) override;
+	void step() override;
 };

@@ -5,19 +5,27 @@ const int Metronome::BPM_VALUES[] = {
 	100, 104, 108, 112, 116, 120, 126, 132, 138, 144, 152, 160, 168, 176, 184, 192, 200, 208
 };
 
-std::string BpmValues::getDisplayValueString() {
-	return string::f("%d", Metronome::BPM_VALUES[(int) getValue()]);
-}
+std::vector<std::string> Metronome::BPM_LABELS;
 
 Metronome::Metronome() { 
 	config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 	configScrewParams();
 	for (auto i = 0; i < NUM_BPM_VALUES; ++i) {
-		configParam<OnOff>(BPM_VALUE_BUTTON_PARAM + i, 0, 1, i == INIT_BPM ? 1 : 0, string::f("%d BPM", BPM_VALUES[i]));
+		if ((int) BPM_LABELS.size() == i) {
+			BPM_LABELS.push_back(string::f("%d BPM", BPM_VALUES[i]));
+		}
+		configButton(BPM_VALUE_BUTTON_PARAM + i, string::f("%d BPM", BPM_VALUES[i]));
 	}
-	configParam<BpmValues>(BPM_VALUE_PARAM, 0, NUM_BPM_VALUES - 1, INIT_BPM, "BPM");
-	configParam<BpmValues>(BPM_RESET_VALUE_PARAM, 0, NUM_BPM_VALUES - 1, INIT_BPM, "BPM");
-	configParam<OnOff>(PLAY_PARAM, 0, 1, 0, "Play");
+	configSwitch(BPM_VALUE_PARAM, 0, NUM_BPM_VALUES - 1, INIT_BPM, "Tempo", BPM_LABELS);
+	configSwitch(BPM_RESET_VALUE_PARAM, 0, NUM_BPM_VALUES - 1, INIT_BPM, "Reset Tempo", BPM_LABELS);
+	configSwitch(PLAY_PARAM, 0, 1, 0, "Play", BasicSwitch::ON_OFF_NAMES);
+	configInput(THREE_STEP_FASTER_INPUT, "3 Steps Faster Trigger");
+	configInput(TWO_STEP_FASTER_INPUT, "2 Steps Faster Trigger");
+	configInput(ONE_STEP_FASTER_INPUT, "1 Step Faster Trigger");
+	configInput(ONE_STEP_SLOWER_INPUT, "1 Step Slower Trigger");
+	configInput(BPM_RESET_INPUT, "Reset Tempo Trigger");
+	configInput(PLAY_INPUT, "Start / Stop Trigger");
+	configOutput(BPM_OUTPUT, "Trigger");
 	pulse.reset();
 	timer.reset();
 	threeStepFasterTrigger.reset();

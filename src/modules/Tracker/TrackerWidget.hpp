@@ -1,7 +1,7 @@
 #include "Tracker.hpp"
 
 struct TrackerScreen : SizedTransparentWidget {
-	std::shared_ptr<Font> font;
+	std::string fontPath;
 	Tracker* module;
 		
 	

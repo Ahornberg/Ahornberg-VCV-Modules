@@ -278,6 +278,7 @@ void KnobWheel::onChange(const event::Change& e) {
 	// Re-transform the widget::TransformWidget
 	float clampValue = 1 / (9.f * NUM_SMEARED_WHEELS);
 	// float frameRate = APP->window->getLastFrameRate();
+	ParamQuantity* paramQuantity = getParamQuantity();
 	if (paramQuantity && module) {
 		float diff;
 		float paramValue;
@@ -496,20 +497,23 @@ void TapeDisplay::draw(const DrawArgs& disp) {
 }
 
 void TextOnCassette::drawText(const Widget::DrawArgs& disp, Rect box) {
-	nvgBeginPath(disp.vg);
-	nvgRotate(disp.vg, (-90 * NVG_PI) / 180);
-	if (useScissor) {
-		nvgScissor(disp.vg, box.size.x * -0.5, 0, box.size.x, box.size.y);
+	std::shared_ptr<Font> font = APP->window->loadFont(fontPath);
+	if (font) {
+		nvgBeginPath(disp.vg);
+		nvgRotate(disp.vg, (-90 * NVG_PI) / 180);
+		if (useScissor) {
+			nvgScissor(disp.vg, box.size.x * -0.5, 0, box.size.x, box.size.y);
+		}
+		nvgFontSize(disp.vg, fontSize);
+		nvgFontFaceId(disp.vg, font->handle);
+		nvgFillColor(disp.vg, textColor);
+		nvgTextAlign(disp.vg, textAlign);
+		nvgText(disp.vg, textPos.x, textPos.y, text.c_str(), NULL);
 	}
-	nvgFontSize(disp.vg, fontSize);
-	nvgFontFaceId(disp.vg, font->handle);
-	nvgFillColor(disp.vg, textColor);
-	nvgTextAlign(disp.vg, textAlign);
-	nvgText(disp.vg, textPos.x, textPos.y, text.c_str(), NULL);
 }
 
 TapeLengthDisplay::TapeLengthDisplay(Rect box, TapeRecorder* tapeRecorder) : ModuleLinkedWidget(box, tapeRecorder) {
-	font = APP->window->loadFont(asset::plugin(pluginInstance, FONT_SERIF_BOLD));
+	fontPath = asset::plugin(pluginInstance, FONT_SERIF_BOLD);
 	textColor = COLOR_BLACK;
 	fontSize = 18;
 	textAlign = NVG_ALIGN_RIGHT;
@@ -538,7 +542,7 @@ std::string TrackCountText::createTrackCountText(const int trackCount) {
 }
 
 TrackCountDisplay::TrackCountDisplay(Rect box, TapeRecorder* tapeRecorder) : ModuleLinkedWidget(box, tapeRecorder) {
-	font = APP->window->loadFont(asset::plugin(pluginInstance, FONT_SERIF_BOLD));
+	fontPath = asset::plugin(pluginInstance, FONT_SERIF_BOLD);
 	textColor = COLOR_BLACK;
 	fontSize = 14;
 	textAlign = NVG_ALIGN_LEFT;
@@ -556,10 +560,10 @@ void TrackCountDisplay::draw(const DrawArgs& disp) {
 	drawText(disp, box);
 }
 
-TapeNameDisplay::TapeNameDisplay(Rect box) : SizedTransparentWidget(box) {
-	font = APP->window->loadFont(asset::plugin(pluginInstance, FONT_HANDWRITE));
+TapeNameDisplay::TapeNameDisplay(Rect box, TapeRecorder* tapeRecorder) : SizedTransparentWidget(box) {
+	this->tapeRecorder = tapeRecorder;
+	fontPath = asset::plugin(pluginInstance, FONT_HANDWRITE);
 	textColor = COLOR_BLACK;
-	text = TapeRecorder::INIT_TAPE_NAME;
 	fontSize = 16;
 	textAlign = NVG_ALIGN_CENTER;
 	useScissor = true;
@@ -567,6 +571,11 @@ TapeNameDisplay::TapeNameDisplay(Rect box) : SizedTransparentWidget(box) {
 }
 
 void TapeNameDisplay::draw(const DrawArgs& disp) {
+	if (tapeRecorder) {
+		text = tapeRecorder->tapeName;
+	} else {
+		text = TapeRecorder::INIT_TAPE_NAME;
+	}
 	drawText(disp, box);
 }
 
@@ -576,14 +585,20 @@ TapeRecorderMenuItem::TapeRecorderMenuItem(TapeRecorder* tapeRecorder) {
 	this->tapeRecorder = tapeRecorder;
 }
 
-TapeNameMenuItem::TapeNameMenuItem(TapeNameDisplay* tapeNameDisplay) {
-	this->tapeNameDisplay = tapeNameDisplay;
-	text = tapeNameDisplay->text;
+TapeNameMenuItem::TapeNameMenuItem(TapeRecorder* tapeRecorder) {
+	this->tapeRecorder = tapeRecorder;
+	if (tapeRecorder) {
+		text = tapeRecorder->tapeName;
+	} else {
+		text = TapeRecorder::INIT_TAPE_NAME;
+	}
 }
 
 void TapeNameMenuItem::onChange(const event::Change& e) {
 	TextFieldMenuItem::onChange(e);
-	tapeNameDisplay->text = text;
+	if (tapeRecorder) {
+		tapeRecorder->tapeName = text;
+	}
 }
 
 const std::string LoopModeValueItem::LOOP_MODES[] = {
@@ -680,27 +695,38 @@ Menu* TapeLengthMenuItem::createChildMenu() {
 	return menu;
 }
 
-TapeStripesValueItem::TapeStripesValueItem(StripeWidget* stripeWidget, int stripe) {
-	this->stripeWidget = stripeWidget;
+TapeStripesValueItem::TapeStripesValueItem(TapeRecorder* tapeRecorder, int stripe) {
+	this->tapeRecorder = tapeRecorder;
 	this->stripe = stripe;
 	text = StripeWidget::STRIPES[stripe].name;
-	rightText = CHECKMARK(stripeWidget->stripe == stripe);
+	if (tapeRecorder) {
+		rightText = CHECKMARK(tapeRecorder->stripeIndex == stripe);
+	} else {
+		rightText = CHECKMARK(tapeRecorder->stripeIndex == 0);
+	}
 }
 
 void TapeStripesValueItem::onAction(const event::Action& e) {
-	stripeWidget->setStripe(stripe);
+	if (tapeRecorder) {
+		tapeRecorder->stripeIndex = stripe;
+	}
+	//stripeWidget->setStripe(stripe);
 }
 
-TapeStripesMenuItem::TapeStripesMenuItem(StripeWidget* stripeWidget) {
-	this->stripeWidget = stripeWidget;
+TapeStripesMenuItem::TapeStripesMenuItem(TapeRecorder* tapeRecorder) {
+	this->tapeRecorder = tapeRecorder;
 	text = "Cassette Label";
-	rightText = StripeWidget::STRIPES[stripeWidget->stripe].name + " " + RIGHT_ARROW;
+	if (tapeRecorder) {
+		rightText = StripeWidget::STRIPES[tapeRecorder->stripeIndex].name + " " + RIGHT_ARROW;
+	} else {
+		rightText = StripeWidget::STRIPES[0].name + " " + RIGHT_ARROW;
+	}
 }
 
 Menu* TapeStripesMenuItem::createChildMenu() {
 	Menu* menu = new Menu;
 	for (auto i = 0; i < StripeWidget::NUM_STRIPES; ++i) {
-		menu->addChild(new TapeStripesValueItem(stripeWidget, i));
+		menu->addChild(new TapeStripesValueItem(tapeRecorder, i));
 	}
 	return menu;
 }
@@ -777,9 +803,10 @@ TapeRecorderWidget::TapeRecorderWidget(TapeRecorder* module) {
 	addChild(new TapeDisplay(Rect(42, 217, 16, 24), module));
 	addChild(new TapeLengthDisplay(Rect(10, 161, 22, 22), module));
 	addChild(new TrackCountDisplay(Rect(10, 306, 22, 22), module));
-	
-	tapeNameDisplay = new TapeNameDisplay(Rect(70.5, 230, 122, 18));
-	addChild(tapeNameDisplay);
+
+	addChild(new TapeNameDisplay(Rect(70.5, 230, 122, 18), module));
+	// tapeNameDisplay = new TapeNameDisplay(Rect(70.5, 230, 122, 18), module);
+	// addChild(tapeNameDisplay);
 	
 	stripeWidget = new StripeWidget(Vec(38, 154));
 	addChild(stripeWidget);
@@ -787,37 +814,23 @@ TapeRecorderWidget::TapeRecorderWidget(TapeRecorder* module) {
 
 void TapeRecorderWidget::appendContextMenu(Menu* menu) {
 	TapeRecorder* tapeRecorder = dynamic_cast<TapeRecorder*>(this->module);
-	menu->addChild(new MenuEntry);
-	menu->addChild(new TapeNameMenuItem(tapeNameDisplay));
-	menu->addChild(new TapeStripesMenuItem(stripeWidget));
+	menu->addChild(new MenuSeparator);
+	menu->addChild(new TapeNameMenuItem(tapeRecorder));
+	menu->addChild(new TapeStripesMenuItem(tapeRecorder));
 	menu->addChild(new TapeLengthMenuItem(tapeRecorder));
 	menu->addChild(new TrackCountMenuItem(tapeRecorder));
 	menu->addChild(new LoopModeMenuItem(tapeRecorder));
 	menu->addChild(new EraseTapeMenuItem(tapeRecorder));
 }
 
-json_t* TapeRecorderWidget::toJson() {
-	json_t* rootJ = ModuleWidget::toJson();
-	
-	json_object_set_new(rootJ, "tape-name", json_string(tapeNameDisplay->text.c_str()));
-	json_object_set_new(rootJ, "tape-stripe", json_integer(stripeWidget->stripe));
-	return rootJ;
-}
-
-void TapeRecorderWidget::fromJson(json_t* rootJ) {
-	ModuleWidget::fromJson(rootJ);
-	
-	json_t* tapeNameJ = json_object_get(rootJ, "tape-name");
-	if (tapeNameJ) {
-		tapeNameDisplay->text = json_string_value(tapeNameJ);
+void TapeRecorderWidget::step() {
+	TapeRecorder* tapeRecorder = dynamic_cast<TapeRecorder*>(this->module);
+	if (tapeRecorder) {
+		if (tapeRecorder->stripeIndex != stripeWidget->stripe) {
+			stripeWidget->setStripe(tapeRecorder->stripeIndex);
+		}
 	}
-	json_t* tapeStripeJ = json_object_get(rootJ, "tape-stripe");
-	if (tapeStripeJ) {
-		stripeWidget->setStripe(json_integer_value(tapeStripeJ));
-	}
-	if (module) {
-		dynamic_cast<TapeRecorder*>(this->module)->initTape();
-	}
+	ModuleWidgetWithScrews::step();
 }
 
 Model* modelTapeRecorder = createModel<TapeRecorder, TapeRecorderWidget>("TapeRecorder");

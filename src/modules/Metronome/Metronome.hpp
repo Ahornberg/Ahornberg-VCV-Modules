@@ -1,13 +1,10 @@
 #include "../../Ahornberg.hpp"
 
-struct BpmValues : ParamQuantity {
-	std::string getDisplayValueString() override;
-};
-
-struct Metronome : ModuleWithScrews {
+struct Metronome : BaseModule {
 	const static int BPM_VALUES[];
+	static std::vector<std::string> BPM_LABELS;
 	constexpr static int NUM_BPM_VALUES = 39;
-	constexpr static int INIT_BPM = 10;
+	constexpr static int INIT_BPM = 11;
 
 	enum ParamIds {
 		BPM_VALUE_PARAM = NUM_MAX_SCREWS,

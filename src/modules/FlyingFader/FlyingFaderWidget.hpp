@@ -8,7 +8,9 @@ struct FaderCapColor {
 struct MotorizedFader : BasicSlider {
 	FlyingFader* flyingFader;
 	bool displayContextMenu;
+	float oldValue;
 	float oldFaderValueBeforeConnected;
+	int faderCapColorIndex;
 	
 	MotorizedFader();
 	void setFlyingFader(FlyingFader* flyingFader);
@@ -20,7 +22,8 @@ struct MotorizedFader : BasicSlider {
 };
 
 struct TextOnFaderModule {
-	std::shared_ptr<Font> font;
+	FlyingFader* flyingFader;
+	std::string fontPath;
 	NVGcolor textColor;
 	std::string text;
 	int fontSize;
@@ -32,14 +35,14 @@ struct TextOnFaderModule {
 };
 
 struct FaderNameDisplay : SizedTransparentWidget, TextOnFaderModule {
-	FaderNameDisplay(Rect box);
+	FaderNameDisplay(FlyingFader* flyingFader, Rect box);
 	void draw(const DrawArgs& disp) override;
 };
 
 struct FaderNameMenuItem : TextFieldMenuItem {
-	FaderNameDisplay* faderNameDisplay;
+	FlyingFader* flyingFader;
 	
-	FaderNameMenuItem(FaderNameDisplay* faderNameDisplay);
+	FaderNameMenuItem(FlyingFader* flyingFader);
 	void onChange(const event::Change& e) override;
 };
 
@@ -50,13 +53,12 @@ struct FlyingFaderWidget : ModuleWidgetWithScrews {
 	MotorizedFader* fader;
 	FaderNameDisplay* faderNameDisplay;
 	// FaderDisplay* faderDisplay;
-	int faderCapColorIndex;
+	// int faderCapColorIndex;
 	
 	FlyingFaderWidget(FlyingFader* module);
 	void changeFaderCapColor(int faderCapColorIndex);
 	void appendContextMenu(Menu* menu) override;
-	json_t* toJson() override;
-	void fromJson(json_t* rootJ) override;
+	void step() override;
 };
 
 struct FaderCapColorValueItem : MenuItem {

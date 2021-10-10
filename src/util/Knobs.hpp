@@ -15,6 +15,7 @@ struct KnobScrewMountModule : BasicKnob {
 
 	KnobScrewMountModule();
 	void onChange(const event::Change& e) override;
+	void onButton(const ButtonEvent& e) override;
 };
 
 struct KnobTiny : BasicKnob {

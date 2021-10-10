@@ -37,6 +37,12 @@ void KnobScrewMountModule::onChange(const event::Change& e) {
 	}
 }
 
+void KnobScrewMountModule::onButton(const ButtonEvent& e) {
+	if (e.action == GLFW_PRESS && e.button == GLFW_MOUSE_BUTTON_LEFT && (e.mods & RACK_MOD_MASK) == 0) {
+		BasicKnob::onButton(e);
+	}
+}
+
 KnobTiny::KnobTiny() {
 	BasicKnob::setSvg("res/knobs/Tiny.svg");
 }

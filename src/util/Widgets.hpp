@@ -1,6 +1,6 @@
 #define ENUMS_WITH_SCREWS(name, count) name = NUM_MAX_SCREWS, name ## _LAST = name + (count) - 1
 
-struct SizedTransparentWidget : LightWidget {
+struct SizedTransparentWidget : TransparentWidget {
 	SizedTransparentWidget(Rect box);
 };
 
@@ -9,24 +9,12 @@ struct TextFieldMenuItem : TextField {
 	void onAction(const event::Action& e) override;
 };
 
-// Module and Widget with Screws
-
-static const std::string SCREW_MESSAGES[] = {
-	"I warn you, UNDO won't help you here!",
-	"If you continue doing that, the module will fall out of the rack!",
-	"Stop doing that!",
-	"Don't pull it out!",
-	"loose",
-	"fixed"
-};
+// Module with intern params and Widget with screws
 
 constexpr int NUM_MAX_SCREWS = 4;
+//constexpr int NUM_MAX_INTERN_PARAM_TYPES = 2;
 
-struct ScrewMessage : ParamQuantity {
-	std::string getDisplayValueString() override;
-};
-
-struct ModuleWithScrews : Module {
+struct BaseModule : Module {
 	enum Screws {
 		ENUMS(SCREW_PARAM, NUM_MAX_SCREWS)
 	};

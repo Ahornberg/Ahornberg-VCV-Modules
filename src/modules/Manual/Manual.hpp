@@ -1,6 +1,6 @@
 #include "../../Ahornberg.hpp"
 
-struct Manual : ModuleWithScrews {
+struct Manual : BaseModule {
 	enum ParamIds {
 		NUM_PARAMS = NUM_MAX_SCREWS
 	};

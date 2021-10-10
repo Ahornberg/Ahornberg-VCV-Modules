@@ -19,12 +19,15 @@ MotorizedFader::MotorizedFader() {
 	maxHandlePos = Vec(0, 2);
 	setBackgroundSvg("res/knobs/MotorizedFaderBackground.svg");
 	fb->dirty = true;
+	faderCapColorIndex = 0;
+	faderCapColorIndex = 0;
 }
 
 void MotorizedFader::setFlyingFader(FlyingFader* flyingFader) {
 	this->flyingFader = flyingFader;
 	if (flyingFader) {
-		setHandleSvg("res/knobs/MotorizedFaderHandle_white.svg");
+		setHandleSvg("res/knobs/MotorizedFaderHandle_" + FlyingFaderWidget::FADER_CAP_COLORS[flyingFader->faderCapColorIndex].color + ".svg");
+		faderCapColorIndex = flyingFader->faderCapColorIndex;
 	} else {
 		setHandleSvg("res/knobs/MotorizedFaderHandle_" + FlyingFaderWidget::FADER_CAP_COLORS[(int) (random::uniform() * FlyingFaderWidget::NUM_FADER_CAP_COLORS)].color + ".svg");
 		handle->box.pos = Vec(0, 68.5);
@@ -47,6 +50,7 @@ void MotorizedFader::onButton(const event::Button& e) {
 void MotorizedFader::onDragStart(const event::DragStart& e) {
 	if (e.button == GLFW_MOUSE_BUTTON_LEFT) {
 		APP->window->cursorLock();
+		ParamQuantity* paramQuantity = getParamQuantity();
 		if (paramQuantity && flyingFader) {
 			oldValue = paramQuantity->getSmoothValue();
 			oldFaderValueBeforeConnected = flyingFader->params[FlyingFader::FADER_VALUE_BEFORE_CONNECTED].getValue();
@@ -57,6 +61,7 @@ void MotorizedFader::onDragStart(const event::DragStart& e) {
 
 void MotorizedFader::onDragEnd(const event::DragEnd& e) {
 	if (e.button == GLFW_MOUSE_BUTTON_LEFT) {
+		ParamQuantity* paramQuantity = getParamQuantity();
 		if (paramQuantity && flyingFader) {
 			flyingFader->faderDragged = false;
 			float newValue = paramQuantity->getSmoothValue();
@@ -98,26 +103,39 @@ void MotorizedFader::step() {
 			displayContextMenu = false;
 		}
 	}
+	if (flyingFader && flyingFader->faderCapColorIndex != faderCapColorIndex) {
+		setHandleSvg("res/knobs/MotorizedFaderHandle_" + FlyingFaderWidget::FADER_CAP_COLORS[flyingFader->faderCapColorIndex].color + ".svg");
+		faderCapColorIndex = flyingFader->faderCapColorIndex;
+	}
 	SvgSlider::step();
 }
 
 void TextOnFaderModule::drawText(const Widget::DrawArgs& disp, Rect box) {
-	nvgBeginPath(disp.vg);
-	nvgRotate(disp.vg, (-90 * NVG_PI) / 180);
-	if (useScissor) {
-		nvgScissor(disp.vg, box.size.x * -0.5, 0, box.size.x, box.size.y);
+	std::shared_ptr<Font> font = APP->window->loadFont(fontPath);
+	if (font) {
+		nvgBeginPath(disp.vg);
+		nvgRotate(disp.vg, (-90 * NVG_PI) / 180);
+		if (useScissor) {
+			nvgScissor(disp.vg, box.size.x * -0.5, 0, box.size.x, box.size.y);
+		}
+		nvgFontSize(disp.vg, fontSize);
+		nvgFontFaceId(disp.vg, font->handle);
+		nvgFillColor(disp.vg, textColor);
+		nvgTextAlign(disp.vg, textAlign);
+		if (flyingFader) {
+			text = flyingFader->faderName;
+		} else {
+			text = FlyingFader::INIT_FADER_NAME;
+		}
+		nvgText(disp.vg, textPos.x, textPos.y, text.c_str(), NULL);
 	}
-	nvgFontSize(disp.vg, fontSize);
-	nvgFontFaceId(disp.vg, font->handle);
-	nvgFillColor(disp.vg, textColor);
-	nvgTextAlign(disp.vg, textAlign);
-	nvgText(disp.vg, textPos.x, textPos.y, text.c_str(), NULL);
 }
 
-FaderNameDisplay::FaderNameDisplay(Rect box) : SizedTransparentWidget(box) {
-	font = APP->window->loadFont(asset::plugin(pluginInstance, FONT_HANDWRITE));
+FaderNameDisplay::FaderNameDisplay(FlyingFader* flyingFader, Rect box) : SizedTransparentWidget(box) {
+	this->flyingFader = flyingFader;
+	fontPath = asset::plugin(pluginInstance, FONT_HANDWRITE);
 	textColor = COLOR_BLACK;
-	text = FlyingFader::INIT_FADER_NAME;
+	//text = FlyingFader::INIT_FADER_NAME;
 	fontSize = 16;
 	textAlign = NVG_ALIGN_CENTER;
 	useScissor = true;
@@ -128,14 +146,20 @@ void FaderNameDisplay::draw(const DrawArgs& disp) {
 	drawText(disp, box);
 }
 
-FaderNameMenuItem::FaderNameMenuItem(FaderNameDisplay* faderNameDisplay) {
-	this->faderNameDisplay = faderNameDisplay;
-	text = faderNameDisplay->text;
+FaderNameMenuItem::FaderNameMenuItem(FlyingFader* flyingFader) {
+	this->flyingFader = flyingFader;
+	if (flyingFader) {
+		text = flyingFader->faderName;
+	} else {
+		text = FlyingFader::INIT_FADER_NAME;
+	}
 }
 
 void FaderNameMenuItem::onChange(const event::Change& e) {
 	TextFieldMenuItem::onChange(e);
-	faderNameDisplay->text = text;
+	if (flyingFader) {
+		flyingFader->faderName = text;
+	}
 }
 
 FlyingFaderWidget::FlyingFaderWidget(FlyingFader* module) {
@@ -143,9 +167,9 @@ FlyingFaderWidget::FlyingFaderWidget(FlyingFader* module) {
 	setPanel("res/FlyingFader.svg");
 	setWidthInHP(4);
 	setScrews(SCREW_TOP_LEFT, NO_SCREW_TOP_RIGHT, NO_SCREW_BOTTOM_LEFT, SCREW_BOTTOM_RIGHT);
-	faderCapColorIndex = 0;
+	//faderCapColorIndex = 0;
 
-	faderNameDisplay = new FaderNameDisplay(Rect(6.5, 214.5, 153, 18));
+	faderNameDisplay = new FaderNameDisplay(module, Rect(6.5, 214.5, 153, 18));
 	addChild(faderNameDisplay);
 
 	fader = dynamic_cast<MotorizedFader*>(createParam<MotorizedFader>(Vec(18, 40.5), module, FlyingFader::FADER_PARAM));
@@ -161,9 +185,9 @@ FlyingFaderWidget::FlyingFaderWidget(FlyingFader* module) {
 
 void FlyingFaderWidget::appendContextMenu(Menu* menu) {
 	FlyingFader* flyingFader = dynamic_cast<FlyingFader*>(this->module);
-	menu->addChild(new MenuEntry);
-	menu->addChild(new FaderNameMenuItem(faderNameDisplay));
-	menu->addChild(new FaderCapColorMenuItem(this, faderCapColorIndex));
+	menu->addChild(new MenuSeparator);
+	menu->addChild(new FaderNameMenuItem(flyingFader));
+	menu->addChild(new FaderCapColorMenuItem(this, flyingFader->faderCapColorIndex));
 	menu->addChild(new AudioPolyModeMenuItem(flyingFader));
 	menu->addChild(new CvScaleModeMenuItem(flyingFader));
 }
@@ -172,39 +196,30 @@ void FlyingFaderWidget::changeFaderCapColor(int faderCapColorIndex) {
 	fader->setHandleSvg("res/knobs/MotorizedFaderHandle_" + FADER_CAP_COLORS[faderCapColorIndex].color + ".svg");
 	event::Change eChange;
 	fader->onChange(eChange);
-	this->faderCapColorIndex = faderCapColorIndex;
+	//this->faderCapColorIndex = faderCapColorIndex;
+	if (module) {
+		dynamic_cast<FlyingFader*>(module)->faderCapColorIndex = faderCapColorIndex;
+	}
 }
 
-json_t* FlyingFaderWidget::toJson() {
-	json_t* rootJ = ModuleWidget::toJson();
-	
-	json_object_set_new(rootJ, "fader-name", json_string(faderNameDisplay->text.c_str()));
-	json_object_set_new(rootJ, "fader-cap-color", json_integer(faderCapColorIndex));
-	return rootJ;
-}
-
-void FlyingFaderWidget::fromJson(json_t* rootJ) {
-	ModuleWidget::fromJson(rootJ);
-	
-	json_t* faderNameJ = json_object_get(rootJ, "fader-name");
-	if (faderNameJ) {
-		faderNameDisplay->text = json_string_value(faderNameJ);
+void FlyingFaderWidget::step() {
+	FlyingFader* flyingFader = dynamic_cast<FlyingFader*>(this->module);
+	if (flyingFader && flyingFader->faderCapColorIndex != fader->faderCapColorIndex) {
+		changeFaderCapColor(flyingFader->faderCapColorIndex);
 	}
-	json_t* faderCapColorJ = json_object_get(rootJ, "fader-cap-color");
-	if (faderCapColorJ) {
-		changeFaderCapColor(json_integer_value(faderCapColorJ));
-		// faderCapColorIndex = json_integer_value(faderCapColorJ);
-	}
-	// if (module) {
-		// dynamic_cast<FlyingFader*>(this->module)->init();
-	// }
+	ModuleWidgetWithScrews::step();
 }
 
 FaderCapColorValueItem::FaderCapColorValueItem(FlyingFaderWidget* flyingFaderWidget, int faderCapColorIndex) {
 	this->flyingFaderWidget = flyingFaderWidget;
 	this->faderCapColorIndex = faderCapColorIndex;
 	text = FlyingFaderWidget::FADER_CAP_COLORS[faderCapColorIndex].color;
-	rightText = CHECKMARK(FlyingFaderWidget::FADER_CAP_COLORS[faderCapColorIndex].index == flyingFaderWidget->faderCapColorIndex);
+	if (flyingFaderWidget->module) {
+		FlyingFader* flyingFader = dynamic_cast<FlyingFader*>(flyingFaderWidget->module);
+		rightText = CHECKMARK(FlyingFaderWidget::FADER_CAP_COLORS[faderCapColorIndex].index == flyingFader->faderCapColorIndex);
+	} else {
+		rightText = CHECKMARK(FlyingFaderWidget::FADER_CAP_COLORS[faderCapColorIndex].index == 0);
+	}
 }
 
 void FaderCapColorValueItem::onAction(const event::Action& e) {

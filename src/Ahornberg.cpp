@@ -3,7 +3,7 @@
 Plugin* pluginInstance;
 
 void init(Plugin* plugin) {
-	new MIDIOverAudioDriver();
+	new MIDIOverAudioDriver(false);
 	pluginInstance = plugin;
 
 	pluginInstance->addModel(modelTracker);

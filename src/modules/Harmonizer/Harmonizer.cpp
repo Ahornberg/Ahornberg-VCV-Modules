@@ -6,22 +6,47 @@ bool Harmonizer::FREQ_RATIOS_INITIALIZED = false;
 Harmonizer::Harmonizer() { 
 	config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 	configScrewParams();
-	configParam(VELOCITY_GLOBAL_MODULATION_PARAM,  0, 1, 0, "Velocity Modulation");
-	configParam(PITCH_GLOBAL_MODULATION_PARAM,    -1, 1, 0, "Pitch Modulation");
+	configParam(VELOCITY_GLOBAL_MODULATION_PARAM,  0, 1, 0, "Velocity Modulation", "%", 0, 100);
+	configParam(PITCH_GLOBAL_MODULATION_PARAM,    -1, 1, 0, "Pitch Modulation", "%", 0, 100);
+	configInput(GATE_INPUT, "Gate");
+	configOutput(GATE_OUTPUT, "Gate");
+	configBypass(GATE_INPUT, GATE_OUTPUT);
+	configInput(RETRIGGER_INPUT, "Retrigger");
+	configOutput(RETRIGGER_OUTPUT, "Retrigger");
+	configBypass(RETRIGGER_INPUT, RETRIGGER_OUTPUT);
+	configInput(VELOCITY_INPUT, "Velocity");
+	configInput(VELOCITY_GLOBAL_MODULATION_INPUT, "Velocity Modulation");
+	configOutput(VELOCITY_GLOBAL_OUTPUT, "Velocity");
+	configBypass(VELOCITY_INPUT, VELOCITY_GLOBAL_OUTPUT);
+	configInput(PITCH_INPUT, "Pitch (1V/Octave)");
+	configInput(PITCH_GLOBAL_MODULATION_INPUT, "Pitch Modulation");
+	configOutput(PITCH_GLOBAL_OUTPUT, "Pitch (1V/Octave)");
+	configBypass(PITCH_INPUT, PITCH_GLOBAL_OUTPUT);
 	for (auto i = 0; i < NUM_CHANNELS; ++i) {
-		configParam<OnOff>(CHANNEL_ACTIVE_PARAM + i, 0,     1,    0, string::f("Channel %d", i + 1));
-		configParam(VELOCITY_MODULATION_PARAM + i,   0,     1,    0, string::f("Velocity Modulation Channel %d", i + 1));
-		configParam(VELOCITY_PARAM + i,              0,     1,    1, string::f("Velocity Channel %d", i + 1));
-		configParam(PITCH_MODULATION_PARAM + i,     -1,     1,    0, string::f("Pitch Modulation Channel %d", i + 1));
+		configSwitch(CHANNEL_ACTIVE_PARAM + i, 0,     1,    i ? 0 : 1, string::f("Channel %d", i + 1), BasicSwitch::ON_OFF_NAMES);
+		configParam(VELOCITY_MODULATION_PARAM + i,   0,     1,    0, string::f("Velocity Modulation Channel %d", i + 1), "%", 0, 100);
+		configParam(VELOCITY_PARAM + i,              0,     1,    1, string::f("Velocity Channel %d", i + 1), "%", 0, 100);
+		configParam(PITCH_MODULATION_PARAM + i,     -1,     1,    0, string::f("Pitch Modulation Channel %d", i + 1), "%", 0, 100);
 		configParam(PITCH_HARMONICS_PARAM + i,       1, NUM_HARMONICS, 1, string::f("Pitch Harmonics Channel %d", i + 1));
 		configParam(PITCH_SUBHARMONICS_PARAM + i,    1, NUM_HARMONICS, 1, string::f("Pitch Subarmonics Channel %d", i + 1));
 		configParam(PITCH_FINE_PARAM + i,            0.97,  1.03, 1, string::f("Pitch Fine Channel %d", i + 1), "%", 0, 100, -100);
+		std::string portLabel = "Velocity Modulation Channel " + std::to_string(i + 1);
+		configInput(VELOCITY_MODULATION_INPUT + i, portLabel);
+		portLabel = "Velocity Channel " + std::to_string(i + 1);
+		configOutput(VELOCITY_OUTPUT + i, portLabel);
+		configBypass(VELOCITY_INPUT, VELOCITY_OUTPUT + i);
+		portLabel = "Pitch Modulation Channel " + std::to_string(i + 1);
+		configInput(PITCH_MODULATION_INPUT + i, portLabel);
+		portLabel = "Pitch Channel " + std::to_string(i + 1) + " (1V/Octave)";
+		configOutput(PITCH_OUTPUT + i, portLabel);
+		configBypass(PITCH_INPUT, PITCH_OUTPUT + i);
 		if (i < NUM_MIXTURES) {
-			configParam<OnOff>(MIXTUR_PARAM + i,     0,     1,    0, string::f("Mixtur %d", i + 1));
+			portLabel = "Mixtur " + std::to_string(i + 1) + " Trigger";
+			configSwitch(MIXTUR_PARAM + i,     0,     1,    0, string::f("Mixtur %d", i + 1), BasicSwitch::ON_OFF_NAMES);
 			mixtureTriggers[i].reset();
+			configInput(MIXTUR_INPUT + i, portLabel);
 		}
 	}
-	params[CHANNEL_ACTIVE_PARAM].setValue(1);
 	if (!FREQ_RATIOS_INITIALIZED) {
 		for (auto i = 0; i < NUM_HARMONICS; ++i) {
 			FREQ_RATIOS[i] = log2f(i + 1.);

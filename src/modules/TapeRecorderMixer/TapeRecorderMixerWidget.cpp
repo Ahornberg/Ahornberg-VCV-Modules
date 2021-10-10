@@ -2,7 +2,7 @@
 
 VolumeDisplay::VolumeDisplay(Rect box, TapeRecorderMixer* tapeRecorderMixer) : Display(box) {
 	this->tapeRecorderMixer = tapeRecorderMixer;
-	vuMeterFont = APP->window->loadFont(asset::plugin(pluginInstance, FONT_VU_METER));
+	vuMeterFontPath = asset::plugin(pluginInstance, FONT_VU_METER);
 	channelNumber = 0;
 	trackName = "";
 	vuMeter = 0;
@@ -35,27 +35,29 @@ void VolumeDisplay::drawText(const DrawArgs& disp) {
 		textPos = Vec(3.25 + i * 7, 28);
 		nvgText(disp.vg, textPos.x, textPos.y, trackName.substr(i, 1).c_str(), NULL);
 	}
-	
-	nvgFontFaceId(disp.vg, vuMeterFont->handle);
-	nvgFontSize(disp.vg, 51.25);
-	nvgFillColor(disp.vg, textColorDark);
-	textPos = Vec(2, 25.5);
-	for (auto i = 0; i < 24; ++i) {
-		if (i > 15) {
-			nvgFillColor(disp.vg, nvgRGB(0xff, 0x00, 0x00));
-		} else if (i > 7) {
-			nvgFillColor(disp.vg, textColorLight);
-		} else {
-			nvgFillColor(disp.vg, textColorDark);
+	std::shared_ptr<Font> vuMeterFont = APP->window->loadFont(vuMeterFontPath);
+	if (vuMeterFont) {
+		nvgFontFaceId(disp.vg, vuMeterFont->handle);
+		nvgFontSize(disp.vg, 51.25);
+		nvgFillColor(disp.vg, textColorDark);
+		textPos = Vec(2, 25.5);
+		for (auto i = 0; i < 24; ++i) {
+			if (i > 15) {
+				nvgFillColor(disp.vg, nvgRGB(0xff, 0x00, 0x00));
+			} else if (i > 7) {
+				nvgFillColor(disp.vg, textColorLight);
+			} else {
+				nvgFillColor(disp.vg, textColorDark);
+			}
+			if (i == vuMeter) {
+				nvgFillColor(disp.vg, COLOR_WHITE);
+			}
+			nvgText(disp.vg, textPos.x, textPos.y, std::string(1, 97 + i).c_str(), NULL);
 		}
-		if (i == vuMeter) {
-			nvgFillColor(disp.vg, COLOR_WHITE);
-		}
-		nvgText(disp.vg, textPos.x, textPos.y, std::string(1, 97 + i).c_str(), NULL);
+		
+		nvgFillColor(disp.vg, COLOR_WHITE);
+		nvgText(disp.vg, textPos.x, textPos.y, std::string(1, 65 + vuMeter).c_str(), NULL);
 	}
-	
-	nvgFillColor(disp.vg, COLOR_WHITE);
-	nvgText(disp.vg, textPos.x, textPos.y, std::string(1, 65 + vuMeter).c_str(), NULL);
 }
 
 RoundSwitchMediumLink::RoundSwitchMediumLink() {
@@ -80,6 +82,7 @@ void RoundSwitchMediumLink::step() {
 }
 
 void RoundSwitchMediumLink::onChange(const event::Change& e) {
+	ParamQuantity* paramQuantity = getParamQuantity();
 	if (!frames.empty() && paramQuantity) {
 		int index = (int) std::round(paramQuantity->getValue() - paramQuantity->getMinValue());
 		index = math::clamp(index, 0, (int) frames.size() - 1);
@@ -177,7 +180,7 @@ TapeRecorderMixerWidget::TapeRecorderMixerWidget(TapeRecorderMixer* module) {
 
 void TapeRecorderMixerWidget::appendContextMenu(Menu* menu) {
 	TapeRecorderMixer* tapeRecorderMixer = dynamic_cast<TapeRecorderMixer*>(this->module);
-	menu->addChild(new MenuEntry);
+	menu->addChild(new MenuSeparator);
 	menu->addChild(new TrackNameMenuItem(volumeDisplay));
 	menu->addChild(new ChangeInputMuteModeMenuItem(tapeRecorderMixer, this));
 }

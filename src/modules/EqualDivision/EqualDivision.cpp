@@ -1,9 +1,5 @@
 #include "EqualDivision.hpp"
 
-std::string IntervalNames::getDisplayValueString() {
-	return EqualDivision::INTERVALS[(int) getValue()].longName;
-}
-
 const Interval EqualDivision::INTERVALS[] = {
 	{ log2f(9. / 8.) * 12, "9/8", "Major Second" },
 	{ log2f(8. / 7.) * 12, "8/7", "Supermajor Second" },
@@ -21,13 +17,35 @@ const Interval EqualDivision::INTERVALS[] = {
 	{ log2f(8.) * 12,      "8",   "3 Octaves" }
 };
 
+const std::vector<std::string> EqualDivision::INTERVAL_LABELS = {
+	EqualDivision::INTERVALS[0].shortName + " - " + EqualDivision::INTERVALS[0].longName,
+	EqualDivision::INTERVALS[1].shortName + " - " + EqualDivision::INTERVALS[1].longName,
+	EqualDivision::INTERVALS[2].shortName + " - " + EqualDivision::INTERVALS[2].longName,
+	EqualDivision::INTERVALS[3].shortName + " - " + EqualDivision::INTERVALS[3].longName,
+	EqualDivision::INTERVALS[4].shortName + " - " + EqualDivision::INTERVALS[4].longName,
+	EqualDivision::INTERVALS[5].shortName + " - " + EqualDivision::INTERVALS[5].longName,
+	EqualDivision::INTERVALS[6].shortName + " - " + EqualDivision::INTERVALS[6].longName,
+	EqualDivision::INTERVALS[7].shortName + " - " + EqualDivision::INTERVALS[7].longName,
+	EqualDivision::INTERVALS[8].shortName + " - " + EqualDivision::INTERVALS[8].longName,
+	EqualDivision::INTERVALS[9].shortName + " - " + EqualDivision::INTERVALS[9].longName,
+	EqualDivision::INTERVALS[10].shortName + " - " + EqualDivision::INTERVALS[10].longName,
+	EqualDivision::INTERVALS[11].shortName + " - " + EqualDivision::INTERVALS[11].longName,
+	EqualDivision::INTERVALS[12].shortName + " - " + EqualDivision::INTERVALS[12].longName,
+	EqualDivision::INTERVALS[13].shortName + " - " + EqualDivision::INTERVALS[13].longName,
+};
+
 EqualDivision::EqualDivision() { 
 	config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 	configScrewParams();
 	configParam(FINE_PARAM, .97, 1.03, 1, "Fine", "%", 0, 100, -100);
 	configParam(STEPS_PARAM, 1, 99, INIT_STEP, "Equal Steps");
-	configParam<IntervalNames>(INTERVAL_PARAM, 0, NUM_INTERVALS, INIT_INTERVAL, "Interval");
-
+	configSwitch(INTERVAL_PARAM, 0, 13, INIT_INTERVAL, "Interval", INTERVAL_LABELS);
+	for (auto i = 0; i < 9; ++i) {
+		std::string portLabel = "Pitch " + std::to_string(i + 1) + " (1V/Octave)";
+		configInput(PITCH_INPUT + i, portLabel);
+		configOutput(PITCH_OUTPUT + i, portLabel);
+		configBypass(PITCH_INPUT + i, PITCH_OUTPUT + i);
+	}
 }
 
 void EqualDivision::process(const ProcessArgs& args) {

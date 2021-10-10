@@ -18,11 +18,11 @@ const TapeLength TapeRecorder::TAPE_LENGTHS[] = {
 TapeRecorder::TapeRecorder() { 
 	config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 	configScrewParams();
-	configParam(PAUSE_PARAM,               0,     1,   0, "Pause");
-	configParam(PLAY_FORWARDS_PARAM,       0,     1,   0, "Play");
-	configParam(PLAY_BACKWARDS_PARAM,      0,     1,   0, "Play Reverse");
-	configParam(CUE_FORWARDS_PARAM,        0,     1,   0, "Fast Forward");
-	configParam(CUE_BACKWARDS_PARAM,       0,     1,   0, "Rewind");
+	configButton(PAUSE_PARAM, "Pause");
+	configButton(PLAY_FORWARDS_PARAM, "Play");
+	configButton(PLAY_BACKWARDS_PARAM, "Play Reverse");
+	configButton(CUE_FORWARDS_PARAM, "Fast Forward");
+	configButton(CUE_BACKWARDS_PARAM, "Rewind");
 	configParam(CUE_SPEED_PARAM,           0.25, 20,   3, "Fast Speed");
 	configParam(CUE_SLEW_PARAM,            1,    20,  15, "Motor Power");
 	configParam(TEMPO_PARAM,               1,   360, 120, "BPM");
@@ -36,6 +36,30 @@ TapeRecorder::TapeRecorder() {
 	configParam(WHEEL_RIGHT_PARAM,       -11.9,  12.1, 0, "Right Wheel");
 	configParam(TAPE_LENGTH_PARAM,         0, NUM_TAPE_LENGTHS - 1, 0, "Tape Length");
 	configParam(TRACK_COUNT_PARAM,         1,    16,   1, "Tape Layout");
+	getParamQuantity(PAUSE_PARAM)->randomizeEnabled = false;
+	getParamQuantity(PLAY_FORWARDS_PARAM)->randomizeEnabled = false;
+	getParamQuantity(PLAY_BACKWARDS_PARAM)->randomizeEnabled = false;
+	getParamQuantity(CUE_FORWARDS_PARAM)->randomizeEnabled = false;
+	getParamQuantity(CUE_BACKWARDS_PARAM)->randomizeEnabled = false;
+	getParamQuantity(LOOP_MODE_PARAM)->randomizeEnabled = false;
+	getParamQuantity(WHEEL_LEFT_PARAM)->randomizeEnabled = false;
+	getParamQuantity(WHEEL_RIGHT_PARAM)->randomizeEnabled = false;
+	getParamQuantity(TAPE_LENGTH_PARAM)->randomizeEnabled = false;
+	getParamQuantity(TRACK_COUNT_PARAM)->randomizeEnabled = false;
+	configInput(AUDIO_INPUT, "Audio");
+	configInput(LOOP_START_INPUT, "Loop Start");
+	configInput(LOOP_END_INPUT, "Loop End");
+	configInput(SPEED_INPUT, "Speed (1V/Octave)");
+	configInput(TRANSPORT_INPUT, "Transport Trigger");
+	configOutput(AUDIO_OUTPUT, "Audio");
+	configOutput(SPEED_OUTPUT, "Speed (1V/Octave)");
+	configOutput(TEMPO_OUTPUT, "Tempo Trigger");
+	configOutput(TRANSPORT_OUTPUT, "Transport");
+	configBypass(AUDIO_INPUT, AUDIO_OUTPUT);
+	configBypass(SPEED_INPUT, SPEED_OUTPUT);
+	configBypass(TRANSPORT_INPUT, TRANSPORT_OUTPUT);
+	tapeName = INIT_TAPE_NAME;
+	stripeIndex = (int) (random::uniform() * 12);
 	displayDivider.setDivision(512);
 	changeTapeInterrupt = false;
 	tapeStoppedAndResetted = true;
@@ -663,3 +687,24 @@ void TapeRecorder::jumpToTapePosition(TapeJump tapeJump) {
 			break;
 	}
 }
+
+json_t* TapeRecorder::dataToJson() {
+	json_t* rootJ = json_object();
+	json_object_set_new(rootJ, "tape-name", json_string(tapeName.c_str()));
+	json_object_set_new(rootJ, "tape-stripe", json_integer(stripeIndex));
+	return rootJ;
+}
+
+void TapeRecorder::dataFromJson(json_t* rootJ) {
+	json_t* tapeNameJ = json_object_get(rootJ, "tape-name");
+	if (tapeNameJ) {
+		tapeName = json_string_value(tapeNameJ);
+	}
+	json_t* tapeStripeJ = json_object_get(rootJ, "tape-stripe");
+	if (tapeStripeJ) {
+		stripeIndex = json_integer_value(tapeStripeJ);
+	}
+	initTape();
+}
+
+

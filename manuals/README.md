@@ -157,5 +157,9 @@ How to use it with Mutools MUX VST:
 
 [![MIDI Over Audio Manual](https://img.youtube.com/vi/WPzz-9QrGzs/0.jpg)](https://www.youtube.com/watch?v=WPzz-9QrGzs)
 
+How to use it with a DAW:
+
+[![MIDI Over Audio Manual](https://img.youtube.com/vi/WBo8ULCoSwc/0.jpg)](https://www.youtube.com/watch?v=WBo8ULCoSwc)
+
 
 

@@ -14,15 +14,19 @@ void TextFieldMenuItem::onAction(const event::Action& e) {
 	getAncestorOfType<MenuOverlay>()->requestDelete();
 }
 
-// Module and Widget with Screws
+// Module with intern params and Widget with screws
 
-std::string ScrewMessage::getDisplayValueString() {
-	return SCREW_MESSAGES[(int) getValue()];
-}
-
-void ModuleWithScrews::configScrewParams() {
+void BaseModule::configScrewParams() {
 	for (auto i = 0; i < NUM_MAX_SCREWS; ++i) {
-		configParam<ScrewMessage>(SCREW_PARAM + i, 0, 5, 5, "Screw");
+		configSwitch(SCREW_PARAM + i, 0, 5, 5, "Screw", {
+			"I warn you, UNDO won't help you here!",
+			"If you continue doing that, the module will fall out of the rack!",
+			"Stop doing that!",
+			"Don't pull it out!",
+			"loose",
+			"fixed"
+		});
+		getParamQuantity(SCREW_PARAM + i)->randomizeEnabled = false;
 	}
 }
 
@@ -36,28 +40,28 @@ void ModuleWidgetWithScrews::setPanel(const std::string& filename) {
 
 void ModuleWidgetWithScrews::setScrews(ScrewTopLeft topLeft, ScrewTopRight topRight, ScrewBottomLeft bottomLeft, ScrewBottomRight bottomRight) {
 	if (topLeft) {
-		addScrew(Vec(0, 0), ModuleWithScrews::SCREW_PARAM);
+		addScrew(Vec(0, 0), BaseModule::SCREW_PARAM);
 	} else if (module) {
-		module->params[ModuleWithScrews::SCREW_PARAM].setValue(0);
+		module->params[BaseModule::SCREW_PARAM].setValue(0);
 	}
 	if (topRight) {
-		addScrew(Vec(box.size.x - RACK_GRID_WIDTH, 0), ModuleWithScrews::SCREW_PARAM + 1);
+		addScrew(Vec(box.size.x - RACK_GRID_WIDTH, 0), BaseModule::SCREW_PARAM + 1);
 	} else if (module) {
-		module->params[ModuleWithScrews::SCREW_PARAM + 1].setValue(0);
+		module->params[BaseModule::SCREW_PARAM + 1].setValue(0);
 	}
 	if (bottomLeft) {
 		if (bottomLeft == SCREW_BOTTOM_LEFT_INDENTED) {
-			addScrew(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH), ModuleWithScrews::SCREW_PARAM + 2);
+			addScrew(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH), BaseModule::SCREW_PARAM + 2);
 		} else {
-			addScrew(Vec(0, RACK_GRID_HEIGHT - RACK_GRID_WIDTH), ModuleWithScrews::SCREW_PARAM + 2);
+			addScrew(Vec(0, RACK_GRID_HEIGHT - RACK_GRID_WIDTH), BaseModule::SCREW_PARAM + 2);
 		}
 	} else if (module) {
-		module->params[ModuleWithScrews::SCREW_PARAM + 2].setValue(0);
+		module->params[BaseModule::SCREW_PARAM + 2].setValue(0);
 	}
 	if (bottomRight) {
-		addScrew(Vec(box.size.x - RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH), ModuleWithScrews::SCREW_PARAM + 3);
+		addScrew(Vec(box.size.x - RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH), BaseModule::SCREW_PARAM + 3);
 	} else if (module) {
-		module->params[ModuleWithScrews::SCREW_PARAM + 3].setValue(0);
+		module->params[BaseModule::SCREW_PARAM + 3].setValue(0);
 	}
 }
 
@@ -77,7 +81,7 @@ void ModuleWidgetWithScrews::step() {
 	ModuleWidget::step();
 	if (hasScrews && module) {
 		for (auto i = 0; i < NUM_MAX_SCREWS; ++i) {
-			if (module->params[ModuleWithScrews::SCREW_PARAM + i].getValue()) {
+			if (module->params[BaseModule::SCREW_PARAM + i].getValue()) {
 				return;
 			}
 		}

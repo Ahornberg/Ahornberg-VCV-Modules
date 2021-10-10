@@ -2,7 +2,7 @@
 
 struct VolumeDisplay : Display {
 	TapeRecorderMixer* tapeRecorderMixer;
-	std::shared_ptr<Font> vuMeterFont;
+	std::string vuMeterFontPath;
 	int channelNumber;
 	std::string trackName;
 	int vuMeter;
@@ -38,8 +38,8 @@ struct TapeRecorderMixerWidget : ModuleWidgetWithScrews {
 	TapeRecorderMixerWidget(TapeRecorderMixer* module);
 	void appendContextMenu(Menu* menu) override;
 	void step() override;
-	json_t* toJson() override;
-	void fromJson(json_t* rootJ) override;
+	json_t* toJson();// override;
+	void fromJson(json_t* rootJ);// override;
 };
 
 struct TapeRecorderMixerMenuItem : MenuItem {

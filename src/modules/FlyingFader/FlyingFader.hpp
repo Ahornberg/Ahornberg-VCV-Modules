@@ -1,6 +1,6 @@
 #include "../../Ahornberg.hpp"
 
-struct FlyingFader : ModuleWithScrews {
+struct FlyingFader : BaseModule {
 	const static std::string INIT_FADER_NAME;
 	
 	enum ParamIds {
@@ -28,7 +28,11 @@ struct FlyingFader : ModuleWithScrews {
 
 	FlyingFader();
 	void process(const ProcessArgs& args) override;
+	json_t* dataToJson() override;
+	void dataFromJson(json_t* rootJ) override;
 	
+	std::string faderName;
+	int faderCapColorIndex;
 	bool faderDragged;
 	dsp::ExponentialSlewLimiter audioSlewLimiter;
 	

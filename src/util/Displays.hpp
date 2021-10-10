@@ -1,5 +1,5 @@
 struct Display : SizedTransparentWidget, ManualText {
-	std::shared_ptr<Font> font;
+	std::string fontPath;
 	NVGcolor backgroundColor;
 	NVGcolor borderColor;
 	NVGcolor textColorLight;

@@ -1,18 +1,14 @@
 #include "../../Ahornberg.hpp"
 
-struct IntervalNames : ParamQuantity {
-	std::string getDisplayValueString() override;
-};
-
 struct Interval {
 	float value;
 	std::string shortName;
 	std::string longName;
 };
 
-struct EqualDivision : ModuleWithScrews {
+struct EqualDivision : BaseModule {
 	const static Interval INTERVALS[];
-	constexpr static int NUM_INTERVALS = 13;
+	const static std::vector<std::string> INTERVAL_LABELS;
 	constexpr static int INIT_STEP = 33;
 	constexpr static int INIT_INTERVAL = 9;
 

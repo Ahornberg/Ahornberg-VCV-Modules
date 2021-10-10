@@ -7,12 +7,17 @@ MIDIOverAudio::MIDIOverAudio() {
 	configScrewParams();
 	
 	for (auto i = 0; i < MIDI_OVER_AUDIO_MAX_DEVICES; ++i) {
-		configParam(TRIM_PARAM + i, -5, 5, 0, "Trim Port " + std::to_string(i + 1));
+		configParam(TRIM_PARAM + i, -5, 5, 0, "Trim MIDI over Audio Port " + std::to_string(i + 1));
 		resetMessageData(i);
+		getParamQuantity(TRIM_PARAM + i)->randomizeEnabled = false;
 		lightsSlewLimiter[i * 3 + 0].setRiseFall(0, 1);
 		lightsSlewLimiter[i * 3 + 1].setRiseFall(0, 3);
 		lightsSlewLimiter[i * 3 + 2].setRiseFall(0, 2);
+		std::string portLabel = "MIDI over Audio Port " + std::to_string(i + 1);
+		configInput(MIDI_OVER_AUDIO_INPUT + i, portLabel);
+		//configLight(RGB_LIGHT + i * 3, portLabel);
 	}
+	new MIDIOverAudioDriver(true);
 }
 
 void MIDIOverAudio::process(const ProcessArgs& args) {
@@ -20,6 +25,9 @@ void MIDIOverAudio::process(const ProcessArgs& args) {
 		for (auto device = 0; device < MIDI_OVER_AUDIO_MAX_DEVICES; ++device) {
 			if (!inputs[MIDI_OVER_AUDIO_INPUT + device].isConnected()) {
 				resetMessageData(device);
+				lights[RGB_LIGHT + device * 3 + 0].setBrightness(0);
+				lights[RGB_LIGHT + device * 3 + 1].setBrightness(0);
+				lights[RGB_LIGHT + device * 3 + 2].setBrightness(0);
 			} else {
 				float dataInputFloat = inputs[MIDI_OVER_AUDIO_INPUT + device].getVoltage() * (params[TRIM_PARAM + device].getValue() * 0.112f + 5.112f * 5);
 				float red = 0;
@@ -37,6 +45,8 @@ void MIDIOverAudio::process(const ProcessArgs& args) {
 					} else  if (isNear(dataInputFloat, -255.56f, 3)) {
 						red = 1;
 						green = 0.5f;
+					} else if (dataInputFloat > -255.56f) {
+						blue = 1;
 					} else {
 						red = 1;
 					}

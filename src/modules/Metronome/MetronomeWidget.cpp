@@ -20,24 +20,31 @@ void TempoDisplay::drawText(const DrawArgs& disp) {
 
 BpmDisplay::BpmDisplay(Vec pos, int bpmIndex) {
 	box.pos = pos;
-	font = APP->window->loadFont(asset::plugin(pluginInstance, FONT_SERIF_BOLD));
+	fontPath = asset::plugin(pluginInstance, FONT_SERIF_BOLD);
 	textColor = COLOR_BLACK;
 	this->bpmIndex = bpmIndex;
 }
 
 void BpmDisplay::draw(const DrawArgs& disp) {
-	nvgBeginPath(disp.vg);
-	nvgFontSize(disp.vg, 9);
-	nvgFontFaceId(disp.vg, font->handle);
-	nvgFillColor(disp.vg, textColor);
-	nvgTextAlign(disp.vg, NVG_ALIGN_CENTER);
-	if (bpmIndex == 22 || bpmIndex == 37) {
-		nvgText(disp.vg, -1, 2.5f, string::f("%d", Metronome::BPM_VALUES[bpmIndex]).c_str(), NULL);
-	} else if (bpmIndex == 38) {
-		nvgText(disp.vg, -4, 3, string::f("%d", Metronome::BPM_VALUES[bpmIndex]).c_str(), NULL);
-	} else {
-		nvgText(disp.vg, -1, 2, string::f("%d", Metronome::BPM_VALUES[bpmIndex]).c_str(), NULL);
+	std::shared_ptr<Font> font = APP->window->loadFont(fontPath);
+	if (font) {
+		nvgBeginPath(disp.vg);
+		nvgFontSize(disp.vg, 9);
+		nvgFontFaceId(disp.vg, font->handle);
+		nvgFillColor(disp.vg, textColor);
+		nvgTextAlign(disp.vg, NVG_ALIGN_CENTER);
+		if (bpmIndex == 22 || bpmIndex == 37) {
+			nvgText(disp.vg, -1, 2.5f, string::f("%d", Metronome::BPM_VALUES[bpmIndex]).c_str(), NULL);
+		} else if (bpmIndex == 38) {
+			nvgText(disp.vg, -4, 3, string::f("%d", Metronome::BPM_VALUES[bpmIndex]).c_str(), NULL);
+		} else {
+			nvgText(disp.vg, -1, 2, string::f("%d", Metronome::BPM_VALUES[bpmIndex]).c_str(), NULL);
+		}
 	}
+}
+
+RadioSwitch::RadioSwitch() {
+	hasContextMenu = false;
 }
 
 void RadioSwitch::onChange(const event::Change& e) {
@@ -65,8 +72,8 @@ void RadioSwitch::onChange(const event::Change& e) {
 void KnobRadioSwitch::onChange(const event::Change& e) {
 	KnobLarge::onChange(e);
 	if (metronome) {
+		int bpmIndex = metronome->params[Metronome::BPM_VALUE_PARAM].getValue();
 		for (auto i = 0; i < Metronome::NUM_BPM_VALUES; ++i) {
-			int bpmIndex = metronome->params[Metronome::BPM_VALUE_PARAM].getValue();
 			if (i == bpmIndex) {
 				if (metronome->params[Metronome::BPM_VALUE_BUTTON_PARAM + i].getValue() != 1) {
 					metronome->params[Metronome::BPM_VALUE_BUTTON_PARAM + i].setValue(1);
@@ -98,7 +105,7 @@ MetronomeWidget::MetronomeWidget(Metronome* module) {
 		
 		addChild(new BpmDisplay(positionOnCircle(i, center, 80), i));
 	}
-	addParam(createParamCentered<RoundLargeSwitch>(center, module, Metronome::PLAY_PARAM));
+	addParam(createParamCentered<RoundSwitchLarge>(center, module, Metronome::PLAY_PARAM));
 	addParam(createParamCentered<KnobSmallSnap>(Vec(180, 266), module, Metronome::BPM_RESET_VALUE_PARAM));
 
 	addInput(createInputCentered<InPort>(Vec( 30,   310), module, Metronome::PLAY_INPUT));

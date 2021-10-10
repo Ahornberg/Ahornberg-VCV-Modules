@@ -5,7 +5,7 @@ struct TapeLength {
 	std::string name;
 };
 
-struct TapeRecorder : ModuleWithScrews {
+struct TapeRecorder : BaseModule {
 	const static std::string INIT_TAPE_NAME;
 	const static TapeLength TAPE_LENGTHS[];
 	constexpr static int NUM_TAPE_LENGTHS = 11;
@@ -65,6 +65,8 @@ struct TapeRecorder : ModuleWithScrews {
 		JUMP_BACKWARDS
 	};
 
+	std::string tapeName;
+	int stripeIndex;
 	bool changeTapeInterrupt;
 	bool tapeStoppedAndResetted;
 	int sizeAudioBuffer;
@@ -144,4 +146,6 @@ struct TapeRecorder : ModuleWithScrews {
 	void setTapeLength(int tapeLength);
 	// void fromJson(json_t* rootJ) override;
 	void jumpToTapePosition(TapeJump tapeJump);
+	json_t* dataToJson() override;
+	void dataFromJson(json_t* rootJ) override;
 };

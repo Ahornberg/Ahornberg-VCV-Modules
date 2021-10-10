@@ -1,11 +1,8 @@
 #include "../../Ahornberg.hpp"
 
-struct ConvertModes : ParamQuantity {
-	std::string getDisplayValueString() override;
-};
-
-struct FunWithFrames : ModuleWithScrews {
+struct FunWithFrames : BaseModule {
 	constexpr static int NUM_VALUE_IO = 4;
+	const static std::string TIME_TABLE_NAMES[];
 	float lastPitchChord[NUM_VALUE_IO];
 	bool pitchGate[NUM_VALUE_IO];
 	

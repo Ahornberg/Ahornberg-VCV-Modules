@@ -1,18 +1,35 @@
 #include "FunWithFrames.hpp"
 
-std::string ConvertModes::getDisplayValueString() {
-	return getValue() ? "linear with jump point" : "linear";
-}
+const std::string FunWithFrames::TIME_TABLE_NAMES[] = {
+	"A",
+	"B",
+	"C",
+	"D"
+};
 
 FunWithFrames::FunWithFrames() { 
 	config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 	configScrewParams();
 	configParam(MAX_CHORD_SIZE_PARAM, 2, NUM_VALUE_IO + 1, 3, "Maximum Chord-Size");
 	for (auto i = 0; i < NUM_VALUE_IO; ++i) {
-		configParam<ConvertModes>(VALUE_CONVERT_MODE + i, 0, 1, 0, "Convert-Mode");
+		configSwitch(VALUE_CONVERT_MODE + i, 0, 1, 0, "Convert-Mode", {
+			"linear",
+			"linear with jump point"
+		});
+		std::string portLabel = "Time-Table " + TIME_TABLE_NAMES[i];
+		configInput(VALUE_INPUT + i, portLabel);
+		configOutput(VALUE_OUTPUT + i, portLabel);
+		configBypass(VALUE_INPUT + i, VALUE_OUTPUT + i);
 		lastPitchChord[i] = 0;
 		pitchGate[i] = false;
 	}
+	configInput(NOTE_INPUT, "Pitch (1V/Octave)");
+	configOutput(NOTE_OUTPUT, "Pitch (1V/Octave)");
+	configBypass(NOTE_INPUT, NOTE_OUTPUT);
+	configInput(GATE_INPUT, "Gate");
+	configOutput(GATE_OUTPUT, "Gate");
+	configBypass(GATE_INPUT, GATE_OUTPUT);
+	configInput(CLOCK_INPUT, "Clock Trigger");
 	arpeggioPosition = 0;
 	clockInputTrigger.reset();
 }

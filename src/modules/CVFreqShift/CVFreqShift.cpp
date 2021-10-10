@@ -1,9 +1,5 @@
 #include "CVFreqShift.hpp"
 
-std::string FrequencyRanges::getDisplayValueString() {
-	return "+/-" + std::to_string(CVFreqShift::FREQUENCY_RANGES[(int) getValue()].rangeInHz * CVFreqShift::MIN_FREQUENCY_RANGE);
-}
-
 const FrequencyRange CVFreqShift::FREQUENCY_RANGES[] = {
 	{ (int) powf(2, 0), powf(2, 0) / dsp::FREQ_C4},
 	{ (int) powf(2, 1), powf(2, 1) / dsp::FREQ_C4},
@@ -16,12 +12,31 @@ const FrequencyRange CVFreqShift::FREQUENCY_RANGES[] = {
 	{ (int) powf(2, 8), powf(2, 8) / dsp::FREQ_C4}
 };
 
+const std::vector<std::string> CVFreqShift::FREQUENCY_RANGE_LABELS = {
+	"+/-" + std::to_string(CVFreqShift::FREQUENCY_RANGES[0].rangeInHz * CVFreqShift::MIN_FREQUENCY_RANGE) + " Hz",
+	"+/-" + std::to_string(CVFreqShift::FREQUENCY_RANGES[1].rangeInHz * CVFreqShift::MIN_FREQUENCY_RANGE) + " Hz",
+	"+/-" + std::to_string(CVFreqShift::FREQUENCY_RANGES[2].rangeInHz * CVFreqShift::MIN_FREQUENCY_RANGE) + " Hz",
+	"+/-" + std::to_string(CVFreqShift::FREQUENCY_RANGES[3].rangeInHz * CVFreqShift::MIN_FREQUENCY_RANGE) + " Hz",
+	"+/-" + std::to_string(CVFreqShift::FREQUENCY_RANGES[4].rangeInHz * CVFreqShift::MIN_FREQUENCY_RANGE) + " Hz",
+	"+/-" + std::to_string(CVFreqShift::FREQUENCY_RANGES[5].rangeInHz * CVFreqShift::MIN_FREQUENCY_RANGE) + " Hz",
+	"+/-" + std::to_string(CVFreqShift::FREQUENCY_RANGES[6].rangeInHz * CVFreqShift::MIN_FREQUENCY_RANGE) + " Hz",
+	"+/-" + std::to_string(CVFreqShift::FREQUENCY_RANGES[7].rangeInHz * CVFreqShift::MIN_FREQUENCY_RANGE) + " Hz",
+	"+/-" + std::to_string(CVFreqShift::FREQUENCY_RANGES[8].rangeInHz * CVFreqShift::MIN_FREQUENCY_RANGE) + " Hz"
+};
+
 CVFreqShift::CVFreqShift() { 
 	config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 	configScrewParams();
-	configParam(FREQUENCY_PARAM, MIN_FREQUENCY_RANGE * -1, MIN_FREQUENCY_RANGE, 0, "Frequency", "Hz");
-	configParam(FREQUENCY_MODULATION_AMOUNT_PARAM, 0, 1, 0, "Frequency Modulation");
-	configParam<FrequencyRanges>(FREQUENCY_RANGE_PARAM, 0, 8, 4, "Frequency Range", "Hz");
+	configParam(FREQUENCY_PARAM, MIN_FREQUENCY_RANGE * -1, MIN_FREQUENCY_RANGE, 0, "Frequency", " Hz");
+	configParam(FREQUENCY_MODULATION_AMOUNT_PARAM, 0, 1, 0, "Frequency Modulation", "%", 0, 100);
+	configSwitch(FREQUENCY_RANGE_PARAM, 0, 8, 4, "Frequency Range", FREQUENCY_RANGE_LABELS);
+	for (auto i = 0; i < 9; ++i) {
+		std::string portLabel = "Pitch " + std::to_string(i + 1) + " (1V/Octave)";
+		configInput(PITCH_INPUT + i, portLabel);
+		configOutput(PITCH_OUTPUT + i, portLabel);
+		configBypass(PITCH_INPUT + i, PITCH_OUTPUT + i);
+	}
+	configInput(FREQUENCY_MODULATION_INPUT, "Frequency Modulation");
 }
 
 void CVFreqShift::process(const ProcessArgs& args) {

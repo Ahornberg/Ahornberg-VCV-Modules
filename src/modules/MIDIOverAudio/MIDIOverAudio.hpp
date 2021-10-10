@@ -5,7 +5,7 @@ struct MIDIOverAudioMessage {
 	int messageDataPos;
 };
 
-struct MIDIOverAudio : ModuleWithScrews {
+struct MIDIOverAudio : BaseModule {
 	enum ParamIds {
 		ENUMS_WITH_SCREWS(TRIM_PARAM, MIDI_OVER_AUDIO_MAX_DEVICES),
 		NUM_PARAMS

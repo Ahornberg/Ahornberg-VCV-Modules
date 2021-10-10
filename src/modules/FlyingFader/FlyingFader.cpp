@@ -12,7 +12,16 @@ FlyingFader::FlyingFader() {
 	configParam(FADER_VALUE_BEFORE_CONNECTED, 0, PLUS_6_DB, 1);
 	configParam(AUDIO_POLY_MODE, 0, 1, 0);
 	configParam(CV_SCALE_MODE, 0, 1, 0);
+	//configParam(FADER_CAP_COLOR_INDEX, 0, 9, 0);
+	configInput(AUDIO_INPUT, "Audio");
+	configInput(CV_INPUT, "CV");
+	configOutput(AUDIO_OUTPUT, "Audio");
+	configOutput(CV_OUTPUT, "CV");
+	configBypass(AUDIO_INPUT, AUDIO_OUTPUT);
+	configBypass(CV_INPUT, CV_OUTPUT);
 	
+	faderName = INIT_FADER_NAME;
+	faderCapColorIndex = 0;
 	faderDragged = false;
 	audioSlewLimiter.setRiseFall(AUDIO_MUTE_SLEW, AUDIO_MUTE_SLEW);
 	audioSlewLimiter.reset();
@@ -66,4 +75,25 @@ void FlyingFader::process(const ProcessArgs& args) {
 		// last_is_connected = is_connected;
 		// last_input_voltage = input_voltage;
 	// }
+}
+
+
+json_t* FlyingFader::dataToJson() {
+	json_t* rootJ = json_object();
+	json_object_set_new(rootJ, "fader-name", json_string(faderName.c_str()));
+	json_object_set_new(rootJ, "fader-cap-color", json_integer(faderCapColorIndex));
+	return rootJ;
+}
+
+void FlyingFader::dataFromJson(json_t* rootJ) {
+	//Module::dataFromJson(rootJ);
+	json_t* faderNameJ = json_object_get(rootJ, "fader-name");
+	if (faderNameJ) {
+		faderName = json_string_value(faderNameJ);
+	}
+	json_t* faderCapColorJ = json_object_get(rootJ, "fader-cap-color");
+	if (faderCapColorJ) {
+		// changeFaderCapColor(json_integer_value(faderCapColorJ));
+		faderCapColorIndex = json_integer_value(faderCapColorJ);
+	}
 }

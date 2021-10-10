@@ -9,12 +9,12 @@ struct MIDIOverAudioWidget : ModuleWidgetWithScrews {
 	void appendContextMenu(Menu* menu) override;
 };
 
-struct MIDIOverAudioDriverMenuItem : MenuItem {
-	MIDIOverAudio* midiOverAudio;
+// struct MIDIOverAudioDriverMenuItem : MenuItem {
+	// MIDIOverAudio* midiOverAudio;
 	
-	MIDIOverAudioDriverMenuItem(MIDIOverAudio* midiOverAudio);
-	void onAction(const event::Action& e) override;
-};
+	// MIDIOverAudioDriverMenuItem(MIDIOverAudio* midiOverAudio);
+	// void onAction(const event::Action& e) override;
+// };
 
 struct MIDIOverAudioPanicMenuItem : MenuItem {
 	MIDIOverAudio* midiOverAudio;

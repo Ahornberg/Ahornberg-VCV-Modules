@@ -9,7 +9,7 @@ struct TempoDisplay : Display {
 };
 
 struct BpmDisplay : TransparentWidget {
-	std::shared_ptr<Font> font;
+	std::string fontPath;
 	NVGcolor textColor;
 	int bpmIndex;
 
@@ -21,6 +21,7 @@ struct RadioSwitch : RoundSwitch {
 	Metronome* metronome;
 	int bpmIndex;
 	
+	RadioSwitch();
 	void onChange(const event::Change& e) override;
 };
 

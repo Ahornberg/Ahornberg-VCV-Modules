@@ -3,16 +3,16 @@
 TapeRecorderMixer::TapeRecorderMixer() { 
 	config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 	configScrewParams();
-	configParam<OnOff>(RECORD_PARAM, 0, 1, 0, "Record");
-	configParam<OnOff>(BYPASS_CHAIN_PARAM, 0, 1, 0, "Bypass Insert");
+	configSwitch(RECORD_PARAM, 0, 1, 0, "Record", BasicSwitch::ON_OFF_NAMES);
+	configSwitch(BYPASS_CHAIN_PARAM, 0, 1, 0, "Bypass Insert", BasicSwitch::ON_OFF_NAMES);
 	configParam(TAPE_DUCKING_PARAM, 0, PLUS_6_DB, 1, "Tape Ducking", " dB", -10, 40);
 	configParam(TAPE_ERASE_PARAM, 0, PLUS_6_DB, 1, "Tape Erase Amount", " dB", -10, 40);
-	configParam<OnOff>(SOLO_PARAM, 0, 1, 0, "Solo");
-	configParam<OnOff>(MUTE_PARAM, 0, 1, 0, "Mute");
+	configSwitch(SOLO_PARAM, 0, 1, 0, "Solo", BasicSwitch::ON_OFF_NAMES);
+	configSwitch(MUTE_PARAM, 0, 1, 0, "Mute", BasicSwitch::ON_OFF_NAMES);
 	configParam(INPUT_VOLUME_PARAM, 0, PLUS_6_DB, 1, "Input Volume", " dB", -10, 40);
-	configParam<OnOff>(INPUT_MUTE_PARAM, 0, 1, 0, "Input Mute");
-	configParam<OnOff>(INPUT_MUTE_ENABLED_PARAM, 0, 1, 0, "Input Mute Enabled");
-	configParam<OnOff>(LINK_PARAM, 0, 1, 0, "Link To Left Module");
+	configSwitch(INPUT_MUTE_PARAM, 0, 1, 0, "Input Mute", BasicSwitch::ON_OFF_NAMES);
+	configSwitch(INPUT_MUTE_ENABLED_PARAM, 0, 1, 0, "Input Mute Enabled", BasicSwitch::ON_OFF_NAMES);
+	configSwitch(LINK_PARAM, 0, 1, 0, "Link To Left Module", BasicSwitch::ON_OFF_NAMES);
 	
 	channelNumber = 0;
 	maxChannels = PORT_MAX_CHANNELS;

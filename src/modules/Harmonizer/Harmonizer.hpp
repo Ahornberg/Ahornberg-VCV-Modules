@@ -1,6 +1,6 @@
 #include "../../Ahornberg.hpp"
 
-struct Harmonizer : ModuleWithScrews {
+struct Harmonizer : BaseModule {
 	constexpr static int NUM_CHANNELS = 16;
 	constexpr static int NUM_MIXTURES = 4;
 	constexpr static int NUM_HARMONICS = 96;
