@@ -27,7 +27,7 @@ BpmDisplay::BpmDisplay(Vec pos, int bpmIndex) {
 
 void BpmDisplay::draw(const DrawArgs& disp) {
 	std::shared_ptr<Font> font = APP->window->loadFont(fontPath);
-	if (font) {
+	if (font && font->handle >= 0) {
 		nvgBeginPath(disp.vg);
 		nvgFontSize(disp.vg, 9);
 		nvgFontFaceId(disp.vg, font->handle);

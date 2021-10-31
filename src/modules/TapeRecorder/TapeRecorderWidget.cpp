@@ -500,7 +500,7 @@ void TapeDisplay::draw(const DrawArgs& disp) {
 
 void TextOnCassette::drawText(const Widget::DrawArgs& disp, Rect box) {
 	std::shared_ptr<Font> font = APP->window->loadFont(fontPath);
-	if (font) {
+	if (font && font->handle >= 0) {
 		nvgBeginPath(disp.vg);
 		nvgRotate(disp.vg, (-90 * NVG_PI) / 180);
 		if (useScissor) {

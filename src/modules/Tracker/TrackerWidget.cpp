@@ -7,7 +7,7 @@ TrackerScreen::TrackerScreen(Rect box, Tracker* module) : SizedTransparentWidget
 
 void TrackerScreen::draw(const DrawArgs& disp) {
 	std::shared_ptr<Font> font = APP->window->loadFont(fontPath);
-	if (font) {
+	if (font && font->handle >= 0) {
 		nvgBeginPath(disp.vg);
 		nvgRect(disp.vg, 0, 0, box.size.x, box.size.y);
 		nvgFillColor(disp.vg, COLOR_BLACK);
