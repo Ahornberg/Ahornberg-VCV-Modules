@@ -148,4 +148,6 @@ struct TapeRecorder : BaseModule {
 	void jumpToTapePosition(TapeJump tapeJump);
 	json_t* dataToJson() override;
 	void dataFromJson(json_t* rootJ) override;
+	void onAdd(const AddEvent& e) override;
+	void onSave(const SaveEvent& e) override;
 };

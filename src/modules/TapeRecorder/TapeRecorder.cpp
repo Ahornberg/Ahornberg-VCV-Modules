@@ -707,4 +707,16 @@ void TapeRecorder::dataFromJson(json_t* rootJ) {
 	initTape();
 }
 
+void TapeRecorder::onAdd(const AddEvent& e) {
+	// std::string path = system::join(createPatchStorageDirectory(), "wavetable.wav");
+	// Read file...
+	DEBUG("onAdd");
+}
+
+void TapeRecorder::onSave(const SaveEvent& e) {
+	// std::string path = system::join(createPatchStorageDirectory(), "wavetable.wav");
+	// Write file...
+	DEBUG("onSave");
+}
+
 

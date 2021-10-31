@@ -248,8 +248,10 @@ void KnobWheel::onDragLeave(const event::DragLeave& e) {
 
 void KnobWheel::onDragMove(const event::DragMove& e) {
 	if (module && e.button == GLFW_MOUSE_BUTTON_LEFT) {
-		mousePos->x += e.mouseDelta.x / exp2(settings::zoom);
-		mousePos->y += e.mouseDelta.y / exp2(settings::zoom);
+		// mousePos->x += e.mouseDelta.x / exp2(settings::zoom);
+		// mousePos->y += e.mouseDelta.y / exp2(settings::zoom);
+		mousePos->x += e.mouseDelta.x / exp2(getAbsoluteZoom());
+		mousePos->y += e.mouseDelta.y / exp2(getAbsoluteZoom());
 		Vec* center = new Vec(box.size.x * 0.5f, box.size.y * 0.5f);
 		int mods = APP->window->getMods();
 		module->touchedWheelForce = calcTouchedWheelForce(distance(mousePos, center), center->x, mods);
