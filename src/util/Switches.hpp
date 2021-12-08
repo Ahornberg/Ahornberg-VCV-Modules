@@ -43,3 +43,9 @@ struct RoundSwitchLarge : BasicRoundSwitch {
 struct PauseSwitch : BasicSwitch {
 	PauseSwitch();
 };
+
+struct MidiButtonSmall : app::MidiButton {
+    MidiButtonSmall();
+	void onAction(const ActionEvent& e) override;
+};
+ 

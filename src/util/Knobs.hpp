@@ -22,6 +22,10 @@ struct KnobTiny : BasicKnob {
 	KnobTiny();
 };
 
+struct KnobTinySnap : KnobTiny {
+	KnobTinySnap();
+};
+
 struct KnobSmall : BasicKnob {
 	KnobSmall();
 };

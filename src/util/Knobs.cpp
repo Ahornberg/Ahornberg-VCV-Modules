@@ -47,6 +47,10 @@ KnobTiny::KnobTiny() {
 	BasicKnob::setSvg("res/knobs/Tiny.svg");
 }
 
+KnobTinySnap::KnobTinySnap() {
+	snap = true;
+}
+
 KnobSmall::KnobSmall() {
 	BasicKnob::setSvg("res/knobs/Small.svg");
 }

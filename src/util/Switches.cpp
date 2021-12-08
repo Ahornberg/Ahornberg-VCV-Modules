@@ -84,3 +84,57 @@ PauseSwitch::PauseSwitch() {
 	addFrame("res/switches/Pause_off.svg");
 	addFrame("res/switches/Pause_on.svg");
 }
+
+MidiButtonSmall::MidiButtonSmall() {
+	addFrame(APP->window->loadSvg(asset::plugin(pluginInstance,"res/switches/MidiButtonSmall.svg")));
+	shadow->opacity = 0.0;
+}
+
+struct MidiDriverValueItem : ui::MenuItem {
+	midi::Port* port;
+	int driverId;
+	void onAction(const ActionEvent& e) override {
+		port->setDriverId(driverId);
+	}
+};
+
+struct MidiDeviceValueItem : ui::MenuItem {
+	midi::Port* port;
+	int deviceId;
+	void onAction(const ActionEvent& e) override {
+		port->setDeviceId(deviceId);
+	}
+};
+
+void MidiButtonSmall::onAction(const ActionEvent& e) {
+	ui::Menu* menu = createMenu();
+	menu->addChild(createMenuLabel("MIDI driver"));
+	if (port) {
+		for (int driverId : midi::getDriverIds()) {
+			MidiDriverValueItem* item = new MidiDriverValueItem;
+			item->port = port;
+			item->driverId = driverId;
+			item->text = midi::getDriver(driverId)->getName();
+			item->rightText = CHECKMARK(item->driverId == port->getDriverId());
+			menu->addChild(item);
+		}
+	}
+	menu->addChild(new ui::MenuSeparator);
+	menu->addChild(createMenuLabel("MIDI device"));
+	if (port) {
+		MidiDeviceValueItem* item = new MidiDeviceValueItem;
+		item->port = port;
+		item->deviceId = -1;
+		item->text = "(No device)";
+		item->rightText = CHECKMARK(item->deviceId == port->getDeviceId());
+		menu->addChild(item);
+		for (int deviceId : port->getDeviceIds()) {
+			MidiDeviceValueItem* item = new MidiDeviceValueItem;
+			item->port = port;
+			item->deviceId = deviceId;
+			item->text = port->getDeviceName(deviceId);
+			item->rightText = CHECKMARK(item->deviceId == port->getDeviceId());
+			menu->addChild(item);
+		}
+	}
+}
