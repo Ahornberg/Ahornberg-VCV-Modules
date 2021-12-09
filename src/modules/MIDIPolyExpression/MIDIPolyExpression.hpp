@@ -1,6 +1,6 @@
 #include "../../Ahornberg.hpp"
 
-struct MIDIPolyEnvelopeData {
+struct MIDIPolyExpressionData {
 	float noteVolume;
 	float notePitch;
 	float volume;
@@ -11,16 +11,13 @@ struct MIDIPolyEnvelopeData {
 	float oldGate;
 };
 
-struct MIDIPolyEnvelope : BaseModule {
+struct MIDIPolyExpression : BaseModule {
 	constexpr static int MIN_MIDI_CHANNEL = 1;
 	constexpr static int MAX_MIDI_CHANNEL = 16;
 	enum ParamIds {
 		MIDI_CHANNEL_FIRST_PARAM = NUM_MAX_SCREWS,
 		MIDI_CHANNEL_COUNT_PARAM,
-		VOLUME_ATTACK_THRESHOLD_PARAM,
-		VOLUME_DECAY_PARAM,
-		VOLUME_MIX_PARAM,
-		VOLUME_SMOOTH_PARAM,
+		GATE_VELOCITY_MODE_PARAM,
 		NUM_PARAMS
 	};
 	enum InputIds {
@@ -37,14 +34,12 @@ struct MIDIPolyEnvelope : BaseModule {
 		NUM_LIGHTS
 	};
 
-	MIDIPolyEnvelopeData envelopes[MAX_MIDI_CHANNEL];
+	MIDIPolyExpressionData envelopes[MAX_MIDI_CHANNEL];
 	midi::InputQueue midiInput;
-	dsp::ExponentialFilter noteVolumeSlews[MAX_MIDI_CHANNEL];
-	// dsp::ExponentialSlewLimiter noteVolumeSlews[MAX_MIDI_CHANNEL];
 	dsp::ExponentialSlewLimiter volumeSlews[MAX_MIDI_CHANNEL];
 	dsp::ExponentialFilter modulationSlews[MAX_MIDI_CHANNEL];
 
-	MIDIPolyEnvelope();
+	MIDIPolyExpression();
 	void process(const ProcessArgs& args) override;
 	void processMidiMessage(const midi::Message& msg);
 	void onReset() override;

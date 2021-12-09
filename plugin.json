@@ -29,19 +29,6 @@
 	  ]
     },
     {
-      "slug": "MIDIPolyEnvelope",
-      "name": "MIDI Poly Envelope",
-      "description": "MIDI MPE to CV",
-	  "disabled": true,
-	  "manualUrl": "https://github.com/Ahornberg/Ahornberg-VCV-Modules/blob/master/manuals/README.md#midi-poly-envelope",
-      "tags": [
-		"Envelope generator",
-		"MIDI",
-		"Polyphonic",
-		"Utility"
-	  ]
-    },
-    {
       "slug": "TapeRecorder",
       "name": "Tape Recorder",
       "description": "micro cassette recorder",
@@ -141,6 +128,19 @@
 		"Multiple",
 		"Polyphonic",
 		"Tuner"
+	  ]
+    },
+    {
+      "slug": "MIDIPolyExpression",
+      "name": "MIDI Poly Expression",
+      "description": "MIDI MPE to CV",
+	  "disabled": false,
+	  "manualUrl": "https://github.com/Ahornberg/Ahornberg-VCV-Modules/blob/master/manuals/README.md#midi-poly-expression",
+      "tags": [
+		"External",
+		"MIDI",
+		"Polyphonic",
+		"Utility"
 	  ]
     },
     {

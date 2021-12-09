@@ -7,7 +7,7 @@ void init(Plugin* plugin) {
 	pluginInstance = plugin;
 
 	pluginInstance->addModel(modelTracker);
-	pluginInstance->addModel(modelMIDIPolyEnvelope);
+	pluginInstance->addModel(modelMIDIPolyExpression);
 	pluginInstance->addModel(modelTapeRecorder);
 	pluginInstance->addModel(modelTapeRecorderMixer);
 	pluginInstance->addModel(modelFlyingFader);
