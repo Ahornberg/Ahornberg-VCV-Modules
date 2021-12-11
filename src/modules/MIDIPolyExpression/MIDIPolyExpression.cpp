@@ -7,6 +7,8 @@ MIDIPolyExpression::MIDIPolyExpression() {
 	configParam(MIDI_CHANNEL_FIRST_PARAM, MIN_MIDI_CHANNEL, MAX_MIDI_CHANNEL, MIN_MIDI_CHANNEL, "First MIDI Channel");
 	configParam(MIDI_CHANNEL_COUNT_PARAM, MIN_MIDI_CHANNEL, MAX_MIDI_CHANNEL, MAX_MIDI_CHANNEL, "Number Of MIDI Channels");
 	configParam(GATE_VELOCITY_MODE_PARAM,  0, 1, 0, "Gate Velocity Mode");
+	configParam(DECAY_PARAM,  0, 20, 0, "Decay");
+	configParam(RELEASE_PARAM,  0, 20, 0, "Release");
 	configOutput(GATE_OUTPUT, "Gate");
 	configOutput(VOLUME_OUTPUT, "Volume");
 	configOutput(PITCH_OUTPUT, "Pitch (1V/Octave)");
@@ -28,28 +30,48 @@ void MIDIPolyExpression::process(const ProcessArgs& args) {
 	for (auto i = 0; i < channels; ++i) {
 		auto channelWithOffset = i + channelOffset;
 		if (envelopes[channelWithOffset].gate && !envelopes[channelWithOffset].oldGate) {
-			volumeSlews[channelWithOffset].setRiseFall(10000, 400);
-			volumeSlews[channelWithOffset].reset();
+			// Note on / Attack
+			pitchSlews[channelWithOffset].setRiseFall(INITIAL_SLEW_VALUE, SLEW_VALUE);
+			pitchSlews[channelWithOffset].reset();
 			modulationSlews[channelWithOffset].reset();
 			modulationSlews[channelWithOffset].out = envelopes[channelWithOffset].modulation;
-			envelopes[channelWithOffset].oldVolume = 0;
+			volumeSlews[channelWithOffset].setRiseFall(std::max(0.f, (float) pow(envelopes[channelWithOffset].noteVolume - 1.0f, 4.2f) + 70.f), SLEW_VALUE);
+			volumeSlews[channelWithOffset].reset();
+			envelopes[channelWithOffset].noteLength = 0;
 			envelopes[channelWithOffset].oldGate = envelopes[channelWithOffset].gate;
-		} else if (envelopes[channelWithOffset].oldVolume > args.sampleRate / 44) {
-			volumeSlews[channelWithOffset].setRiseFall(400, 400);
+		} else if (!envelopes[channelWithOffset].gate && envelopes[channelWithOffset].oldGate) {
+			float noteLength = envelopes[channelWithOffset].noteLength * 8.f / args.sampleRate;
+			// Note off / Release
+			if (noteLength > 1.5f) {
+				// Release
+				volumeSlews[channelWithOffset].setRiseFall(SLEW_VALUE, SLEW_VALUE / (params[RELEASE_PARAM].getValue() + 1));
+			} else if (noteLength > 1.f) {
+				// Decay to Release
+				volumeSlews[channelWithOffset].setRiseFall(SLEW_VALUE, SLEW_VALUE / ((params[RELEASE_PARAM].getValue() + 1) * (noteLength - 1.f) + (params[DECAY_PARAM].getValue() + 1) * (1.5f - noteLength)) / 2.);	
+			} else {
+				// Decay for short notes
+				volumeSlews[channelWithOffset].setRiseFall(SLEW_VALUE, SLEW_VALUE / (params[DECAY_PARAM].getValue() + 1));
+			}				
+			envelopes[channelWithOffset].oldGate = envelopes[channelWithOffset].gate;	
+		} else if (envelopes[channelWithOffset].gate && envelopes[channelWithOffset].noteLength > args.sampleRate / 44) {
+			// Note on / Decay & Sustain
+			pitchSlews[channelWithOffset].setRiseFall(SLEW_VALUE, SLEW_VALUE);
+			volumeSlews[channelWithOffset].setRiseFall(SLEW_VALUE, SLEW_VALUE / (params[DECAY_PARAM].getValue() + 1));
 		}
 		if (params[GATE_VELOCITY_MODE_PARAM].getValue()) {
-			// if (envelopes[channelWithOffset].gate) {
-				outputs[GATE_OUTPUT].setVoltage(envelopes[channelWithOffset].noteVolume, i);
-			// } else {
-				// outputs[GATE_OUTPUT].setVoltage(envelopes[channelWithOffset].noteVolume * -10, i);
-			// }
+			// W Gate Velocity Mode off
+			outputs[GATE_OUTPUT].setVoltage(envelopes[channelWithOffset].noteVolume, i);
 		} else {
+			// W Gate Velocity Mode on
 			outputs[GATE_OUTPUT].setVoltage(envelopes[channelWithOffset].gate * 10, i);
 		}
-		outputs[VOLUME_OUTPUT].setVoltage(volumeSlews[channelWithOffset].process(args.sampleTime, envelopes[channelWithOffset].volume), i);
-		envelopes[channelWithOffset].oldVolume++;
-		outputs[PITCH_OUTPUT].setVoltage(envelopes[channelWithOffset].notePitch + envelopes[channelWithOffset].pitch, i);
+		// X
+		outputs[PITCH_OUTPUT].setVoltage(envelopes[channelWithOffset].notePitch + pitchSlews[channelWithOffset].process(args.sampleTime, envelopes[channelWithOffset].pitch), i);
+		// Y
 		outputs[MODULATION_OUTPUT].setVoltage(modulationSlews[channelWithOffset].process(args.sampleTime, envelopes[channelWithOffset].modulation), i);
+		// Z
+		outputs[VOLUME_OUTPUT].setVoltage(volumeSlews[channelWithOffset].process(args.sampleTime, envelopes[channelWithOffset].volume), i);
+		envelopes[channelWithOffset].noteLength++;
 	}
 }
 
@@ -89,10 +111,12 @@ void MIDIPolyExpression::onReset() {
 		envelopes[i].modulation = 0;
 		envelopes[i].gate = 0;
 		envelopes[i].oldGate = 0;
-		volumeSlews[i].setRiseFall(10000, 400);
-		modulationSlews[i].setLambda(120);
-		volumeSlews[i].reset();
+		pitchSlews[i].setRiseFall(INITIAL_SLEW_VALUE, SLEW_VALUE);
+		pitchSlews[i].reset();
 		modulationSlews[i].reset();
+		modulationSlews[i].setLambda(SLEW_VALUE);
+		volumeSlews[i].setRiseFall(INITIAL_SLEW_VALUE, SLEW_VALUE);
+		volumeSlews[i].reset();
 	}
 	midiInput.reset();
 }

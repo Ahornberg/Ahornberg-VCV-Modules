@@ -41,6 +41,11 @@ MIDIPolyExpressionWidget::MIDIPolyExpressionWidget(MIDIPolyExpression* module) {
 	addOutput(createOutputCentered<OutPort>(Vec(15, 238), module, MIDIPolyExpression::GATE_OUTPUT));
 	addOutput(createOutputCentered<OutPort>(Vec(15, 273), module, MIDIPolyExpression::PITCH_OUTPUT));
 	addOutput(createOutputCentered<OutPort>(Vec(15, 308), module, MIDIPolyExpression::MODULATION_OUTPUT));
+	
+	addParam(createParamCentered<KnobScrew>(Vec(8.3f, 326), module, MIDIPolyExpression::DECAY_PARAM));
+	
+	addParam(createParamCentered<KnobScrew>(Vec(30.f - 8.3f, 326), module, MIDIPolyExpression::RELEASE_PARAM));
+	
 	addOutput(createOutputCentered<OutPort>(Vec(15, 343), module, MIDIPolyExpression::VOLUME_OUTPUT));
 	
 	MidiButton* midiButton = createWidgetCentered<MidiButtonSmall>(Vec(15, 62));
