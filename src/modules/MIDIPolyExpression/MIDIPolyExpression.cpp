@@ -7,8 +7,8 @@ MIDIPolyExpression::MIDIPolyExpression() {
 	configParam(MIDI_CHANNEL_FIRST_PARAM, MIN_MIDI_CHANNEL, MAX_MIDI_CHANNEL, MIN_MIDI_CHANNEL, "First MIDI Channel");
 	configParam(MIDI_CHANNEL_COUNT_PARAM, MIN_MIDI_CHANNEL, MAX_MIDI_CHANNEL, MAX_MIDI_CHANNEL, "Number Of MIDI Channels");
 	configParam(GATE_VELOCITY_MODE_PARAM,  0, 1, 0, "Gate Velocity Mode");
-	configParam(DECAY_PARAM,  0, 20, 0, "Decay");
-	configParam(RELEASE_PARAM,  0, 20, 0, "Release");
+	configParam(DECAY_PARAM,  0, 40, 8, "Decay");
+	configParam(RELEASE_PARAM,  0, 4, 0, "Release");
 	configOutput(GATE_OUTPUT, "Gate");
 	configOutput(VOLUME_OUTPUT, "Volume");
 	configOutput(PITCH_OUTPUT, "Pitch (1V/Octave)");
@@ -41,10 +41,12 @@ void MIDIPolyExpression::process(const ProcessArgs& args) {
 			envelopes[channelWithOffset].oldGate = envelopes[channelWithOffset].gate;
 		} else if (!envelopes[channelWithOffset].gate && envelopes[channelWithOffset].oldGate) {
 			float noteLength = envelopes[channelWithOffset].noteLength * 8.f / args.sampleRate;
+			// Hack for Bitwig
+			envelopes[channelWithOffset].volume = 0;
 			// Note off / Release
 			if (noteLength > 1.5f) {
 				// Release
-				volumeSlews[channelWithOffset].setRiseFall(SLEW_VALUE, SLEW_VALUE / (params[RELEASE_PARAM].getValue() + 1));
+				volumeSlews[channelWithOffset].setRiseFall(SLEW_VALUE, SLEW_VALUE / ((params[RELEASE_PARAM].getValue() + 1) * (2.f + envelopes[channelWithOffset].noteVolume / 10.f)));
 			} else if (noteLength > 1.f) {
 				// Decay to Release
 				volumeSlews[channelWithOffset].setRiseFall(SLEW_VALUE, SLEW_VALUE / ((params[RELEASE_PARAM].getValue() + 1) * (noteLength - 1.f) + (params[DECAY_PARAM].getValue() + 1) * (1.5f - noteLength)) / 2.);	
@@ -56,7 +58,7 @@ void MIDIPolyExpression::process(const ProcessArgs& args) {
 		} else if (envelopes[channelWithOffset].gate && envelopes[channelWithOffset].noteLength > args.sampleRate / 44) {
 			// Note on / Decay & Sustain
 			pitchSlews[channelWithOffset].setRiseFall(SLEW_VALUE, SLEW_VALUE);
-			volumeSlews[channelWithOffset].setRiseFall(SLEW_VALUE, SLEW_VALUE / (params[DECAY_PARAM].getValue() + 1));
+			volumeSlews[channelWithOffset].setRiseFall(SLEW_VALUE, SLEW_VALUE);
 		}
 		if (params[GATE_VELOCITY_MODE_PARAM].getValue()) {
 			// W Gate Velocity Mode off

@@ -15,7 +15,7 @@
    version="1.1"
    id="svg8"
    inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
-   sodipodi:docname="MIDIPolyEnvelope.svg">
+   sodipodi:docname="MIDIPolyExpression.svg">
   <defs
      id="defs2" />
   <sodipodi:namedview
@@ -25,9 +25,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2.5677983"
-     inkscape:cx="11.50849"
-     inkscape:cy="195.32465"
+     inkscape:zoom="6.2864127"
+     inkscape:cx="33.436326"
+     inkscape:cy="79.968782"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -226,7 +226,7 @@
        inkscape:connector-curvature="0" />
     <g
        aria-label="Expression"
-       transform="rotate(-90,-17.070696,-17.68086)"
+       transform="rotate(-90,-17.269133,-17.879297)"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:semi-expanded;font-size:2.82222223px;line-height:1.25;font-family:Magneto;-inkscape-font-specification:'Magneto, Bold Semi-Expanded';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
        id="text874">
       <path
@@ -284,7 +284,7 @@
        aria-label="W"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:3.17499995px;line-height:1.25;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
        id="text914"
-       transform="translate(0,-6.0854163)">
+       transform="translate(0,-7.0114581)">
       <path
          d="m 7.3897299,260.17175 -0.3302124,2.43241 H 6.8843344 l -0.2635498,-1.82934 q -0.00155,-0.0481 -0.0062,-0.14263 0,0.0496 -0.0062,0.14263 l -0.2635498,1.82934 H 6.1696493 l -0.3302124,-2.43241 h 0.2139405 l 0.2061889,1.75028 q 0.00155,0.0589 0.0062,0.17364 -0.00155,-0.0589 0.0062,-0.17364 l 0.2511474,-1.75028 H 6.707601 l 0.2495971,1.75028 q 0.0031,0.0589 0.0062,0.17364 0,-0.0589 0.00775,-0.17364 l 0.2061889,-1.75028 z"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:3.17499995px;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.26458332"
@@ -295,7 +295,7 @@
        aria-label="X"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:3.17499995px;line-height:1.25;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
        id="text918"
-       transform="translate(0,-4.7625)">
+       transform="translate(0,-5.9531251)">
       <path
          d="M 7.157175,270.54166 H 6.9354831 l -0.3240113,-0.99684 -0.3240112,0.99684 H 6.0719699 q 0,-0.0109 0,-0.0124 l 0.4325317,-1.22938 q -0.4092773,-1.17822 -0.407727,-1.18442 h 0.2263428 l 0.291455,0.92087 0.3023072,-0.92087 h 0.2154907 q 0,0.0109 0,0.0139 l -0.4030762,1.15807 q 0.4309814,1.24799 0.4278809,1.25419 z"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:3.17499995px;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.26458332"
@@ -306,22 +306,11 @@
        aria-label="Y"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:3.17499995px;line-height:1.25;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
        id="text922"
-       transform="translate(0,-3.4395834)">
+       transform="translate(0,-4.8947918)">
       <path
          d="m 7.1641621,276.0669 -0.2945557,0.98134 q -0.055811,0.14727 -0.1472778,0.49144 v 0.93948 H 6.5068378 v -0.93948 q -0.021704,-0.11782 -0.066663,-0.24805 -0.074414,-0.22324 -0.080615,-0.24339 L 6.0650044,276.0669 q 0,-0.002 0,-0.0139 h 0.2185913 l 0.3333129,1.21388 0.3302124,-1.21388 h 0.2170411 q 0,0.0109 0,0.0139 z"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:3.17499995px;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.26458332"
          id="path962"
-         inkscape:connector-curvature="0" />
-    </g>
-    <g
-       aria-label="Z"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:3.17499995px;line-height:1.25;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-       id="text926"
-       transform="translate(0,-2.1166668)">
-      <path
-         d="M 7.0796711,286.41666 H 6.1494953 q 0,-0.11473 0,-0.11473 l 0.6821289,-2.1208 H 6.2161579 v -0.19068 h 0.8635132 q 0,0.11162 0,0.11162 l -0.6821289,2.1239 h 0.6821289 z"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:3.17499995px;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.26458332"
-         id="path965"
          inkscape:connector-curvature="0" />
     </g>
     <g
@@ -394,6 +383,28 @@
          d="m 6.531901,216.46693 q 0,0.15572 -0.1543403,0.15572 H 5.9365885 q -0.1543403,0 -0.1543403,-0.15572 v -1.02939 q 0,-0.15572 0.1543403,-0.15572 h 0.4409722 q 0.1543403,0 0.1543403,0.15572 v 0.48231 l -0.062012,0.0648 H 5.9600151 v 0.48507 h 0.394119 V 216.2244 H 6.531901 Z m -0.1777669,-0.62838 v -0.40377 h -0.394119 v 0.40377 z"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:2.82222223px;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332"
          id="path995"
+         inkscape:connector-curvature="0" />
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:semi-expanded;font-size:3.52777767px;line-height:1.25;font-family:Magneto;-inkscape-font-specification:'Magneto, Bold Semi-Expanded';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="21.741226"
+       y="211.27155"
+       id="text875"><tspan
+         sodipodi:role="line"
+         id="tspan873"
+         x="21.741226"
+         y="211.27155"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:semi-expanded;font-size:3.52777767px;font-family:Magneto;-inkscape-font-specification:'Magneto, Bold Semi-Expanded';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332">Mpe</tspan></text>
+    <g
+       aria-label="z"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:3.17499995px;line-height:1.25;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       id="text883"
+       transform="translate(0.0446412,0.39687501)">
+      <path
+         d="m 6.9416952,284.31165 h -0.79375 v -0.0946 l 0.550354,-1.22938 H 6.2053061 v -0.18449 h 0.7363891 v 0.0961 l -0.5519043,1.22783 h 0.5519043 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:3.17499995px;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332"
+         id="path886"
          inkscape:connector-curvature="0" />
     </g>
   </g>

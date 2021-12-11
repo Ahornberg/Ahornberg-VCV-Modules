@@ -38,13 +38,13 @@ MIDIPolyExpressionWidget::MIDIPolyExpressionWidget(MIDIPolyExpression* module) {
 	addParam(createParamCentered<KnobTinySnap>(Vec(15, 110), module, MIDIPolyExpression::MIDI_CHANNEL_FIRST_PARAM));
 	addParam(createParamCentered<KnobTinySnap>(Vec(15, 135), module, MIDIPolyExpression::MIDI_CHANNEL_COUNT_PARAM));
 		
-	addOutput(createOutputCentered<OutPort>(Vec(15, 238), module, MIDIPolyExpression::GATE_OUTPUT));
-	addOutput(createOutputCentered<OutPort>(Vec(15, 273), module, MIDIPolyExpression::PITCH_OUTPUT));
-	addOutput(createOutputCentered<OutPort>(Vec(15, 308), module, MIDIPolyExpression::MODULATION_OUTPUT));
+	addOutput(createOutputCentered<OutPort>(Vec(15, 234), module, MIDIPolyExpression::GATE_OUTPUT));
+	addOutput(createOutputCentered<OutPort>(Vec(15, 268), module, MIDIPolyExpression::PITCH_OUTPUT));
+	addOutput(createOutputCentered<OutPort>(Vec(15, 302), module, MIDIPolyExpression::MODULATION_OUTPUT));
 	
-	addParam(createParamCentered<KnobScrew>(Vec(8.3f, 326), module, MIDIPolyExpression::DECAY_PARAM));
+	addParam(createParamCentered<KnobScrew>(Vec(30.f - 8.3f, 320.75f), module, MIDIPolyExpression::DECAY_PARAM));
 	
-	addParam(createParamCentered<KnobScrew>(Vec(30.f - 8.3f, 326), module, MIDIPolyExpression::RELEASE_PARAM));
+	addParam(createParamCentered<KnobScrew>(Vec(8.3f, 324.25f), module, MIDIPolyExpression::RELEASE_PARAM));
 	
 	addOutput(createOutputCentered<OutPort>(Vec(15, 343), module, MIDIPolyExpression::VOLUME_OUTPUT));
 	
