@@ -136,42 +136,42 @@ TapeRecorderMixerWidget::TapeRecorderMixerWidget(TapeRecorderMixer* module) {
 	setModule(module);
 	setPanel("res/TapeRecorderMixer.svg");
 	setWidthInHP(4);
-	setScrews(SCREW_TOP_LEFT, NO_SCREW_TOP_RIGHT, SCREW_BOTTOM_LEFT_INDENTED, NO_SCREW_BOTTOM_RIGHT);
+	setScrews(SCREW_TOP_LEFT, NO_SCREW_TOP_RIGHT, SCREW_BOTTOM_LEFT, SCREW_BOTTOM_RIGHT);
 
-	addInput(createInputCentered<InPort>(Vec(31, 14), module,  TapeRecorderMixer::AUDIO_INPUT));
-	addInput(createInputCentered<InPort>(Vec(14, 71), module,  TapeRecorderMixer::AUDIO_FX_RETURN));
-	addInput(createInputCentered<InPortSmall>(Vec(12, 338), module,  TapeRecorderMixer::AUDIO_CHAIN_TO_TAPE_INPUT));
-	addInput(createInputCentered<InPortSmall>(Vec(33, 359), module,  TapeRecorderMixer::AUDIO_CHAIN_FROM_TAPE_INPUT));
+	addInput(createInputCentered<InPort>(Vec(31 + 1, 14 + 1), module,  TapeRecorderMixer::AUDIO_INPUT));
+	addInput(createInputCentered<InPort>(Vec(15 + 14 - 1, 71 - 5), module,  TapeRecorderMixer::AUDIO_FX_RETURN));
+	addInput(createInputCentered<InPortSmall>(Vec(12, 335), module,  TapeRecorderMixer::AUDIO_CHAIN_TO_TAPE_INPUT));
+	addInput(createInputCentered<InPortSmall>(Vec(15 + 33, 357), module,  TapeRecorderMixer::AUDIO_CHAIN_FROM_TAPE_INPUT));
 
-	addOutput(createOutputCentered<OutPort>(Vec(14, 32), module,  TapeRecorderMixer::AUDIO_OUTPUT));
-	addOutput(createOutputCentered<OutPort>(Vec(31, 53), module,  TapeRecorderMixer::AUDIO_FX_SEND));
-	addOutput(createOutputCentered<OutPortSmall>(Vec(33, 338), module,  TapeRecorderMixer::AUDIO_CHAIN_TO_TAPE_OUTPUT));
-	addOutput(createOutputCentered<OutPortSmall>(Vec(12, 359), module,  TapeRecorderMixer::AUDIO_CHAIN_FROM_TAPE_OUTPUT));
+	addOutput(createOutputCentered<OutPort>(Vec(14 + 1, 32 + 1), module,  TapeRecorderMixer::AUDIO_OUTPUT));
+	addOutput(createOutputCentered<OutPort>(Vec(15 + 31 - 1, 53 - 5), module,  TapeRecorderMixer::AUDIO_FX_SEND));
+	addOutput(createOutputCentered<OutPortSmall>(Vec(15 + 33, 335), module,  TapeRecorderMixer::AUDIO_CHAIN_TO_TAPE_OUTPUT));
+	addOutput(createOutputCentered<OutPortSmall>(Vec(12, 357), module,  TapeRecorderMixer::AUDIO_CHAIN_FROM_TAPE_OUTPUT));
 	
 	volumeDisplay = new VolumeDisplay(Rect(3, 82, 54, 32), module);
 	addChild(volumeDisplay);
 
-	addParam(createParamCentered<RoundSwitchMediumRed>(Vec(12, 136), module, TapeRecorderMixer::RECORD_PARAM));
-	addInput(createInputCentered<InPortSmall>(Vec(12, 157), module, TapeRecorderMixer::CV_RECORD_INPUT));
-	addParam(createParamCentered<RoundSwitchMedium>(Vec(33, 143), module, TapeRecorderMixer::BYPASS_CHAIN_PARAM));
-	addInput(createInputCentered<InPortSmall>(Vec(33, 164), module, TapeRecorderMixer::CV_BYPASS_CHAIN_INPUT));
+	addParam(createParamCentered<RoundSwitchMediumRed>(Vec(5 + 12, 136 + 4), module, TapeRecorderMixer::RECORD_PARAM));
+	addInput(createInputCentered<InPortSmall>(Vec(5 + 12, 157 + 4), module, TapeRecorderMixer::CV_RECORD_INPUT));
+	addParam(createParamCentered<RoundSwitchMedium>(Vec(10 + 33, 143 + 4), module, TapeRecorderMixer::BYPASS_CHAIN_PARAM));
+	addInput(createInputCentered<InPortSmall>(Vec(10 + 33, 164 + 4), module, TapeRecorderMixer::CV_BYPASS_CHAIN_INPUT));
 
-	addParam(createParamCentered<KnobTiny>(Vec(12, 189), module, TapeRecorderMixer::TAPE_DUCKING_PARAM));
-	addInput(createInputCentered<InPortSmall>(Vec(12, 210), module, TapeRecorderMixer::CV_TAPE_DUCKING_INPUT));
-	addParam(createParamCentered<KnobTiny>(Vec(33, 196), module, TapeRecorderMixer::TAPE_ERASE_PARAM));
-	addInput(createInputCentered<InPortSmall>(Vec(33, 217), module, TapeRecorderMixer::CV_TAPE_ERASE_INPUT));
+	addParam(createParamCentered<KnobTiny>(Vec(5 + 12, 189 + 6), module, TapeRecorderMixer::TAPE_DUCKING_PARAM));
+	addInput(createInputCentered<InPortSmall>(Vec(5 + 12, 210 + 6), module, TapeRecorderMixer::CV_TAPE_DUCKING_INPUT));
+	addParam(createParamCentered<KnobTiny>(Vec(10 + 33, 196 + 6), module, TapeRecorderMixer::TAPE_ERASE_PARAM));
+	addInput(createInputCentered<InPortSmall>(Vec(10 + 33, 217 + 6), module, TapeRecorderMixer::CV_TAPE_ERASE_INPUT));
 	
-	addParam(createParamCentered<RoundSwitchMedium>(Vec(12, 242), module, TapeRecorderMixer::SOLO_PARAM));
-	addInput(createInputCentered<InPortSmall>(Vec(12, 263), module, TapeRecorderMixer::CV_SOLO_INPUT));
-	addParam(createParamCentered<RoundSwitchMedium>(Vec(33, 249), module, TapeRecorderMixer::MUTE_PARAM));
-	addInput(createInputCentered<InPortSmall>(Vec(33, 270), module, TapeRecorderMixer::CV_MUTE_INPUT));
+	addParam(createParamCentered<RoundSwitchMedium>(Vec(5 + 12, 242 + 8), module, TapeRecorderMixer::SOLO_PARAM));
+	addInput(createInputCentered<InPortSmall>(Vec(5 + 12, 263 + 8), module, TapeRecorderMixer::CV_SOLO_INPUT));
+	addParam(createParamCentered<RoundSwitchMedium>(Vec(10 + 33, 249 + 8), module, TapeRecorderMixer::MUTE_PARAM));
+	addInput(createInputCentered<InPortSmall>(Vec(10 + 33, 270 + 8), module, TapeRecorderMixer::CV_MUTE_INPUT));
 
 
-	addParam(createParamCentered<KnobSmall>(Vec(16, 289), module, TapeRecorderMixer::INPUT_VOLUME_PARAM));
-	addParam(createParamCentered<RoundSwitch>(Vec(16, 289), module, TapeRecorderMixer::INPUT_MUTE_PARAM));
-	addInput(createInputCentered<InPortSmall>(Vec(33, 307), module, TapeRecorderMixer::CV_INPUT_VOLUME_INPUT));
+	addParam(createParamCentered<KnobSmall>(Vec(5 + 16, 289 + 10), module, TapeRecorderMixer::INPUT_VOLUME_PARAM));
+	addParam(createParamCentered<RoundSwitch>(Vec(5 + 16, 289 + 10), module, TapeRecorderMixer::INPUT_MUTE_PARAM));
+	addInput(createInputCentered<InPortSmall>(Vec(10 + 33, 302 + 10), module, TapeRecorderMixer::CV_INPUT_VOLUME_INPUT));
 
-	RoundSwitchMediumLink* roundSwitchMediumLink = dynamic_cast<RoundSwitchMediumLink*>(createParamCentered<RoundSwitchMediumLink>(Vec(12, 316), module, TapeRecorderMixer::LINK_PARAM));
+	RoundSwitchMediumLink* roundSwitchMediumLink = dynamic_cast<RoundSwitchMediumLink*>(createParamCentered<RoundSwitchMediumLink>(Vec(30, 346), module, TapeRecorderMixer::LINK_PARAM));
 	roundSwitchMediumLink->tapeRecorderMixer = module;
 	addParam(roundSwitchMediumLink);
 
