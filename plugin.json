@@ -1,6 +1,6 @@
 {
   "slug": "Ahornberg",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "license": "GPL-3.0-only",
   "name": "Ahornberg",
   "brand": "Ahornberg",
@@ -43,6 +43,22 @@
 	  ]
     },
     {
+      "slug": "TapeRecorderMixer",
+      "name": "Tape Recorder Mixer",
+      "description": "mixer for micro cassette recorder",
+	  "disabled": true,
+	  "manualUrl": "https://github.com/Ahornberg/Ahornberg-VCV-Modules/blob/master/manuals/README.md#tape-recorder-mixer",
+      "tags": [ 
+	    "Attenuator",
+		"Controller",
+		"Expander",
+		"Mixer",
+		"Utility",
+		"Visual",
+		"Voltage-controlled amplifier"
+	  ]
+    },
+    {
       "slug": "FlyingFader",
       "name": "Flying Fader",
       "description": "cv-controlled fader",
@@ -52,22 +68,6 @@
 	    "Attenuator",
 		"Controller",
 		"Polyphonic",
-		"Utility",
-		"Visual",
-		"Voltage-controlled amplifier"
-	  ]
-    },
-    {
-      "slug": "TapeRecorderMixer",
-      "name": "Tape Recorder Mixer",
-      "description": "mixer for micro cassette recorder",
-	  "disabled": false,
-	  "manualUrl": "https://github.com/Ahornberg/Ahornberg-VCV-Modules/blob/master/manuals/README.md#tape-recorder-mixer",
-      "tags": [ 
-	    "Attenuator",
-		"Controller",
-		"Expander",
-		"Mixer",
 		"Utility",
 		"Visual",
 		"Voltage-controlled amplifier"

@@ -41,8 +41,6 @@ void MIDIPolyExpression::process(const ProcessArgs& args) {
 			envelopes[channelWithOffset].oldGate = envelopes[channelWithOffset].gate;
 		} else if (!envelopes[channelWithOffset].gate && envelopes[channelWithOffset].oldGate) {
 			float noteLength = envelopes[channelWithOffset].noteLength * 8.f / args.sampleRate;
-			// Hack for Bitwig
-			envelopes[channelWithOffset].volume = 0;
 			// Note off / Release
 			if (noteLength > 1.5f) {
 				// Release
@@ -59,6 +57,10 @@ void MIDIPolyExpression::process(const ProcessArgs& args) {
 			// Note on / Decay & Sustain
 			pitchSlews[channelWithOffset].setRiseFall(SLEW_VALUE, SLEW_VALUE);
 			volumeSlews[channelWithOffset].setRiseFall(SLEW_VALUE, SLEW_VALUE);
+		}
+		if (!envelopes[channelWithOffset].gate) {
+			// prevent hanging notes
+			envelopes[channelWithOffset].volume = 0;		
 		}
 		if (params[GATE_VELOCITY_MODE_PARAM].getValue()) {
 			// W Gate Velocity Mode off
