@@ -49,4 +49,5 @@ struct ModuleWidgetWithScrews : ModuleWidget {
 	void setScrews(ScrewTopLeft topLeft, ScrewTopRight topRight, ScrewBottomLeft bottomLeft, ScrewBottomRight bottomRight);
 	void addScrew(Vec pos, int screwParam);
 	void step() override;
+	bool isBypassed();
 };

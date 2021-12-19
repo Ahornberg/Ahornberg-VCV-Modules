@@ -9,6 +9,7 @@ MIDIPolyExpression::MIDIPolyExpression() {
 	configParam(GATE_VELOCITY_MODE_PARAM,  0, 1, 0, "Gate Velocity Mode");
 	configParam(DECAY_PARAM,  0, 40, 8, "Decay");
 	configParam(RELEASE_PARAM,  0, 4, 0, "Release");
+	configParam(PITCH_SHAPE_PARAM,  0, 1, 0, "Pitch Shape");
 	configOutput(GATE_OUTPUT, "Gate");
 	configOutput(VOLUME_OUTPUT, "Volume");
 	configOutput(PITCH_OUTPUT, "Pitch (1V/Octave)");
@@ -60,7 +61,7 @@ void MIDIPolyExpression::process(const ProcessArgs& args) {
 		}
 		if (!envelopes[channelWithOffset].gate) {
 			// prevent hanging notes
-			envelopes[channelWithOffset].volume = 0;		
+			envelopes[channelWithOffset].volume = 0;
 		}
 		if (params[GATE_VELOCITY_MODE_PARAM].getValue()) {
 			// W Gate Velocity Mode off
@@ -100,6 +101,19 @@ void MIDIPolyExpression::processMidiMessage(const midi::Message& msg) {
 	} else if (msg.getStatus() == 0xe) {
 		// pitch bend
 		envelopes[channel].pitch = 4 * ((((uint16_t) msg.getValue() << 7) | msg.getNote()) - 8192) / 8191.f;
+		if (params[PITCH_SHAPE_PARAM].getValue() > 0.f) {
+			// Pitch Shape
+			int semitones = floor(envelopes[channel].pitch * 12.f - 0.5f);
+			float microtones = envelopes[channel].pitch * 12.f - 0.5f - semitones;
+			float shapedMicrotones;
+			if (microtones > 0.5) {
+				shapedMicrotones= std::max((microtones - 0.5f) * (1.f - params[PITCH_SHAPE_PARAM].getValue()) + 0.5f, (microtones - params[PITCH_SHAPE_PARAM].getValue()) / (1.f - params[PITCH_SHAPE_PARAM].getValue()));
+			} else {
+				shapedMicrotones= std::min((microtones - 0.5f) * (1.f - params[PITCH_SHAPE_PARAM].getValue()) + 0.5f, microtones / (1.f - params[PITCH_SHAPE_PARAM].getValue()));
+			}
+			envelopes[channel].pitch = (semitones + shapedMicrotones + 0.5f) / 12.f;
+			//DEBUG(" %i, %f", semitones, microtones - shapedMicrotones);
+		}
 	} else if (msg.getStatus() == 0xb && (msg.getNote() == 1 || msg.getNote() == 74)) {
 		// modulation
 		envelopes[channel].modulation = msg.getValue() / 12.7f;

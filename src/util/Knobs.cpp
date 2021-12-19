@@ -15,6 +15,10 @@ KnobScrew::KnobScrew() {
 	BasicKnob::setSvg("res/knobs/ScrewWithDot.svg");
 }
 
+KnobScrewSnap::KnobScrewSnap() {
+	snap = true;
+}
+
 KnobScrewMountModule::KnobScrewMountModule() {
 	minAngle = -5 * M_PI;
 	maxAngle = 5 * M_PI;

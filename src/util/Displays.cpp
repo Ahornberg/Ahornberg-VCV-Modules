@@ -24,13 +24,16 @@ void Display::draw(const DrawArgs& disp) {
 
 void Display::drawLayer(const DrawArgs& disp, int layer) {
 	if (layer == 1) {
-		std::shared_ptr<Font> font = APP->window->loadFont(fontPath);
-		if (font && font->handle >= 0) {
-			// init font
-			nvgFontSize(disp.vg, 10);
-			nvgFontFaceId(disp.vg, font->handle);
-			nvgTextLetterSpacing(disp.vg, 1);
-			drawText(disp);
+		ModuleWidgetWithScrews* parentWidget = dynamic_cast<ModuleWidgetWithScrews*>(getParent());
+		if (parentWidget && !parentWidget->isBypassed()) {
+			std::shared_ptr<Font> font = APP->window->loadFont(fontPath);
+			if (font && font->handle >= 0) {
+				// init font
+				nvgFontSize(disp.vg, 10);
+				nvgFontFaceId(disp.vg, font->handle);
+				nvgTextLetterSpacing(disp.vg, 1);
+				drawText(disp);
+			}
 		}
 	}
 	Widget::drawLayer(disp, layer);

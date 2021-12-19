@@ -4,7 +4,7 @@ VolumeDisplay::VolumeDisplay(Rect box, TapeRecorderMixer* tapeRecorderMixer) : D
 	this->tapeRecorderMixer = tapeRecorderMixer;
 	vuMeterFontPath = asset::plugin(pluginInstance, FONT_VU_METER);
 	channelNumber = 0;
-	trackName = "";
+	trackName = TapeRecorderMixer::INIT_TRACK_NAME;
 	vuMeter = 0;
 }
 
@@ -12,10 +12,11 @@ void VolumeDisplay::drawText(const DrawArgs& disp) {
 	nvgFillColor(disp.vg, textColorLight);
 	if (tapeRecorderMixer) {
 		channelNumber = tapeRecorderMixer->channelNumber;
-		vuMeter = std::min(tapeRecorderMixer->vuMeter * 4.8f, 23.f);
+		vuMeter = std::min(tapeRecorderMixer->vuMeter * 3.3f, 23.f);
 		if (tapeRecorderMixer->params[TapeRecorderMixer::RECORD_PARAM].getValue()) {
 			nvgFillColor(disp.vg, textColorRed);
 		}
+		trackName = tapeRecorderMixer->trackName;
 	}
 	nvgFontSize(disp.vg, 8);
 	Vec textPos = Vec(45.25, 28);
@@ -42,20 +43,27 @@ void VolumeDisplay::drawText(const DrawArgs& disp) {
 		nvgFillColor(disp.vg, textColorDark);
 		textPos = Vec(2, 25.5);
 		for (auto i = 0; i < 24; ++i) {
-			if (i > 15) {
-				nvgFillColor(disp.vg, nvgRGB(0xff, 0x00, 0x00));
-			} else if (i > 7) {
-				nvgFillColor(disp.vg, textColorLight);
+			if (tapeRecorderMixer && tapeRecorderMixer->params[TapeRecorderMixer::MUTE_PARAM].getValue()) {
+				nvgFillColor(disp.vg, COLOR_GREY);
 			} else {
-				nvgFillColor(disp.vg, textColorDark);
-			}
-			if (i == vuMeter) {
-				nvgFillColor(disp.vg, COLOR_WHITE);
+				if (i > 15) {
+					nvgFillColor(disp.vg, nvgRGB(0xff, 0x00, 0x00));
+				} else if (i > 7) {
+					nvgFillColor(disp.vg, textColorLight);
+				} else {
+					nvgFillColor(disp.vg, textColorDark);
+				}
+				if (i == vuMeter) {
+					nvgFillColor(disp.vg, COLOR_WHITE);
+				}
 			}
 			nvgText(disp.vg, textPos.x, textPos.y, std::string(1, 97 + i).c_str(), NULL);
 		}
-		
-		nvgFillColor(disp.vg, COLOR_WHITE);
+		if (tapeRecorderMixer && tapeRecorderMixer->params[TapeRecorderMixer::MUTE_PARAM].getValue()) {
+			nvgFillColor(disp.vg, COLOR_GREY);
+		} else {
+			nvgFillColor(disp.vg, COLOR_WHITE);
+		}
 		nvgText(disp.vg, textPos.x, textPos.y, std::string(1, 65 + vuMeter).c_str(), NULL);
 	}
 }
@@ -109,14 +117,18 @@ TapeRecorderMixerMenuItem::TapeRecorderMixerMenuItem(TapeRecorderMixer* tapeReco
 	this->tapeRecorderMixerWidget = tapeRecorderMixerWidget;
 }
 
-TrackNameMenuItem::TrackNameMenuItem(VolumeDisplay* volumeDisplay) {
-	this->volumeDisplay = volumeDisplay;
-	text = volumeDisplay->trackName;
+TrackNameMenuItem::TrackNameMenuItem(TapeRecorderMixer* tapeRecorderMixer) {
+	this->tapeRecorderMixer = tapeRecorderMixer;
+	if (tapeRecorderMixer) {
+		text = tapeRecorderMixer->trackName;
+	}
 }
 
 void TrackNameMenuItem::onChange(const event::Change& e) {
 	TextFieldMenuItem::onChange(e);
-	volumeDisplay->trackName = text;
+	if (tapeRecorderMixer) {
+		tapeRecorderMixer->trackName = text;
+	}
 }
 
 ChangeInputMuteModeMenuItem::ChangeInputMuteModeMenuItem(TapeRecorderMixer* tapeRecorderMixer, TapeRecorderMixerWidget* tapeRecorderMixerWidget) : TapeRecorderMixerMenuItem(tapeRecorderMixer, tapeRecorderMixerWidget) {
@@ -143,6 +155,8 @@ TapeRecorderMixerWidget::TapeRecorderMixerWidget(TapeRecorderMixer* module) {
 	addInput(createInputCentered<InPortSmall>(Vec(12, 335), module,  TapeRecorderMixer::AUDIO_CHAIN_TO_TAPE_INPUT));
 	addInput(createInputCentered<InPortSmall>(Vec(15 + 33, 357), module,  TapeRecorderMixer::AUDIO_CHAIN_FROM_TAPE_INPUT));
 
+	addParam(createParamCentered<KnobScrewSnap>(Vec(    50, 71), module, TapeRecorderMixer::SAMPLE_DELAY_PARAM));
+
 	addOutput(createOutputCentered<OutPort>(Vec(14 + 1, 32 + 1), module,  TapeRecorderMixer::AUDIO_OUTPUT));
 	addOutput(createOutputCentered<OutPort>(Vec(15 + 31 - 1, 53 - 5), module,  TapeRecorderMixer::AUDIO_FX_SEND));
 	addOutput(createOutputCentered<OutPortSmall>(Vec(15 + 33, 335), module,  TapeRecorderMixer::AUDIO_CHAIN_TO_TAPE_OUTPUT));
@@ -153,8 +167,8 @@ TapeRecorderMixerWidget::TapeRecorderMixerWidget(TapeRecorderMixer* module) {
 
 	addParam(createParamCentered<RoundSwitchMediumRed>(Vec(5 + 12, 136 + 4), module, TapeRecorderMixer::RECORD_PARAM));
 	addInput(createInputCentered<InPortSmall>(Vec(5 + 12, 157 + 4), module, TapeRecorderMixer::CV_RECORD_INPUT));
-	addParam(createParamCentered<RoundSwitchMedium>(Vec(10 + 33, 143 + 4), module, TapeRecorderMixer::BYPASS_CHAIN_PARAM));
-	addInput(createInputCentered<InPortSmall>(Vec(10 + 33, 164 + 4), module, TapeRecorderMixer::CV_BYPASS_CHAIN_INPUT));
+	addParam(createParamCentered<RoundSwitchMedium>(Vec(10 + 33, 143 + 4), module, TapeRecorderMixer::BYPASS_INSERT_PARAM));
+	addInput(createInputCentered<InPortSmall>(Vec(10 + 33, 164 + 4), module, TapeRecorderMixer::CV_BYPASS_INSERT_INPUT));
 
 	addParam(createParamCentered<KnobTiny>(Vec(5 + 12, 189 + 6), module, TapeRecorderMixer::TAPE_DUCKING_PARAM));
 	addInput(createInputCentered<InPortSmall>(Vec(5 + 12, 210 + 6), module, TapeRecorderMixer::CV_TAPE_DUCKING_INPUT));
@@ -173,6 +187,7 @@ TapeRecorderMixerWidget::TapeRecorderMixerWidget(TapeRecorderMixer* module) {
 
 	RoundSwitchMediumLink* roundSwitchMediumLink = dynamic_cast<RoundSwitchMediumLink*>(createParamCentered<RoundSwitchMediumLink>(Vec(30, 346), module, TapeRecorderMixer::LINK_PARAM));
 	roundSwitchMediumLink->tapeRecorderMixer = module;
+	roundSwitchMediumLink->hide();
 	addParam(roundSwitchMediumLink);
 
 
@@ -181,7 +196,7 @@ TapeRecorderMixerWidget::TapeRecorderMixerWidget(TapeRecorderMixer* module) {
 void TapeRecorderMixerWidget::appendContextMenu(Menu* menu) {
 	TapeRecorderMixer* tapeRecorderMixer = dynamic_cast<TapeRecorderMixer*>(this->module);
 	menu->addChild(new MenuSeparator);
-	menu->addChild(new TrackNameMenuItem(volumeDisplay));
+	menu->addChild(new TrackNameMenuItem(tapeRecorderMixer));
 	menu->addChild(new ChangeInputMuteModeMenuItem(tapeRecorderMixer, this));
 }
 
@@ -194,22 +209,6 @@ void TapeRecorderMixerWidget::step() {
 		} else {
 			inputMuteParamWidget->hide();
 		}
-	}
-}
-
-json_t* TapeRecorderMixerWidget::toJson() {
-	json_t* rootJ = ModuleWidget::toJson();
-	
-	json_object_set_new(rootJ, "track-name", json_string(volumeDisplay->trackName.c_str()));
-	return rootJ;
-}
-
-void TapeRecorderMixerWidget::fromJson(json_t* rootJ) {
-	ModuleWidget::fromJson(rootJ);
-	
-	json_t* trackNameJ = json_object_get(rootJ, "track-name");
-	if (trackNameJ) {
-		volumeDisplay->trackName = json_string_value(trackNameJ);
 	}
 }
 

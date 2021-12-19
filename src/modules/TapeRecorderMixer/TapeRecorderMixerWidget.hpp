@@ -38,8 +38,6 @@ struct TapeRecorderMixerWidget : ModuleWidgetWithScrews {
 	TapeRecorderMixerWidget(TapeRecorderMixer* module);
 	void appendContextMenu(Menu* menu) override;
 	void step() override;
-	json_t* toJson();// override;
-	void fromJson(json_t* rootJ);// override;
 };
 
 struct TapeRecorderMixerMenuItem : MenuItem {
@@ -50,9 +48,9 @@ struct TapeRecorderMixerMenuItem : MenuItem {
 };
 
 struct TrackNameMenuItem : TextFieldMenuItem {
-	VolumeDisplay* volumeDisplay;
+	TapeRecorderMixer* tapeRecorderMixer;
 	
-	TrackNameMenuItem(VolumeDisplay* volumeDisplay);
+	TrackNameMenuItem(TapeRecorderMixer* tapeRecorderMixer);
 	void onChange(const event::Change& e) override;
 };
 

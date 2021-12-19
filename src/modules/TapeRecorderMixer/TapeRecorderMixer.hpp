@@ -1,19 +1,20 @@
 #include "../../Ahornberg.hpp"
 
 struct TapeRecorderMixer : BaseModule {
-	//constexpr static float AUDIO_MUTE_SLEW = 350;
+	const static std::string INIT_TRACK_NAME;
 	constexpr static int TRACK_NUMBER_BITMASK = 15;
 	constexpr static int LINK_BITMASK = 16;
 	constexpr static int RECORD_BITMASK = 32;
-	constexpr static int BYPASS_CHAIN_BITMASK = 64;
+	constexpr static int BYPASS_INSERT_BITMASK = 64;
 	constexpr static int SOLO_BITMASK = 128;
 	constexpr static int MUTE_BITMASK = 256;
 	constexpr static int INPUT_MUTE_BITMASK = 512;
 	constexpr static int CHANNEL_16_CONVERT_FACTOR = 8388608;
+	constexpr static int NUM_MAX_TRACKS = 4;
 	
 	enum ParamIds {
 		RECORD_PARAM = NUM_MAX_SCREWS,
-		BYPASS_CHAIN_PARAM,
+		BYPASS_INSERT_PARAM,
 		TAPE_DUCKING_PARAM,
 		TAPE_ERASE_PARAM,
 		SOLO_PARAM,
@@ -22,7 +23,7 @@ struct TapeRecorderMixer : BaseModule {
 		INPUT_MUTE_PARAM,
 		INPUT_MUTE_ENABLED_PARAM,
 		LINK_PARAM,
-		// delay compensation
+		SAMPLE_DELAY_PARAM,
 		NUM_PARAMS
 	};
 	enum InputIds {
@@ -31,7 +32,7 @@ struct TapeRecorderMixer : BaseModule {
 		AUDIO_CHAIN_TO_TAPE_INPUT,
 		AUDIO_CHAIN_FROM_TAPE_INPUT,
 		CV_RECORD_INPUT,
-		CV_BYPASS_CHAIN_INPUT,
+		CV_BYPASS_INSERT_INPUT,
 		CV_TAPE_DUCKING_INPUT,
 		CV_TAPE_ERASE_INPUT,
 		CV_SOLO_INPUT,
@@ -54,7 +55,10 @@ struct TapeRecorderMixer : BaseModule {
 	int maxChannels;
 	float vuMeter;
 	bool linked;
+	std::string trackName;
 
+	dsp::ExponentialSlewLimiter recordSlewLimiter;
+	dsp::ExponentialSlewLimiter recordSlewLimiter2;
 	dsp::ExponentialSlewLimiter muteSlewLimiter;
 	dsp::ExponentialSlewLimiter inputMuteSlewLimiter;
 	dsp::ExponentialSlewLimiter fxReturnSlewLimiter;
@@ -70,4 +74,6 @@ struct TapeRecorderMixer : BaseModule {
 	
 	TapeRecorderMixer();
 	void process(const ProcessArgs& args) override;
+	json_t* dataToJson() override;
+	void dataFromJson(json_t* rootJ) override;
 };

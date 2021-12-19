@@ -9,6 +9,10 @@ struct KnobScrew : BasicKnob {
 	KnobScrew();
 };
 
+struct KnobScrewSnap : KnobScrew {
+	KnobScrewSnap();
+};
+
 struct KnobScrewMountModule : BasicKnob {
 	Module* module;
 	int param;

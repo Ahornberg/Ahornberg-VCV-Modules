@@ -22,6 +22,7 @@ struct MIDIPolyExpression : BaseModule {
 		GATE_VELOCITY_MODE_PARAM,
 		DECAY_PARAM,
 		RELEASE_PARAM,
+		PITCH_SHAPE_PARAM,
 		NUM_PARAMS
 	};
 	enum InputIds {

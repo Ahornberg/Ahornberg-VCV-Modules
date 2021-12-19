@@ -88,3 +88,13 @@ void ModuleWidgetWithScrews::step() {
 		removeAction();
 	}
 }
+
+bool ModuleWidgetWithScrews::isBypassed() {
+	if (module) {
+		if (module->isBypassed()) {
+			return true;
+		}
+		return false;
+	}
+	return false;
+}
