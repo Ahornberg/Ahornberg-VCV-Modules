@@ -57,7 +57,7 @@ struct FlyingFaderWidget : ModuleWidgetWithScrews {
 	
 	FlyingFaderWidget(FlyingFader* module);
 	void changeFaderCapColor(int faderCapColorIndex);
-	void appendContextMenu(Menu* menu) override;
+	void contextMenu(Menu* menu) override;
 	void step() override;
 };
 

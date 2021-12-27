@@ -78,9 +78,8 @@ void MIDIOverAudioWidget::init() {
 	MIDIOverAudioWidget::widgets->push_back(this);
 }
 
-void MIDIOverAudioWidget::appendContextMenu(Menu* menu) {
+void MIDIOverAudioWidget::contextMenu(Menu* menu) {
 	MIDIOverAudio* midiOverAudio = dynamic_cast<MIDIOverAudio*>(this->module);
-	menu->addChild(new MenuSeparator);
 	// menu->addChild(new MIDIOverAudioDriverMenuItem(midiOverAudio));
 	if (MIDIOverAudioDriver::driver->enabled) {
 		menu->addChild(new MIDIOverAudioPanicMenuItem(midiOverAudio));

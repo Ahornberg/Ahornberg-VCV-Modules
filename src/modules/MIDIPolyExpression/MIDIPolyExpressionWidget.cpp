@@ -55,9 +55,8 @@ MIDIPolyExpressionWidget::MIDIPolyExpressionWidget(MIDIPolyExpression* module) {
 	addChild(midiButton);
 }
 
-void MIDIPolyExpressionWidget::appendContextMenu(Menu* menu) {
+void MIDIPolyExpressionWidget::contextMenu(Menu* menu) {
 	MIDIPolyExpression* midipolyExpression = dynamic_cast<MIDIPolyExpression*>(this->module);
-	menu->addChild(new MenuSeparator);
 	menu->addChild(new MIDIPolyExpressionGateVelocityModeMenuItem(midipolyExpression));
 	menu->addChild(new MIDIPolyExpressionPanicMenuItem(midipolyExpression));
 }

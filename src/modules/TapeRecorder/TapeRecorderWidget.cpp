@@ -814,9 +814,8 @@ TapeRecorderWidget::TapeRecorderWidget(TapeRecorder* module) {
 	addChild(stripeWidget);
 }
 
-void TapeRecorderWidget::appendContextMenu(Menu* menu) {
+void TapeRecorderWidget::contextMenu(Menu* menu) {
 	TapeRecorder* tapeRecorder = dynamic_cast<TapeRecorder*>(this->module);
-	menu->addChild(new MenuSeparator);
 	menu->addChild(new TapeNameMenuItem(tapeRecorder));
 	menu->addChild(new TapeStripesMenuItem(tapeRecorder));
 	menu->addChild(new TapeLengthMenuItem(tapeRecorder));

@@ -1,5 +1,7 @@
 #define NDEBUG
 #include <assert.h>
+#include <osdialog.h>
+#include <regex>
 #include "rack.hpp"
 #include <settings.hpp>
 
@@ -30,6 +32,7 @@ extern Model* modelMIDIOverAudio;
 #include "util/Widgets.hpp"
 #include "util/Displays.hpp"
 #include "util/Drivers.hpp"
+#include "util/AudioFile.h"
 
 #ifndef NDEBUG
 #  include "test/Asserts.hpp"

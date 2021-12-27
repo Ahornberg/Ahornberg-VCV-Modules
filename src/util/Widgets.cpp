@@ -98,3 +98,72 @@ bool ModuleWidgetWithScrews::isBypassed() {
 	}
 	return false;
 }
+
+static void appendSelectionItems(ui::Menu* menu, WeakPtr<ModuleWidget> moduleWidget, std::string presetDir) {
+	bool hasPresets = false;
+	// Note: This is not cached, so opening this menu each time might have a bit of latency.
+	if (system::isDirectory(presetDir)) {
+		std::vector<std::string> entries = system::getEntries(presetDir);
+		std::sort(entries.begin(), entries.end());
+		for (std::string path : entries) {
+			std::string name = system::getStem(path);
+			// Remove "1_", "42_", "001_", etc at the beginning of preset filenames
+			std::regex r("^\\d+_");
+			name = std::regex_replace(name, r, "");
+
+			if (system::isDirectory(path)) {
+				hasPresets = true;
+
+				menu->addChild(createSubmenuItem(name, "", [=](ui::Menu* menu) {
+					if (!moduleWidget) {
+						return;
+					}
+					appendSelectionItems(menu, moduleWidget, path);
+				}));
+			}
+			else if (system::getExtension(path) == ".vcvs") {
+				hasPresets = true;
+
+				menu->addChild(createMenuItem(name, "", [=]() {
+					if (!moduleWidget) {
+						return;
+					}
+					try {
+						FILE* file = std::fopen(path.c_str(), "r");
+						if (!file) {
+							throw Exception("Could not load selection file %s", path.c_str());
+						}
+						DEFER({std::fclose(file);});
+
+						INFO("Loading selection %s", path.c_str());
+
+						json_error_t error;
+						json_t* rootJ = json_loadf(file, 0, &error);
+						if (!rootJ) {
+							throw Exception("File is not a valid selection file. JSON parsing error at %s %d:%d %s", error.source, error.line, error.column, error.text);
+						}
+						DEFER({json_decref(rootJ);});
+
+						APP->scene->rack->pasteJsonAction(rootJ);
+					} catch (Exception& e) {
+						osdialog_message(OSDIALOG_WARNING, OSDIALOG_OK, e.what());
+					}
+				}));
+			}
+		}
+	}
+	if (!hasPresets) {
+		menu->addChild(createMenuLabel("(None)"));
+	}
+};
+
+void ModuleWidgetWithScrews::appendContextMenu(Menu* menu) {
+	menu->addChild(new MenuSeparator);
+	menu->addChild(createSubmenuItem("Import factory selection", "", [=](Menu* menu) {
+		WeakPtr<ModuleWidget> weakThis = this;
+		appendSelectionItems(menu, weakThis, asset::plugin(pluginInstance, system::join("selections", model->slug)));
+	}));
+	contextMenu(menu);
+}
+
+void ModuleWidgetWithScrews::contextMenu(Menu* menu) {}

@@ -1,5 +1,7 @@
 #define ENUMS_WITH_SCREWS(name, count) name = NUM_MAX_SCREWS, name ## _LAST = name + (count) - 1
 
+static const char SELECTION_FILTERS[] = "VCV Rack module selection (.vcvs):vcvs";
+
 struct SizedTransparentWidget : TransparentWidget {
 	SizedTransparentWidget(Rect box);
 };
@@ -50,4 +52,8 @@ struct ModuleWidgetWithScrews : ModuleWidget {
 	void addScrew(Vec pos, int screwParam);
 	void step() override;
 	bool isBypassed();
+	void appendContextMenu(Menu* menu) override;
+	virtual void contextMenu(Menu* menu);
+	void loadSelectionDialog();
+	void loadSelection(std::string path);
 };

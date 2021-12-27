@@ -6,7 +6,7 @@ struct MIDIOverAudioWidget : ModuleWidgetWithScrews {
 	MIDIOverAudioWidget(MIDIOverAudio* module);
 	~MIDIOverAudioWidget();
 	void init();
-	void appendContextMenu(Menu* menu) override;
+	void contextMenu(Menu* menu) override;
 };
 
 // struct MIDIOverAudioDriverMenuItem : MenuItem {

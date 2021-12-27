@@ -2,7 +2,7 @@
 
 struct MIDIPolyExpressionWidget : ModuleWidgetWithScrews {
 	MIDIPolyExpressionWidget(MIDIPolyExpression* module);
-	void appendContextMenu(Menu* menu) override;
+	void contextMenu(Menu* menu) override;
 };
 
 struct MIDIPolyExpressionGateVelocityModeMenuItem : MenuItem {

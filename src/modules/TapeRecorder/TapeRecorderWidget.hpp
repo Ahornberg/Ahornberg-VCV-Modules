@@ -226,6 +226,6 @@ struct TapeRecorderWidget : ModuleWidgetWithScrews {
 	// TextField* tapeName;
 	
 	TapeRecorderWidget(TapeRecorder* module);
-	void appendContextMenu(Menu* menu) override;
+	void contextMenu(Menu* menu) override;
 	void step() override;
 };

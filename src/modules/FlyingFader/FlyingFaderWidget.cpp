@@ -183,9 +183,8 @@ FlyingFaderWidget::FlyingFaderWidget(FlyingFader* module) {
 	addOutput(createOutputCentered<OutPort>(Vec(44.5, 23), module, FlyingFader::AUDIO_OUTPUT));
 }
 
-void FlyingFaderWidget::appendContextMenu(Menu* menu) {
+void FlyingFaderWidget::contextMenu(Menu* menu) {
 	FlyingFader* flyingFader = dynamic_cast<FlyingFader*>(this->module);
-	menu->addChild(new MenuSeparator);
 	menu->addChild(new FaderNameMenuItem(flyingFader));
 	menu->addChild(new FaderCapColorMenuItem(this, flyingFader->faderCapColorIndex));
 	menu->addChild(new AudioPolyModeMenuItem(flyingFader));

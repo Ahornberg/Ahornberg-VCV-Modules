@@ -193,9 +193,8 @@ TapeRecorderMixerWidget::TapeRecorderMixerWidget(TapeRecorderMixer* module) {
 
 }
 
-void TapeRecorderMixerWidget::appendContextMenu(Menu* menu) {
+void TapeRecorderMixerWidget::contextMenu(Menu* menu) {
 	TapeRecorderMixer* tapeRecorderMixer = dynamic_cast<TapeRecorderMixer*>(this->module);
-	menu->addChild(new MenuSeparator);
 	menu->addChild(new TrackNameMenuItem(tapeRecorderMixer));
 	menu->addChild(new ChangeInputMuteModeMenuItem(tapeRecorderMixer, this));
 }
