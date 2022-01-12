@@ -1,5 +1,7 @@
 # Ahornberg-VCV-Modules
 The latest stable release can be downloaded at https://library.vcvrack.com/?brand=Ahornberg
+
+<a href="https://liberapay.com/Ahornberg/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a>
 ## Manuals
 
 [![Tape Recorder](manuals/TapeRecorder.png)](manuals/README.md#tape-recorder)
