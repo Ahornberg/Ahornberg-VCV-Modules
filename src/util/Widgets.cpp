@@ -143,8 +143,59 @@ static void appendSelectionItems(ui::Menu* menu, WeakPtr<ModuleWidget> moduleWid
 							throw Exception("File is not a valid selection file. JSON parsing error at %s %d:%d %s", error.source, error.line, error.column, error.text);
 						}
 						DEFER({json_decref(rootJ);});
+						
+						// iterate modules and recalc position
+						json_t* modulesJ = json_object_get(rootJ, "modules");
+						if (modulesJ) {
+							size_t moduleIndex;
+							int minX = 1000000, minY = 100000;
+							json_t* moduleJ;
+							json_array_foreach(modulesJ, moduleIndex, moduleJ) {
+								// read min pos
+								json_t* posJ = json_object_get(moduleJ, "pos");
+								int x = 0, y = 0;
+								json_unpack(posJ, "[i, i]", &x, &y);
+								minX = std::min(minX, x);
+								minY = std::min(minY, y);
+							}
+							minX *= -1;
+							minX += (int) (moduleWidget->getPosition().x / RACK_GRID_WIDTH) - 2000;
+							minY *= -1;
+							minY += (int) (moduleWidget->getPosition().y / RACK_GRID_HEIGHT) - 100;
+							json_array_foreach(modulesJ, moduleIndex, moduleJ) {
+								// recalc pos
+								json_t* posJ = json_object_get(moduleJ, "pos");
+								int x = 0, y = 0;
+								json_unpack(posJ, "[i, i]", &x, &y);
+								x += minX;
+								y += minY;
+								posJ = json_pack("[i, i]", x, y);
+								json_object_set(moduleJ, "pos", posJ);
+							}
+						}
 
 						APP->scene->rack->pasteJsonAction(rootJ);
+						// delete calling module if not connected
+						/*if (moduleWidget->module) {
+							bool hasConnections = false;
+							for (auto& port: moduleWidget->module->inputs) {
+								if (port.isConnected()) {
+									hasConnections = true;
+									break;
+								}
+							}
+							if (!hasConnections) {	
+								for (auto& port: moduleWidget->module->outputs) {
+									if (port.isConnected()) {
+										hasConnections = true;
+										break;
+									}
+								}
+							}
+							if (!hasConnections) {	
+								moduleWidget->requestDelete();
+							}
+						}*/
 					} catch (Exception& e) {
 						osdialog_message(OSDIALOG_WARNING, OSDIALOG_OK, e.what());
 					}
@@ -159,8 +210,12 @@ static void appendSelectionItems(ui::Menu* menu, WeakPtr<ModuleWidget> moduleWid
 
 void ModuleWidgetWithScrews::appendContextMenu(Menu* menu) {
 	menu->addChild(new MenuSeparator);
-	menu->addChild(createSubmenuItem("Import factory selection", "", [=](Menu* menu) {
+	menu->addChild(createSubmenuItem("Import selection", "", [=](Menu* menu) {
 		WeakPtr<ModuleWidget> weakThis = this;
+		menu->addChild(createMenuLabel("User selections"));
+		appendSelectionItems(menu, weakThis, asset::user("selections"));
+		menu->addChild(new ui::MenuSeparator);
+		menu->addChild(createMenuLabel("Factory selections"));
 		appendSelectionItems(menu, weakThis, asset::plugin(pluginInstance, system::join("selections", model->slug)));
 	}));
 	contextMenu(menu);
