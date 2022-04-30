@@ -497,6 +497,7 @@ void TapeRecorder::process(const ProcessArgs& args) {
 		return;
 	}
 	int audioBufferLocation = (int) audioBufferPosition;
+	float fractAudioBufferLocation = audioBufferPosition - audioBufferLocation;
 	
 	calcTapeAndPositionsOnWheels(false);
 	params[WHEEL_LEFT_PARAM].setValue(positionLeftWheel);
@@ -531,7 +532,9 @@ void TapeRecorder::process(const ProcessArgs& args) {
 		outputs[AUDIO_OUTPUT].setChannels(trackCount);
 		for (auto i = 0; i < trackCount; ++i) {
 			if (playStatus) {
-				outputs[AUDIO_OUTPUT].setVoltage(audioBuffer[audioBufferLocation * trackCount + i], i);
+				// TODO add interpolation on recording
+				outputs[AUDIO_OUTPUT].setVoltage(crossfade(audioBuffer[audioBufferLocation * trackCount + i], audioBuffer[(audioBufferLocation + 1) * trackCount + i], fractAudioBufferLocation), i);
+				// outputs[AUDIO_OUTPUT].setVoltage(audioBuffer[audioBufferLocation * trackCount + i], i);
 			} else {
 				outputs[AUDIO_OUTPUT].setVoltage(inputs[AUDIO_INPUT].getVoltage(i), i);
 			}
