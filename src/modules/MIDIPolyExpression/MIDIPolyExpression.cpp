@@ -85,7 +85,7 @@ void MIDIPolyExpression::processMidiMessage(const midi::Message& msg) {
 	int channel = msg.getChannel();
 	if (msg.getStatus() == 0x9 && msg.getValue() > 0) {
 		// note on
-		float noteVolumeLinear = msg.getValue() / 127.f;
+		float noteVolumeLinear = clamp((msg.getValue() - 20) / 107.f);
 		float noteVolumeSharp = sin(pow(noteVolumeLinear, 0.6f) * M_PI) / 2.f + noteVolumeLinear;
 		float noteVolumeFlat = noteVolumeLinear - sin(noteVolumeLinear * M_PI) / 3.3f;
 		envelopes[channel].noteVolume = crossfade(noteVolumeSharp, noteVolumeFlat, params[VOLUME_SHAPE_PARAM].getValue()) * 10.f;
