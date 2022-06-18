@@ -26,8 +26,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="6.2864127"
-     inkscape:cx="-4.1049573"
-     inkscape:cy="79.968782"
+     inkscape:cx="-79.187524"
+     inkscape:cy="264.49373"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -38,7 +38,7 @@
      inkscape:snap-bbox-edge-midpoints="true"
      inkscape:window-width="2304"
      inkscape:window-height="1355"
-     inkscape:window-x="-8"
+     inkscape:window-x="1139"
      inkscape:window-y="0"
      inkscape:window-maximized="0"
      inkscape:snap-global="true"
@@ -226,7 +226,7 @@
        inkscape:connector-curvature="0" />
     <g
        aria-label="Expression"
-       transform="rotate(-90,-17.269133,-17.879297)"
+       transform="rotate(-90,-18.147059,-18.757223)"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:semi-expanded;font-size:2.82222223px;line-height:1.25;font-family:Magneto;-inkscape-font-specification:'Magneto, Bold Semi-Expanded';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
        id="text874">
       <path
@@ -317,7 +317,7 @@
        aria-label="Channel"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:2.82222223px;line-height:1.25;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
        id="text930"
-       transform="translate(0,5.06667)">
+       transform="translate(0,4.8020867)">
       <path
          d="m 1.4875921,213.52071 q 0,0.0675 -0.044097,0.11025 -0.044097,0.0427 -0.1116211,0.0427 H 0.7765244 q -0.0675239,0 -0.11024305,-0.0427 -0.0427192,-0.0427 -0.0427192,-0.11025 v -1.8507 q 0,-0.0675 0.0427192,-0.11025 0.0427192,-0.0427 0.11024305,-0.0427 h 0.5553494 q 0.067524,0 0.1116211,0.0427 0.044097,0.0427 0.044097,0.11025 v 0.5016 H 1.2946668 v -0.48507 H 0.81510947 v 1.81764 H 1.2946668 v -0.53055 h 0.1929253 z"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:2.82222223px;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332"
@@ -358,7 +358,7 @@
        aria-label="Range"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:2.82222223px;line-height:1.25;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
        id="text934"
-       transform="translate(0,5.06667)">
+       transform="translate(0,4.8020867)">
       <path
          d="M 2.3233724,216.62265 H 2.1221788 l -0.4010091,-1.1548 0.026183,-0.0386 H 2.0891062 V 214.6355 H 1.5971463 v 1.98713 H 1.405599 V 214.466 h 0.722092 q 0.067524,0 0.110243,0.0427 0.042719,0.0427 0.042719,0.11024 v 0.81856 q 0,0.15572 -0.2094618,0.15572 -0.020671,0 -0.060634,-0.001 -0.039963,-0.003 -0.057878,-0.003 0.1860352,0.51539 0.3706923,1.03353 z"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:2.82222223px;font-family:'Agency FB';-inkscape-font-specification:'Agency FB, Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332"

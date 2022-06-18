@@ -35,9 +35,11 @@ MIDIPolyExpressionWidget::MIDIPolyExpressionWidget(MIDIPolyExpression* module) {
 	setWidthInHP(2);
 	setScrews(SCREW_TOP_LEFT, NO_SCREW_TOP_RIGHT, NO_SCREW_BOTTOM_LEFT, SCREW_BOTTOM_RIGHT);
 
-	addParam(createParamCentered<KnobTinySnap>(Vec(15, 110), module, MIDIPolyExpression::MIDI_CHANNEL_FIRST_PARAM));
-	addParam(createParamCentered<KnobTinySnap>(Vec(15, 135), module, MIDIPolyExpression::MIDI_CHANNEL_COUNT_PARAM));
+	addParam(createParamCentered<KnobTinySnap>(Vec(15, 108), module, MIDIPolyExpression::MIDI_CHANNEL_FIRST_PARAM));
+	addParam(createParamCentered<KnobTinySnap>(Vec(15, 132), module, MIDIPolyExpression::MIDI_CHANNEL_COUNT_PARAM));
 		
+	addParam(createParamCentered<KnobScrew>(Vec(8.3f, 215.25f), module, MIDIPolyExpression::VOLUME_SHAPE_PARAM));
+	
 	addOutput(createOutputCentered<OutPort>(Vec(15, 234), module, MIDIPolyExpression::GATE_OUTPUT));
 
 	addParam(createParamCentered<KnobScrew>(Vec(8.3f, 252.75f), module, MIDIPolyExpression::PITCH_SHAPE_PARAM));

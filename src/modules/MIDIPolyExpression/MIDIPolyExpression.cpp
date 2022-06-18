@@ -10,6 +10,7 @@ MIDIPolyExpression::MIDIPolyExpression() {
 	configParam(DECAY_PARAM,  0, 40, 8, "Decay");
 	configParam(RELEASE_PARAM,  0, 4, 0, "Release");
 	configParam(PITCH_SHAPE_PARAM,  0, 1, 0, "Pitch Shape");
+	configParam(VOLUME_SHAPE_PARAM,  0, 1, 0.2f, "Volume Shape");
 	configOutput(GATE_OUTPUT, "Gate");
 	configOutput(VOLUME_OUTPUT, "Volume");
 	configOutput(PITCH_OUTPUT, "Pitch (1V/Octave)");
@@ -84,7 +85,10 @@ void MIDIPolyExpression::processMidiMessage(const midi::Message& msg) {
 	int channel = msg.getChannel();
 	if (msg.getStatus() == 0x9 && msg.getValue() > 0) {
 		// note on
-		envelopes[channel].noteVolume = msg.getValue() / 12.7f;
+		float noteVolumeLinear = msg.getValue() / 127.f;
+		float noteVolumeSharp = sin(pow(noteVolumeLinear, 0.6f) * M_PI) / 2.f + noteVolumeLinear;
+		float noteVolumeFlat = noteVolumeLinear - sin(noteVolumeLinear * M_PI) / 3.3f;
+		envelopes[channel].noteVolume = crossfade(noteVolumeSharp, noteVolumeFlat, params[VOLUME_SHAPE_PARAM].getValue()) * 10.f;
 		envelopes[channel].notePitch = (msg.getNote() - 60) / 12.f;
 		envelopes[channel].gate = 1;
 		envelopes[channel].oldGate = 0;
