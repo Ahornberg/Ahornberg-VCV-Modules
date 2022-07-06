@@ -3,7 +3,6 @@
 #include <osdialog.h>
 #include <regex>
 #include "rack.hpp"
-#include <settings.hpp>
 
 using namespace rack;
 using simd::float_4;
@@ -21,6 +20,7 @@ extern Model* modelFunWithFrames;
 extern Model* modelMetronome;
 extern Model* modelHarmonizer;
 extern Model* modelMIDIOverAudio;
+extern Model* modelCopyPastePreset;
 // extern Model* modelManual;
 
 #include "util/Manuals.hpp"

@@ -17,5 +17,6 @@ void init(Plugin* plugin) {
 	pluginInstance->addModel(modelMetronome);
 	pluginInstance->addModel(modelHarmonizer);
 	pluginInstance->addModel(modelMIDIOverAudio);
+	pluginInstance->addModel(modelCopyPastePreset);
 	// pluginInstance->addModel(modelManual);
 }
