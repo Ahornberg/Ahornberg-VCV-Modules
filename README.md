@@ -11,7 +11,9 @@ The latest stable release can be downloaded at https://library.vcvrack.com/?bran
 [![Fun With Frames](manuals/FunWithFrames.png)](manuals/README.md#fun-with-frames)
 [![Metronome](manuals/Metronome.png)](manuals/README.md#metronome)
 [![Harmonizer](manuals/Harmonizer.png)](manuals/README.md#harmonizer)
+[![MIDI Poly Expression](manuals/MIDIPolyExpression.png)](manuals/README.md#midi-poly-expression)
 [![MIDI Over Audio](manuals/MIDIOverAudio.png)](manuals/README.md#midi-over-audio)
+[![Copy Paste Preset](manuals/CopyPastePreset.png)](manuals/README.md#copy-paste-preset)
 
 # Ahornberg Music Tools
 ## Why

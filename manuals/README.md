@@ -139,6 +139,12 @@ How to use it:
 
 [![Harmonizer Manual](https://img.youtube.com/vi/6k2-fbuGoeU/0.jpg)](https://www.youtube.com/watch?v=6k2-fbuGoeU)
 
+## MIDI Poly Expression
+
+MIDI MPE to CV.
+
+![MIDI Poly Expression](MIDIPolyExpression.png)
+
 ## MIDI Over Audio
 
 A way to send out MIDI data from the VCV Host module.
@@ -161,5 +167,13 @@ How to use it with a DAW:
 
 [![MIDI Over Audio Manual](https://img.youtube.com/vi/WBo8ULCoSwc/0.jpg)](https://www.youtube.com/watch?v=WBo8ULCoSwc)
 
+## Copy Paste Preset
 
+Copy-paste a preset from the module on the left side to the modules on the right side.
+
+![Copy Paste Preset](CopyPastePreset.png)
+
+How to use it:
+
+[![Copy Paste Preset Manual](https://img.youtube.com/vi/JhS7cuWsmcw/0.jpg)](https://www.youtube.com/watch?v=JhS7cuWsmcw)
 
