@@ -30,6 +30,25 @@ void BaseModule::configScrewParams() {
 	}
 }
 
+struct ModuleWidget::Internal {
+	/** The module position clicked on to start dragging in the rack.
+	*/
+	math::Vec dragOffset;
+
+	/** Global rack position the user clicked on.
+	*/
+	math::Vec dragRackPos;
+	bool dragEnabled = true;
+
+	/** The position in the RackWidget when dragging began.
+	Used for history::ModuleMove.
+	Set by RackWidget::updateModuleOldPositions() when *any* module begins dragging, since force-dragging can move other modules around.
+	*/
+	math::Vec oldPos;
+
+	widget::Widget* panel = NULL;
+};
+
 ModuleWidgetWithScrews::ModuleWidgetWithScrews() {
 	hasScrews = false;
 }
@@ -39,17 +58,17 @@ void ModuleWidgetWithScrews::setPanel(const std::string& filename) {
 }
 
 void ModuleWidgetWithScrews::setScrews(ScrewTopLeft topLeft, ScrewTopRight topRight, ScrewBottomLeft bottomLeft, ScrewBottomRight bottomRight) {
-	if (topLeft) {
+	if (topLeft && DISPLAY_SCREWS) {
 		addScrew(Vec(0, 0), BaseModule::SCREW_PARAM);
 	} else if (module) {
 		module->params[BaseModule::SCREW_PARAM].setValue(0);
 	}
-	if (topRight) {
+	if (topRight && DISPLAY_SCREWS) {
 		addScrew(Vec(box.size.x - RACK_GRID_WIDTH, 0), BaseModule::SCREW_PARAM + 1);
 	} else if (module) {
 		module->params[BaseModule::SCREW_PARAM + 1].setValue(0);
 	}
-	if (bottomLeft) {
+	if (bottomLeft && DISPLAY_SCREWS) {
 		if (bottomLeft == SCREW_BOTTOM_LEFT_INDENTED) {
 			addScrew(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH), BaseModule::SCREW_PARAM + 2);
 		} else {
@@ -58,7 +77,7 @@ void ModuleWidgetWithScrews::setScrews(ScrewTopLeft topLeft, ScrewTopRight topRi
 	} else if (module) {
 		module->params[BaseModule::SCREW_PARAM + 2].setValue(0);
 	}
-	if (bottomRight) {
+	if (bottomRight && DISPLAY_SCREWS) {
 		addScrew(Vec(box.size.x - RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH), BaseModule::SCREW_PARAM + 3);
 	} else if (module) {
 		module->params[BaseModule::SCREW_PARAM + 3].setValue(0);
@@ -98,6 +117,49 @@ bool ModuleWidgetWithScrews::isBypassed() {
 	}
 	return false;
 }
+
+// Create ModulePresetPathItems for each patch in a directory.
+static void appendPresetItems(ui::Menu* menu, WeakPtr<ModuleWidget> moduleWidget, std::string presetDir) {
+	bool hasPresets = false;
+	// Note: This is not cached, so opening this menu each time might have a bit of latency.
+	if (system::isDirectory(presetDir)) {
+		std::vector<std::string> entries = system::getEntries(presetDir);
+		std::sort(entries.begin(), entries.end());
+		for (std::string path : entries) {
+			std::string name = system::getStem(path);
+			// Remove "1_", "42_", "001_", etc at the beginning of preset filenames
+			std::regex r("^\\d+_");
+			name = std::regex_replace(name, r, "");
+
+			if (system::isDirectory(path)) {
+				hasPresets = true;
+
+				menu->addChild(createSubmenuItem(name, "", [=](ui::Menu* menu) {
+					if (!moduleWidget)
+						return;
+					appendPresetItems(menu, moduleWidget, path);
+				}));
+			}
+			else if (system::getExtension(path) == ".vcvm") {
+				hasPresets = true;
+
+				menu->addChild(createMenuItem(name, "", [=]() {
+					if (!moduleWidget)
+						return;
+					try {
+						moduleWidget->loadAction(path);
+					}
+					catch (Exception& e) {
+						osdialog_message(OSDIALOG_WARNING, OSDIALOG_OK, e.what());
+					}
+				}));
+			}
+		}
+	}
+	if (!hasPresets) {
+		menu->addChild(createMenuLabel("(None)"));
+	}
+};
 
 static void appendSelectionItems(ui::Menu* menu, WeakPtr<ModuleWidget> moduleWidget, std::string presetDir) {
 	bool hasPresets = false;
@@ -210,6 +272,117 @@ static void appendSelectionItems(ui::Menu* menu, WeakPtr<ModuleWidget> moduleWid
 
 void ModuleWidgetWithScrews::appendContextMenu(Menu* menu) {
 	menu->addChild(new MenuSeparator);
+	// menu->addChild(createSubmenuItem("Import selection", "", [=](Menu* menu) {
+		// WeakPtr<ModuleWidget> weakThis = this;
+		// menu->addChild(createMenuLabel("User selections"));
+		// appendSelectionItems(menu, weakThis, asset::user("selections"));
+		// menu->addChild(new ui::MenuSeparator);
+		// menu->addChild(createMenuLabel("Factory selections"));
+		// appendSelectionItems(menu, weakThis, asset::plugin(pluginInstance, system::join("selections", model->slug)));
+	// }));
+	contextMenu(menu);
+}
+
+void ModuleWidgetWithScrews::contextMenu(Menu* menu) {}
+
+void ModuleWidgetWithScrews::onButton(const ButtonEvent& e) {
+	bool selected = APP->scene->rack->isSelected(this);
+
+	if (selected) {
+		if (e.action == GLFW_PRESS && e.button == GLFW_MOUSE_BUTTON_RIGHT) {
+			ui::Menu* menu = createMenu();
+			APP->scene->rack->appendSelectionContextMenu(menu);
+		}
+
+		e.consume(this);
+	}
+
+	OpaqueWidget::onButton(e);
+
+	if (e.getTarget() == this) {
+		// Set starting drag position
+		if (e.action == GLFW_PRESS && e.button == GLFW_MOUSE_BUTTON_LEFT) {
+			internal->dragOffset = e.pos;
+		}
+		// Toggle selection on Shift-click
+		if (e.action == GLFW_PRESS && e.button == GLFW_MOUSE_BUTTON_LEFT && (e.mods & RACK_MOD_MASK) == GLFW_MOD_SHIFT) {
+			APP->scene->rack->select(this, !selected);
+		}
+	}
+
+	if (!e.isConsumed() && !selected) {
+		// Open context menu on right-click
+		if (e.action == GLFW_PRESS && e.button == GLFW_MOUSE_BUTTON_RIGHT) {
+			createCustomContextMenu();
+			e.consume(this);
+		}
+	}
+}
+
+void ModuleWidgetWithScrews::createCustomContextMenu() {
+	ui::Menu* menu = createMenu();
+	assert(model);
+
+	WeakPtr<ModuleWidget> weakThis = this;
+
+	// Brand and module name
+	menu->addChild(createMenuLabel(model->name));
+	menu->addChild(createMenuLabel(model->plugin->brand));
+
+	// Info
+	menu->addChild(createSubmenuItem("Info", "", [=](ui::Menu* menu) {
+		model->appendContextMenu(menu);
+	}));
+
+	// Preset
+	menu->addChild(createSubmenuItem("Preset", "", [=](ui::Menu* menu) {
+		menu->addChild(createMenuItem("Copy", RACK_MOD_CTRL_NAME "+C", [=]() {
+			if (!weakThis)
+				return;
+			weakThis->copyClipboard();
+		}));
+
+		menu->addChild(createMenuItem("Paste", RACK_MOD_CTRL_NAME "+V", [=]() {
+			if (!weakThis)
+				return;
+			weakThis->pasteClipboardAction();
+		}));
+
+		menu->addChild(createMenuItem("Open", "", [=]() {
+			if (!weakThis)
+				return;
+			weakThis->loadDialog();
+		}));
+
+		menu->addChild(createMenuItem("Save as", "", [=]() {
+			if (!weakThis)
+				return;
+			weakThis->saveDialog();
+		}));
+
+		menu->addChild(createMenuItem("Save template", "", [=]() {
+			if (!weakThis)
+				return;
+			weakThis->saveTemplateDialog();
+		}));
+
+		menu->addChild(createMenuItem("Clear template", "", [=]() {
+			if (!weakThis)
+				return;
+			weakThis->clearTemplateDialog();
+		}, !weakThis->hasTemplate()));
+
+		// Scan `<user dir>/presets/<plugin slug>/<module slug>` for presets.
+		menu->addChild(new ui::MenuSeparator);
+		menu->addChild(createMenuLabel("User presets"));
+		appendPresetItems(menu, weakThis, weakThis->model->getUserPresetDirectory());
+
+		// Scan `<plugin dir>/presets/<module slug>` for presets.
+		menu->addChild(new ui::MenuSeparator);
+		menu->addChild(createMenuLabel("Factory presets"));
+		appendPresetItems(menu, weakThis, weakThis->model->getFactoryPresetDirectory());
+	}));
+
 	menu->addChild(createSubmenuItem("Import selection", "", [=](Menu* menu) {
 		WeakPtr<ModuleWidget> weakThis = this;
 		menu->addChild(createMenuLabel("User selections"));
@@ -218,7 +391,60 @@ void ModuleWidgetWithScrews::appendContextMenu(Menu* menu) {
 		menu->addChild(createMenuLabel("Factory selections"));
 		appendSelectionItems(menu, weakThis, asset::plugin(pluginInstance, system::join("selections", model->slug)));
 	}));
-	contextMenu(menu);
+
+	// Initialize
+	menu->addChild(createMenuItem("Initialize", RACK_MOD_CTRL_NAME "+I", [=]() {
+		if (!weakThis)
+			return;
+		weakThis->resetAction();
+	}));
+
+	// Randomize
+	menu->addChild(createMenuItem("Randomize", RACK_MOD_CTRL_NAME "+R", [=]() {
+		if (!weakThis)
+			return;
+		weakThis->randomizeAction();
+	}));
+
+	// Disconnect cables
+	menu->addChild(createMenuItem("Disconnect cables", RACK_MOD_CTRL_NAME "+U", [=]() {
+		if (!weakThis)
+			return;
+		weakThis->disconnectAction();
+	}));
+
+	// Bypass
+	std::string bypassText = RACK_MOD_CTRL_NAME "+E";
+	bool bypassed = module && module->isBypassed();
+	if (bypassed)
+		bypassText += " " CHECKMARK_STRING;
+	menu->addChild(createMenuItem("Bypass", bypassText, [=]() {
+		if (!weakThis)
+			return;
+		weakThis->bypassAction(!bypassed);
+	}));
+
+	// Duplicate
+	menu->addChild(createMenuItem("Duplicate", RACK_MOD_CTRL_NAME "+D", [=]() {
+		if (!weakThis)
+			return;
+		weakThis->cloneAction(false);
+	}));
+
+	// Duplicate with cables
+	menu->addChild(createMenuItem("└ with cables", RACK_MOD_SHIFT_NAME "+" RACK_MOD_CTRL_NAME "+D", [=]() {
+		if (!weakThis)
+			return;
+		weakThis->cloneAction(true);
+	}));
+
+	// Delete
+	menu->addChild(createMenuItem("Delete", "Backspace/Delete", [=]() {
+		if (!weakThis)
+			return;
+		weakThis->removeAction();
+	}, false, true));
+
+	appendContextMenu(menu);
 }
 
-void ModuleWidgetWithScrews::contextMenu(Menu* menu) {}

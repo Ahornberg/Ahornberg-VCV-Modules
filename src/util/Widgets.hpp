@@ -15,6 +15,7 @@ struct TextFieldMenuItem : TextField {
 
 constexpr int NUM_MAX_SCREWS = 4;
 //constexpr int NUM_MAX_INTERN_PARAM_TYPES = 2;
+constexpr bool DISPLAY_SCREWS = false;
 
 struct BaseModule : Module {
 	enum Screws {
@@ -56,4 +57,6 @@ struct ModuleWidgetWithScrews : ModuleWidget {
 	virtual void contextMenu(Menu* menu);
 	void loadSelectionDialog();
 	void loadSelection(std::string path);
+	void onButton(const ButtonEvent& e) override;
+	virtual void createCustomContextMenu();
 };
