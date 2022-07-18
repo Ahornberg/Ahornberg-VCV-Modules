@@ -3,7 +3,7 @@
 
 bool assertEquals(int value1, int value2, const char* message) {
 	if (value1 != value2) {
-		DEBUG(message);
+		DEBUG("%s", message);
 		DEBUG("value1: %d", value1);
 		DEBUG("value2: %d", value2);
 		return false;
