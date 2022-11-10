@@ -7,7 +7,6 @@ void init(Plugin* plugin) {
 	pluginInstance = plugin;
 
 	pluginInstance->addModel(modelTracker);
-	pluginInstance->addModel(modelMIDIPolyExpression);
 	pluginInstance->addModel(modelTapeRecorder);
 	pluginInstance->addModel(modelTapeRecorderMixer);
 	pluginInstance->addModel(modelFlyingFader);
@@ -16,6 +15,8 @@ void init(Plugin* plugin) {
 	pluginInstance->addModel(modelFunWithFrames);
 	pluginInstance->addModel(modelMetronome);
 	pluginInstance->addModel(modelHarmonizer);
+	pluginInstance->addModel(modelMIDIController);
+	pluginInstance->addModel(modelMIDIPolyExpression);
 	pluginInstance->addModel(modelMIDIOverAudio);
 	pluginInstance->addModel(modelCopyPastePreset);
 	// pluginInstance->addModel(modelManual);

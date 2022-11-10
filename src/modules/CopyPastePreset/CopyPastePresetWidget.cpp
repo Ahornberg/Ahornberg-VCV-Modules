@@ -5,7 +5,6 @@ CopyPastePresetWidget::CopyPastePresetWidget(CopyPastePreset* module) {
 	setPanel("res/CopyPastePreset.svg");
 	setWidthInHP(2);
 	waitCounter = WAIT_COUNTER;
-	setScrews(SCREW_TOP_LEFT, NO_SCREW_TOP_RIGHT, NO_SCREW_BOTTOM_LEFT, SCREW_BOTTOM_RIGHT);
 	
 	addParam(createParamCentered<RoundSwitchMedium>(Vec(15, 130), module, CopyPastePreset::DO_COPY_PASTE_PARAM));
 	addInput(createInputCentered<InPort>(Vec(15, 275), module, CopyPastePreset::LINK_CV_INPUT));
@@ -47,7 +46,7 @@ void CopyPastePresetWidget::step() {
 			waitCounter = WAIT_COUNTER;
 		}
 	}
-	ModuleWidgetWithScrews::step();
+	BaseModuleWidget::step();
 }
 
 Model* modelCopyPastePreset = createModel<CopyPastePreset, CopyPastePresetWidget>("CopyPastePreset");

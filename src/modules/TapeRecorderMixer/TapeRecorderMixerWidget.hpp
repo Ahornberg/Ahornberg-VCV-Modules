@@ -32,7 +32,7 @@ struct RoundSwitchMediumLink : BasicRoundSwitch {
 	void onChange(const event::Change& e) override;
 };
 
-struct TapeRecorderMixerWidget : ModuleWidgetWithScrews {
+struct TapeRecorderMixerWidget : BaseModuleWidget {
 	VolumeDisplay* volumeDisplay;
 	
 	TapeRecorderMixerWidget(TapeRecorderMixer* module);

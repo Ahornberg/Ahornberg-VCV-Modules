@@ -9,7 +9,6 @@ std::vector<std::string> Metronome::BPM_LABELS;
 
 Metronome::Metronome() { 
 	config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-	configScrewParams();
 	for (auto i = 0; i < NUM_BPM_VALUES; ++i) {
 		if ((int) BPM_LABELS.size() == i) {
 			BPM_LABELS.push_back(string::f("%d BPM", BPM_VALUES[i]));

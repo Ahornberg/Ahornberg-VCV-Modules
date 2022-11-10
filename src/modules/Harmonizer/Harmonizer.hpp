@@ -1,6 +1,6 @@
 #include "../../Ahornberg.hpp"
 
-struct Harmonizer : BaseModule {
+struct Harmonizer : Module {
 	constexpr static int NUM_CHANNELS = 16;
 	constexpr static int NUM_MIXTURES = 4;
 	constexpr static int NUM_HARMONICS = 96;
@@ -8,7 +8,7 @@ struct Harmonizer : BaseModule {
 	static bool FREQ_RATIOS_INITIALIZED;
 	
 	enum ParamIds {
-		VELOCITY_GLOBAL_MODULATION_PARAM = NUM_MAX_SCREWS,
+		VELOCITY_GLOBAL_MODULATION_PARAM,
 		ENUMS(VELOCITY_MODULATION_PARAM, NUM_CHANNELS),
 		ENUMS(VELOCITY_PARAM, NUM_CHANNELS),
 		PITCH_GLOBAL_MODULATION_PARAM,

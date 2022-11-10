@@ -1,8 +1,8 @@
 #include "../../Ahornberg.hpp"
 
-struct CopyPastePreset : BaseModule {
+struct CopyPastePreset : Module {
 	enum ParamIds {
-		DO_COPY_PASTE_PARAM = NUM_MAX_SCREWS,
+		DO_COPY_PASTE_PARAM,
 		NUM_PARAMS
 	};
 	enum InputIds {

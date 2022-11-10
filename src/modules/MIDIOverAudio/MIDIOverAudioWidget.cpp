@@ -55,7 +55,6 @@ MIDIOverAudioWidget::MIDIOverAudioWidget(MIDIOverAudio* module) {
 	// }
 	setPanel("res/MIDIOverAudio.svg");
 	setWidthInHP(2);
-	setScrews(SCREW_TOP_LEFT, NO_SCREW_TOP_RIGHT, NO_SCREW_BOTTOM_LEFT, SCREW_BOTTOM_RIGHT);
 
 	for (auto i = 0; i < MIDI_OVER_AUDIO_MAX_DEVICES; ++i) {
 		addInput(createInputCentered<InPort>(Vec(15, 95 - 9 + i * 37), module, MIDIOverAudio::MIDI_OVER_AUDIO_INPUT + i));

@@ -4,7 +4,6 @@ const std::string FlyingFader::INIT_FADER_NAME = "My Flying Fader";
 
 FlyingFader::FlyingFader() { 
 	config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-	configScrewParams();
 	configParam(FADER_PARAM, 0, PLUS_6_DB, 1, "Volume", " dB", -10, 40);
 	// configParam(FADER_PARAM, 0, PLUS_6_DB, 1, "Volume", " dB", -10.f, 60.f * PLUS_6_DB);
 	// configParam(FADER_PARAM, 0, PLUS_6_DB, 1, "Volume", " dB", -10.f, 60.f);

@@ -11,7 +11,6 @@ CVFreqShiftWidget::CVFreqShiftWidget(CVFreqShift* module) {
 	setModule(module);
 	setPanel("res/CVFreqShift.svg");
 	setWidthInHP(6);
-	setScrews(SCREW_TOP_LEFT, NO_SCREW_TOP_RIGHT, NO_SCREW_BOTTOM_LEFT, SCREW_BOTTOM_RIGHT);
 
 	MultiplierKnob* multiplierKnob = dynamic_cast<MultiplierKnob*>(createParam<MultiplierKnob>(Vec(10, 50), module, CVFreqShift::FREQUENCY_RANGE_PARAM));
 	multiplierKnob->module = module;

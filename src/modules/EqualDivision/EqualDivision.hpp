@@ -6,14 +6,14 @@ struct Interval {
 	std::string longName;
 };
 
-struct EqualDivision : BaseModule {
+struct EqualDivision : Module {
 	const static Interval INTERVALS[];
 	const static std::vector<std::string> INTERVAL_LABELS;
 	constexpr static int INIT_STEP = 33;
 	constexpr static int INIT_INTERVAL = 9;
 
 	enum ParamIds {
-		FINE_PARAM = NUM_MAX_SCREWS,
+		FINE_PARAM,
 		STEPS_PARAM,
 		INTERVAL_PARAM,
 		NUM_PARAMS

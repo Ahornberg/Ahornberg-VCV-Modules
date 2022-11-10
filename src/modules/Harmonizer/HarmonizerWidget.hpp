@@ -17,6 +17,6 @@ struct MixtureSwitch : RoundSwitch {
 	void onChange(const event::Change& e) override;
 };
 
-struct HarmonizerWidget : ModuleWidgetWithScrews {
+struct HarmonizerWidget : BaseModuleWidget {
 	HarmonizerWidget(Harmonizer* module);
 };

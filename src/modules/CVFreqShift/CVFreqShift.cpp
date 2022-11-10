@@ -26,7 +26,6 @@ const std::vector<std::string> CVFreqShift::FREQUENCY_RANGE_LABELS = {
 
 CVFreqShift::CVFreqShift() { 
 	config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-	configScrewParams();
 	configParam(FREQUENCY_PARAM, MIN_FREQUENCY_RANGE * -1, MIN_FREQUENCY_RANGE, 0, "Frequency", " Hz");
 	configParam(FREQUENCY_MODULATION_AMOUNT_PARAM, 0, 1, 0, "Frequency Modulation", "%", 0, 100);
 	configSwitch(FREQUENCY_RANGE_PARAM, 0, 8, 4, "Frequency Range", FREQUENCY_RANGE_LABELS);

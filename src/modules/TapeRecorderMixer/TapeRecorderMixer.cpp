@@ -4,7 +4,6 @@ const std::string TapeRecorderMixer::INIT_TRACK_NAME = "Track";
 
 TapeRecorderMixer::TapeRecorderMixer() { 
 	config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-	configScrewParams();
 	configSwitch(RECORD_PARAM, 0, 1, 0, "Record", BasicSwitch::ON_OFF_NAMES);
 	configSwitch(BYPASS_INSERT_PARAM, 0, 1, 0, "Bypass Insert", BasicSwitch::ON_OFF_NAMES);
 	configParam(TAPE_DUCKING_PARAM, 0, PLUS_6_DB, 1, "Tape Ducking", " dB", -10, 40);

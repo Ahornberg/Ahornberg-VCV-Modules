@@ -1,6 +1,6 @@
 #include "MIDIPolyExpression.hpp"
 
-struct MIDIPolyExpressionWidget : ModuleWidgetWithScrews {
+struct MIDIPolyExpressionWidget : BaseModuleWidget {
 	MIDIPolyExpressionWidget(MIDIPolyExpression* module);
 	void contextMenu(Menu* menu) override;
 };

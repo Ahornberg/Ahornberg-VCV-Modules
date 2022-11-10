@@ -1,5 +1,5 @@
 #include "FunWithFrames.hpp"
 
-struct FunWithFramesWidget : ModuleWidgetWithScrews {
+struct FunWithFramesWidget : BaseModuleWidget {
 	FunWithFramesWidget(FunWithFrames* module);
 };

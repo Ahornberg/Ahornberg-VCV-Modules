@@ -30,7 +30,6 @@ EqualDivisionWidget::EqualDivisionWidget(EqualDivision* module) {
 	setModule(module);
 	setPanel("res/EqualDivision.svg");
 	setWidthInHP(6);
-	setScrews(SCREW_TOP_LEFT, NO_SCREW_TOP_RIGHT, NO_SCREW_BOTTOM_LEFT, SCREW_BOTTOM_RIGHT);
 
 	addParam(createParam<KnobBig>(      Vec(             46.5,  47), module, EqualDivision::FINE_PARAM));
 	addParam(createParam<KnobSmallSnap>(Vec(             10,   124), module, EqualDivision::STEPS_PARAM));

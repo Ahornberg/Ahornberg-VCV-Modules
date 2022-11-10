@@ -28,23 +28,23 @@ struct TransportCueSwitch : TransportSwitch {
 
 struct CueBackwardsSwitch : TransportCueSwitch {
 	CueBackwardsSwitch();
-	void onChange(const event::Change& e) override;
+	void onButton(const event::Button& e) override;
 };
 
 
 struct CueForwardsSwitch : TransportCueSwitch {
 	CueForwardsSwitch();
-	void onChange(const event::Change& e) override;
+	void onButton(const event::Button& e) override;
 };
 
 struct PlayBackwardsSwitch : TransportSwitch {
 	PlayBackwardsSwitch();
-	void onChange(const event::Change& e) override;
+	void onButton(const event::Button& e) override;
 };
 
 struct PlayForwardsSwitch : TransportSwitch {
 	PlayForwardsSwitch();
-	void onChange(const event::Change& e) override;
+	void onButton(const event::Button& e) override;
 };
 
 struct KnobWheel : SvgKnob {
@@ -91,6 +91,8 @@ struct TapePositionDisplay : Display {
 	bool cueStatus;
 	bool playForwardStatus;
 	bool cueForwardStatus;
+	bool changeTapeInterrupt;
+	int loadProgress;
 
 	TapePositionDisplay(Rect box, TapeRecorder* tapeRecorder);
 	void drawText(const DrawArgs& disp) override;
@@ -220,7 +222,7 @@ struct EraseTapeMenuItem : TapeRecorderMenuItem {
 	void onAction(const event::Action& e) override;
 };
 
-struct TapeRecorderWidget : ModuleWidgetWithScrews {
+struct TapeRecorderWidget : BaseModuleWidget {
 	// TapeNameDisplay* tapeNameDisplay;
 	StripeWidget* stripeWidget;
 	// TextField* tapeName;

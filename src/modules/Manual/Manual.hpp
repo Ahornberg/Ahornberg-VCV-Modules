@@ -1,8 +1,8 @@
 #include "../../Ahornberg.hpp"
 
-struct Manual : BaseModule {
+struct Manual : Module {
 	enum ParamIds {
-		NUM_PARAMS = NUM_MAX_SCREWS
+		NUM_PARAMS
 	};
 	enum InputIds {
 		NUM_INPUTS

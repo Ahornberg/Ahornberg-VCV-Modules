@@ -6,6 +6,6 @@ struct MultiplierKnob : KnobSmallSnap {
 	void onChange(const event::Change& e) override;
 };
 
-struct CVFreqShiftWidget : ModuleWidgetWithScrews {
+struct CVFreqShiftWidget : BaseModuleWidget {
 	CVFreqShiftWidget(CVFreqShift* module);
 };

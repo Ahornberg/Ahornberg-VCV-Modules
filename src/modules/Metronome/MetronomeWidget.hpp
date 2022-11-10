@@ -31,7 +31,7 @@ struct KnobRadioSwitch : KnobLarge {
 	void onChange(const event::Change& e) override;
 };
 
-struct MetronomeWidget : ModuleWidgetWithScrews {
+struct MetronomeWidget : BaseModuleWidget {
 	MetronomeWidget(Metronome* module);
 	Vec positionOnCircle(int positionInList, Vec center, int radius);
 };

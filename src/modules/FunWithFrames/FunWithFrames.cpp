@@ -9,7 +9,6 @@ const std::string FunWithFrames::TIME_TABLE_NAMES[] = {
 
 FunWithFrames::FunWithFrames() { 
 	config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-	configScrewParams();
 	configParam(MAX_CHORD_SIZE_PARAM, 2, NUM_VALUE_IO + 1, 3, "Maximum Chord-Size");
 	for (auto i = 0; i < NUM_VALUE_IO; ++i) {
 		configSwitch(VALUE_CONVERT_MODE + i, 0, 1, 0, "Convert-Mode", {

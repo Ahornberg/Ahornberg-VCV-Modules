@@ -9,6 +9,6 @@ struct IntervalDisplay : Display {
 	void drawText(const DrawArgs& disp) override;
 };
 
-struct EqualDivisionWidget : ModuleWidgetWithScrews {
+struct EqualDivisionWidget : BaseModuleWidget {
 	EqualDivisionWidget(EqualDivision* module);
 };

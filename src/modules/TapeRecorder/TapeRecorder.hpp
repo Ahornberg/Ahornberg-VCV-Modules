@@ -1,18 +1,23 @@
+// #include <atomic>
+// #include <thread>
+#include <future>
 #include "../../Ahornberg.hpp"
+#include "../../include/AudioFile.h"
 
 struct TapeLength {
 	float value;
 	std::string name;
 };
 
-struct TapeRecorder : BaseModule {
-	const static std::string INIT_TAPE_NAME;
+struct TapeRecorder : Module {
+	const static std::string INITIAL_TAPE_NAME;
 	const static TapeLength TAPE_LENGTHS[];
 	constexpr static int NUM_TAPE_LENGTHS = 11;
 	constexpr static int NUM_MAX_TRACKS = 4;
+	const static std::string AUDIO_FILE_DIR;
 
 	enum ParamIds {
-		PAUSE_PARAM = NUM_MAX_SCREWS,
+		PAUSE_PARAM,
 		PLAY_FORWARDS_PARAM,
 		PLAY_BACKWARDS_PARAM,
 		CUE_FORWARDS_PARAM,
@@ -28,8 +33,8 @@ struct TapeRecorder : BaseModule {
 		LOOP_MODE_PARAM,
 		WHEEL_LEFT_PARAM,
 		WHEEL_RIGHT_PARAM,
-		TAPE_LENGTH_PARAM,
-		TRACK_COUNT_PARAM,
+		// TAPE_LENGTH_PARAM,
+		// TRACK_COUNT_PARAM,
 		NUM_PARAMS
 	};
 	enum InputIds {
@@ -64,13 +69,37 @@ struct TapeRecorder : BaseModule {
 		JUMP_FORWARDS,
 		JUMP_BACKWARDS
 	};
+	
+	enum InitTape {
+		INIT_TAPE_NOOP,
+		INIT_TAPE_COMPLETE,
+		INIT_TAPE_TRACK_COUNT,
+		INIT_TAPE_LENGTH,
+		INIT_TAPE_ERASE
+	};
 
 	std::string tapeName;
+	std::string oldTapeName;
 	int stripeIndex;
+	int oldStripeIndex;
+	// std::atomic<bool> changeTapeInterrupt;
+	// std::atomic<bool> initThreadEnded;
 	bool changeTapeInterrupt;
+	bool initThreadEnded;
+	// std::thread initThread;
+	std::future<void> initThreadFuture;
 	bool tapeStoppedAndResetted;
+	AudioFile<float> audioFile;
+	// std::mutex mylock;
+	std::string audioFilePath;
+	std::string oldAudioFilePath;
+	std::string warningString;
 	int sizeAudioBuffer;
-	float* audioBuffer;
+	int trackCountParam;
+	int oldTrackCountParam;
+	int tapeLengthParam;
+	int oldTapeLengthParam;
+	// float* audioBuffer;
 	double audioBufferPosition;
 	double loopStartPosition;
 	double loopEndPosition;
@@ -83,6 +112,7 @@ struct TapeRecorder : BaseModule {
 	TapeStatus tapeStatus;
 	float lastDistortionLevelInput[NUM_MAX_TRACKS];
 	float lastDistortionLevelValue[NUM_MAX_TRACKS];
+	float prevInputSample[NUM_MAX_TRACKS];
 
 	dsp::BooleanTrigger playForwardsTrigger;
 	dsp::BooleanTrigger playBackwardsTrigger;
@@ -118,12 +148,12 @@ struct TapeRecorder : BaseModule {
 	float wheelMovement;
 	float tapeLengthInMinutes;
 	
-	bool dataFromJsonCalled;
+	InitTape callInitTape;
 	
 	TapeRecorder();
 	~TapeRecorder();
-	void initTape();
-	void eraseTape();
+	void initTape(InitTape what);
+	void initTapeThread(InitTape what);
 	void calcTapeAndPositionsOnWheels(bool always);
 	// float centerWheel(float positionOnWheel);
 	void processTempoOutput(const ProcessArgs& args);
@@ -140,7 +170,7 @@ struct TapeRecorder : BaseModule {
 	void processAudioInput(const ProcessArgs& args);
 	void processAudioOutput(const ProcessArgs& args);
 	void process(const ProcessArgs& args) override;
-	void calcAudio(int trackCount);
+	void calcAudio(int trackCount, float fractAudioBufferLocation);
 	// float valueAtOffset (const float* const inputs, const float offset) noexcept;
 	void setTrackCount(int trackCount);
 	void setTapeLength(int tapeLength);
@@ -150,4 +180,6 @@ struct TapeRecorder : BaseModule {
 	void dataFromJson(json_t* rootJ) override;
 	void onAdd(const AddEvent& e) override;
 	void onSave(const SaveEvent& e) override;
+	void onRemove(const RemoveEvent& e) override;
+	std::string getAudioFileDir();
 };

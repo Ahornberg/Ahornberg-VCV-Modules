@@ -1,6 +1,6 @@
 #include "CopyPastePreset.hpp"
 
-struct CopyPastePresetWidget : ModuleWidgetWithScrews {
+struct CopyPastePresetWidget : BaseModuleWidget {
 	constexpr static int WAIT_COUNTER = 1;
 	
 	int waitCounter;

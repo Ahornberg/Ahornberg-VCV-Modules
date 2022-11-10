@@ -4,9 +4,6 @@ ManualWidget::ManualWidget(Manual* module) {
 	setModule(module);
 	setPanel("res/Manual.svg");
 	setWidthInHP(6);
-	setScrews(SCREW_TOP_LEFT, NO_SCREW_TOP_RIGHT, NO_SCREW_BOTTOM_LEFT, SCREW_BOTTOM_RIGHT);
-
-
 
 	// addChild(new IntervalDisplay(Rect(8.5, 98, 74, 18), module));
 }
@@ -24,7 +21,7 @@ void ManualWidget::step() {
 			DEBUG("%s", manualText->manualContent.c_str());
 		}
 	}
-	ModuleWidgetWithScrews::step();
+	BaseModuleWidget::step();
 }
 
 Model* modelManual = createModel<Manual, ManualWidget>("Manual");

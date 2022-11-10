@@ -24,7 +24,7 @@ void Display::draw(const DrawArgs& disp) {
 
 void Display::drawLayer(const DrawArgs& disp, int layer) {
 	if (layer == 1) {
-		ModuleWidgetWithScrews* parentWidget = dynamic_cast<ModuleWidgetWithScrews*>(getParent());
+		BaseModuleWidget* parentWidget = dynamic_cast<BaseModuleWidget*>(getParent());
 		if (parentWidget && !parentWidget->isBypassed()) {
 			std::shared_ptr<Font> font = APP->window->loadFont(fontPath);
 			if (font && font->handle >= 0) {

@@ -14,22 +14,6 @@ void TextFieldMenuItem::onAction(const event::Action& e) {
 	getAncestorOfType<MenuOverlay>()->requestDelete();
 }
 
-// Module with intern params and Widget with screws
-
-void BaseModule::configScrewParams() {
-	for (auto i = 0; i < NUM_MAX_SCREWS; ++i) {
-		configSwitch(SCREW_PARAM + i, 0, 5, 5, "Screw", {
-			"I warn you, UNDO won't help you here!",
-			"If you continue doing that, the module will fall out of the rack!",
-			"Stop doing that!",
-			"Don't pull it out!",
-			"loose",
-			"fixed"
-		});
-		getParamQuantity(SCREW_PARAM + i)->randomizeEnabled = false;
-	}
-}
-
 struct ModuleWidget::Internal {
 	/** The module position clicked on to start dragging in the rack.
 	*/
@@ -49,66 +33,15 @@ struct ModuleWidget::Internal {
 	widget::Widget* panel = NULL;
 };
 
-ModuleWidgetWithScrews::ModuleWidgetWithScrews() {
-	hasScrews = false;
-}
-
-void ModuleWidgetWithScrews::setPanel(const std::string& filename) {
+void BaseModuleWidget::setPanel(const std::string& filename) {
 	ModuleWidget::setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, filename)));
 }
 
-void ModuleWidgetWithScrews::setScrews(ScrewTopLeft topLeft, ScrewTopRight topRight, ScrewBottomLeft bottomLeft, ScrewBottomRight bottomRight) {
-	if (topLeft && DISPLAY_SCREWS) {
-		addScrew(Vec(0, 0), BaseModule::SCREW_PARAM);
-	} else if (module) {
-		module->params[BaseModule::SCREW_PARAM].setValue(0);
-	}
-	if (topRight && DISPLAY_SCREWS) {
-		addScrew(Vec(box.size.x - RACK_GRID_WIDTH, 0), BaseModule::SCREW_PARAM + 1);
-	} else if (module) {
-		module->params[BaseModule::SCREW_PARAM + 1].setValue(0);
-	}
-	if (bottomLeft && DISPLAY_SCREWS) {
-		if (bottomLeft == SCREW_BOTTOM_LEFT_INDENTED) {
-			addScrew(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH), BaseModule::SCREW_PARAM + 2);
-		} else {
-			addScrew(Vec(0, RACK_GRID_HEIGHT - RACK_GRID_WIDTH), BaseModule::SCREW_PARAM + 2);
-		}
-	} else if (module) {
-		module->params[BaseModule::SCREW_PARAM + 2].setValue(0);
-	}
-	if (bottomRight && DISPLAY_SCREWS) {
-		addScrew(Vec(box.size.x - RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH), BaseModule::SCREW_PARAM + 3);
-	} else if (module) {
-		module->params[BaseModule::SCREW_PARAM + 3].setValue(0);
-	}
-}
-
-void ModuleWidgetWithScrews::setWidthInHP(int hp) {
+void BaseModuleWidget::setWidthInHP(int hp) {
 	setSize(Vec(hp * 15, 380));
 }
 
-void ModuleWidgetWithScrews::addScrew(Vec pos, int screwParam) {
-	KnobScrewMountModule* screw = dynamic_cast<KnobScrewMountModule*>(createParam<KnobScrewMountModule>(pos, module, screwParam));
-	screw->module = module;
-	screw->param = screwParam;
-	addParam(screw);
-	hasScrews = true;
-}
-
-void ModuleWidgetWithScrews::step() {
-	ModuleWidget::step();
-	if (hasScrews && module) {
-		for (auto i = 0; i < NUM_MAX_SCREWS; ++i) {
-			if (module->params[BaseModule::SCREW_PARAM + i].getValue()) {
-				return;
-			}
-		}
-		removeAction();
-	}
-}
-
-bool ModuleWidgetWithScrews::isBypassed() {
+bool BaseModuleWidget::isBypassed() {
 	if (module) {
 		if (module->isBypassed()) {
 			return true;
@@ -270,7 +203,7 @@ static void appendSelectionItems(ui::Menu* menu, WeakPtr<ModuleWidget> moduleWid
 	}
 };
 
-void ModuleWidgetWithScrews::appendContextMenu(Menu* menu) {
+void BaseModuleWidget::appendContextMenu(Menu* menu) {
 	menu->addChild(new MenuSeparator);
 	// menu->addChild(createSubmenuItem("Import selection", "", [=](Menu* menu) {
 		// WeakPtr<ModuleWidget> weakThis = this;
@@ -283,9 +216,9 @@ void ModuleWidgetWithScrews::appendContextMenu(Menu* menu) {
 	contextMenu(menu);
 }
 
-void ModuleWidgetWithScrews::contextMenu(Menu* menu) {}
+void BaseModuleWidget::contextMenu(Menu* menu) {}
 
-void ModuleWidgetWithScrews::onButton(const ButtonEvent& e) {
+void BaseModuleWidget::onButton(const ButtonEvent& e) {
 	bool selected = APP->scene->rack->isSelected(this);
 
 	if (selected) {
@@ -319,7 +252,7 @@ void ModuleWidgetWithScrews::onButton(const ButtonEvent& e) {
 	}
 }
 
-void ModuleWidgetWithScrews::createCustomContextMenu() {
+void BaseModuleWidget::createCustomContextMenu() {
 	ui::Menu* menu = createMenu();
 	assert(model);
 

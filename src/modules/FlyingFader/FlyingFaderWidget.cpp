@@ -166,7 +166,6 @@ FlyingFaderWidget::FlyingFaderWidget(FlyingFader* module) {
 	setModule(module);
 	setPanel("res/FlyingFader.svg");
 	setWidthInHP(4);
-	setScrews(SCREW_TOP_LEFT, NO_SCREW_TOP_RIGHT, NO_SCREW_BOTTOM_LEFT, SCREW_BOTTOM_RIGHT);
 	//faderCapColorIndex = 0;
 
 	faderNameDisplay = new FaderNameDisplay(module, Rect(6.5, 214.5, 153, 18));
@@ -206,7 +205,7 @@ void FlyingFaderWidget::step() {
 	if (flyingFader && flyingFader->faderCapColorIndex != fader->faderCapColorIndex) {
 		changeFaderCapColor(flyingFader->faderCapColorIndex);
 	}
-	ModuleWidgetWithScrews::step();
+	BaseModuleWidget::step();
 }
 
 FaderCapColorValueItem::FaderCapColorValueItem(FlyingFaderWidget* flyingFaderWidget, int faderCapColorIndex) {

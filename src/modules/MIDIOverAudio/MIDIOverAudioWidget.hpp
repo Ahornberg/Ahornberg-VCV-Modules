@@ -1,6 +1,6 @@
 #include "MIDIOverAudio.hpp"
 
-struct MIDIOverAudioWidget : ModuleWidgetWithScrews {
+struct MIDIOverAudioWidget : BaseModuleWidget {
 	static std::vector<MIDIOverAudioWidget*>* widgets;
 	
 	MIDIOverAudioWidget(MIDIOverAudio* module);

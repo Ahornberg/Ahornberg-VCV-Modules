@@ -4,32 +4,16 @@
   "version": "2.0.0",
   "params": [
     {
-      "value": 5.0,
+      "value": 1.0,
       "id": 0
     },
     {
-      "value": 5.0,
+      "value": 41.0,
       "id": 1
     },
     {
-      "value": 5.0,
-      "id": 2
-    },
-    {
-      "value": 5.0,
-      "id": 3
-    },
-    {
-      "value": 1.0,
-      "id": 4
-    },
-    {
-      "value": 41.0,
-      "id": 5
-    },
-    {
       "value": 7.0,
-      "id": 6
+      "id": 2
     }
   ]
 }

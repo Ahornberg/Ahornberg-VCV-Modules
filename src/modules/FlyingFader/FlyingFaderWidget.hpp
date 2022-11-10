@@ -46,7 +46,7 @@ struct FaderNameMenuItem : TextFieldMenuItem {
 	void onChange(const event::Change& e) override;
 };
 
-struct FlyingFaderWidget : ModuleWidgetWithScrews {
+struct FlyingFaderWidget : BaseModuleWidget {
 	const static FaderCapColor FADER_CAP_COLORS[];
 	constexpr static int NUM_FADER_CAP_COLORS = 10;
 	

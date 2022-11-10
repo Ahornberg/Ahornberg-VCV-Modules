@@ -1,3 +1,4 @@
+#include <osdialog.h>
 #include "TapeRecorderWidget.hpp"
 
 const Stripe StripeWidget::STRIPES[] = {
@@ -39,11 +40,12 @@ CueBackwardsSwitch::CueBackwardsSwitch() {
 	addFrame("res/switches/CueBackwards_on.svg");
 }
 
-void CueBackwardsSwitch::onChange(const event::Change& e) {
-	TransportCueSwitch::onChange(e);
+void CueBackwardsSwitch::onButton(const event::Button& e) {
+	e.consume(this);
 	if (tapeRecorder && tapeRecorder->params[TapeRecorder::CUE_BACKWARDS_PARAM].getValue()) {
 		int mods = APP->window->getMods();
 		if ((mods & RACK_MOD_MASK) == RACK_MOD_CTRL) {
+			DEBUG("RACK_MOD_CTRL");
 			tapeRecorder->jumpToTapePosition(TapeRecorder::JUMP_BACKWARDS);
 			tapeRecorder->params[TapeRecorder::CUE_FORWARDS_PARAM].setValue(0.);
 			tapeRecorder->params[TapeRecorder::CUE_BACKWARDS_PARAM].setValue(0.);
@@ -62,8 +64,8 @@ CueForwardsSwitch::CueForwardsSwitch() {
 	addFrame("res/switches/CueForwards_on.svg");
 }
 
-void CueForwardsSwitch::onChange(const event::Change& e) {
-	TransportCueSwitch::onChange(e);
+void CueForwardsSwitch::onButton(const event::Button& e) {
+	e.consume(this);
 	if (tapeRecorder && tapeRecorder->params[TapeRecorder::CUE_FORWARDS_PARAM].getValue()) {
 		int mods = APP->window->getMods();
 		if ((mods & RACK_MOD_MASK) == RACK_MOD_CTRL) {
@@ -85,8 +87,8 @@ PlayBackwardsSwitch::PlayBackwardsSwitch() {
 	addFrame("res/switches/PlayBackwards_on.svg");
 }
 
-void PlayBackwardsSwitch::onChange(const event::Change& e) {
-	TransportSwitch::onChange(e);
+void PlayBackwardsSwitch::onButton(const event::Button& e) {
+	e.consume(this);
 	if (tapeRecorder && tapeRecorder->params[TapeRecorder::PLAY_BACKWARDS_PARAM].getValue()) {
 		tapeRecorder->params[TapeRecorder::PLAY_FORWARDS_PARAM].setValue(0.);
 	}
@@ -97,8 +99,8 @@ PlayForwardsSwitch::PlayForwardsSwitch() {
 	addFrame("res/switches/PlayForwards_on.svg");
 }
 
-void PlayForwardsSwitch::onChange(const event::Change& e) {
-	TransportSwitch::onChange(e);
+void PlayForwardsSwitch::onButton(const event::Button& e) {
+	e.consume(this);
 	if (tapeRecorder && tapeRecorder->params[TapeRecorder::PLAY_FORWARDS_PARAM].getValue()) {
 		tapeRecorder->params[TapeRecorder::PLAY_BACKWARDS_PARAM].setValue(0.);
 	}
@@ -285,7 +287,7 @@ void KnobWheel::onChange(const event::Change& e) {
 		float diff;
 		float paramValue;
 		float radius;
-		float tapeLength = module->params[TapeRecorder::TAPE_LENGTH_PARAM].getValue() * 1.3f;
+		float tapeLength = module->tapeLengthParam * 1.3f;
 		if (paramQuantity->isBounded()) {
 			paramValue = paramQuantity->getScaledValue();
 		} else {
@@ -342,6 +344,8 @@ TapePositionDisplay::TapePositionDisplay(Rect box, TapeRecorder* tapeRecorder) :
 	cueStatus = false;
 	playForwardStatus = false;
 	cueForwardStatus = false;
+	changeTapeInterrupt = false;
+	loadProgress = 0;
 }
 
 void TapePositionDisplay::drawText(const DrawArgs& disp) {
@@ -360,111 +364,127 @@ void TapePositionDisplay::drawText(const DrawArgs& disp) {
 		cueStatus = tapeRecorder->cueStatus;
 		// loopStartOnTapePosition = (tapeRecorder->params[TapeRecorder::LOOP_START_BUTTON_PARAM].getValue() == 1.0f);
 		// loopEndOnTapePosition = (tapeRecorder->params[TapeRecorder::LOOP_END_BUTTON_PARAM].getValue() == 1.0f);
+		changeTapeInterrupt = tapeRecorder->changeTapeInterrupt;
 	}
-	Vec textPos = Vec(4, 14);
-	nvgFillColor(disp.vg, textColorLight);
-	int bar = (int) tapePosition;
-	int beat = (int) ((tapePosition - bar) * beatsPerBar);
-	if (bar > 9999) {
-		bar = 9999;
-	}
-	std::string text = std::to_string(bar);
-	if (bar < 1000) {
-		text = " " + text;
-	} 
-	if (bar < 100) {
-		text = " " + text;
-	} 
-	if (bar < 10) {
-		text = " " + text;
-	}
-	if (beat < 10) {
-		text += "/ " + std::to_string(beat);
-	} else {
-		text += "/" + std::to_string(beat);
-	}
-	nvgText(disp.vg, textPos.x, textPos.y, text.c_str(), NULL);
-	
-	if (loopStart != loopEnd) {
-		textPos = Vec(33, 28);
-		if (loopMode) {
-			nvgText(disp.vg, textPos.x, textPos.y, "P", NULL);
-		} else {
-			nvgText(disp.vg, textPos.x, textPos.y, "C", NULL);
+	if (changeTapeInterrupt) {
+		Vec textPos = Vec(4, 14);
+		nvgFillColor(disp.vg, textColorLight);
+		nvgText(disp.vg, textPos.x, textPos.y, "loading", NULL);
+		nvgFontSize(disp.vg, 8);
+		textPos = Vec(4, 28);
+		std::string text = "";
+		for (auto i = 0; i < loadProgress / 30; ++i) {
+			text += "-";
 		}
-	}
-	// if (cueStatus) {
-		// if (cueForwardStatus) {
-			// textPos = Vec(33, 28);
-			// nvgText(disp.vg, textPos.x, textPos.y, ")", NULL);
-			// textPos = Vec(35.5, 28);
-			// nvgText(disp.vg, textPos.x, textPos.y, ")", NULL);
-		// } else {
-			// textPos = Vec(33, 28);
-			// nvgText(disp.vg, textPos.x, textPos.y, "(", NULL);
-			// textPos = Vec(35.5, 28);
-			// nvgText(disp.vg, textPos.x, textPos.y, "(", NULL);
+		++loadProgress;
+		nvgText(disp.vg, textPos.x, textPos.y, text.c_str(), NULL);
+	} else {
+		loadProgress = 0;
+		Vec textPos = Vec(4, 14);
+		nvgFillColor(disp.vg, textColorLight);
+		int bar = (int) tapePosition;
+		int beat = (int) ((tapePosition - bar) * beatsPerBar);
+		if (bar > 9999) {
+			bar = 9999;
+		}
+		std::string text = std::to_string(bar);
+		if (bar < 1000) {
+			text = " " + text;
+		} 
+		if (bar < 100) {
+			text = " " + text;
+		} 
+		if (bar < 10) {
+			text = " " + text;
+		}
+		if (beat < 10) {
+			text += "/ " + std::to_string(beat);
+		} else {
+			text += "/" + std::to_string(beat);
+		}
+		nvgText(disp.vg, textPos.x, textPos.y, text.c_str(), NULL);
+		
+		if (loopStart != loopEnd) {
+			textPos = Vec(33, 28);
+			if (loopMode) {
+				nvgText(disp.vg, textPos.x, textPos.y, "P", NULL);
+			} else {
+				nvgText(disp.vg, textPos.x, textPos.y, "C", NULL);
+			}
+		}
+		// if (cueStatus) {
+			// if (cueForwardStatus) {
+				// textPos = Vec(33, 28);
+				// nvgText(disp.vg, textPos.x, textPos.y, ")", NULL);
+				// textPos = Vec(35.5, 28);
+				// nvgText(disp.vg, textPos.x, textPos.y, ")", NULL);
+			// } else {
+				// textPos = Vec(33, 28);
+				// nvgText(disp.vg, textPos.x, textPos.y, "(", NULL);
+				// textPos = Vec(35.5, 28);
+				// nvgText(disp.vg, textPos.x, textPos.y, "(", NULL);
+			// }
+		// } else if (playStatus) {
+			// // if ((playForwardStatus && position < loopEnd) || (!playForwardStatus && position < loopStart)) {
+			// if (playForwardStatus) {
+				// textPos = Vec(33, 28);
+				// nvgText(disp.vg, textPos.x, textPos.y, "-", NULL);
+				// textPos = Vec(35.5, 28);
+				// nvgText(disp.vg, textPos.x, textPos.y, ")", NULL);
+			// } else {
+				// textPos = Vec(33, 28);
+				// nvgText(disp.vg, textPos.x, textPos.y, "(", NULL);
+				// textPos = Vec(35.5, 28);
+				// nvgText(disp.vg, textPos.x, textPos.y, "-", NULL);
+			// }
 		// }
-	// } else if (playStatus) {
-		// // if ((playForwardStatus && position < loopEnd) || (!playForwardStatus && position < loopStart)) {
-		// if (playForwardStatus) {
-			// textPos = Vec(33, 28);
-			// nvgText(disp.vg, textPos.x, textPos.y, "-", NULL);
-			// textPos = Vec(35.5, 28);
-			// nvgText(disp.vg, textPos.x, textPos.y, ")", NULL);
+		
+		// textPos = Vec(34, 14);
+		// if (speedConnected) {
+			// nvgFillColor(disp.vg, textColorDark);
 		// } else {
-			// textPos = Vec(33, 28);
-			// nvgText(disp.vg, textPos.x, textPos.y, "(", NULL);
-			// textPos = Vec(35.5, 28);
-			// nvgText(disp.vg, textPos.x, textPos.y, "-", NULL);
+			// nvgFillColor(disp.vg, textColorLight);
 		// }
-	// }
-	
-	// textPos = Vec(34, 14);
-	// if (speedConnected) {
-		// nvgFillColor(disp.vg, textColorDark);
-	// } else {
-		// nvgFillColor(disp.vg, textColorLight);
-	// }
-	// nvgText(disp.vg, textPos.x, textPos.y, (std::to_string(tempo)).c_str(), NULL);
-	
-	nvgFontSize(disp.vg, 8);
+		// nvgText(disp.vg, textPos.x, textPos.y, (std::to_string(tempo)).c_str(), NULL);
+		
+		nvgFontSize(disp.vg, 8);
 
-	textPos = Vec(4, 28);
-	// if (loopStartOnTapePosition) {
-		// nvgFillColor(disp.vg, textColorRed);
-	// } else 
-	if (loopStartConnected) {
-		nvgFillColor(disp.vg, textColorDark);
-	} else {
-		nvgFillColor(disp.vg, textColorLight);
+		textPos = Vec(4, 28);
+		// if (loopStartOnTapePosition) {
+			// nvgFillColor(disp.vg, textColorRed);
+		// } else 
+		if (loopStartConnected) {
+			nvgFillColor(disp.vg, textColorDark);
+		} else {
+			nvgFillColor(disp.vg, textColorLight);
+		}
+		text = std::to_string(loopStart);
+		if (loopStart < 100) {
+			text = " " + text;
+		} 
+		if (loopStart < 10) {
+			text = " " + text;
+		}
+		nvgText(disp.vg, textPos.x, textPos.y, text.c_str(), NULL);
+		
+		textPos = Vec(46, 28);
+		// if (loopEndOnTapePosition) {
+			// nvgFillColor(disp.vg, textColorRed);
+		// } else 
+		if (loopEndConnected) {
+			nvgFillColor(disp.vg, textColorDark);
+		} else {
+			nvgFillColor(disp.vg, textColorLight);
+		}
+		text = std::to_string(loopEnd);
+		if (loopEnd < 100) {
+			text = " " + text;
+		} 
+		if (loopEnd < 10) {
+			text = " " + text;
+		}
+		nvgText(disp.vg, textPos.x, textPos.y, text.c_str(), NULL);
 	}
-	text = std::to_string(loopStart);
-	if (loopStart < 100) {
-		text = " " + text;
-	} 
-	if (loopStart < 10) {
-		text = " " + text;
-	}
-	nvgText(disp.vg, textPos.x, textPos.y, text.c_str(), NULL);
-	
-	textPos = Vec(46, 28);
-	// if (loopEndOnTapePosition) {
-		// nvgFillColor(disp.vg, textColorRed);
-	// } else 
-	if (loopEndConnected) {
-		nvgFillColor(disp.vg, textColorDark);
-	} else {
-		nvgFillColor(disp.vg, textColorLight);
-	}
-	text = std::to_string(loopEnd);
-	if (loopEnd < 100) {
-		text = " " + text;
-	} 
-	if (loopEnd < 10) {
-		text = " " + text;
-	}
-	nvgText(disp.vg, textPos.x, textPos.y, text.c_str(), NULL);
 }
 	
 ModuleLinkedWidget::ModuleLinkedWidget(Rect box, TapeRecorder* tapeRecorder) : SizedTransparentWidget(box) {
@@ -482,7 +502,7 @@ void TapeDisplay::draw(const DrawArgs& disp) {
 	if (tapeRecorder) {
 		tapeOnLeftWheel = tapeRecorder->tapeOnLeftWheel;
 		tapeOnRightWheel = tapeRecorder->tapeOnRightWheel;
-		tapeLength = tapeRecorder->params[TapeRecorder::TAPE_LENGTH_PARAM].getValue() * 1.3f;
+		tapeLength = tapeRecorder->tapeLengthParam * 1.3f;
 	}
 	float radiusLeft = (RADIUS_MAX - RADIUS_MIN + tapeLength) * tapeOnLeftWheel + RADIUS_MIN;
 	float radiusRight = (RADIUS_MAX - RADIUS_MIN + tapeLength) * tapeOnRightWheel + RADIUS_MIN;
@@ -525,7 +545,7 @@ TapeLengthDisplay::TapeLengthDisplay(Rect box, TapeRecorder* tapeRecorder) : Mod
 
 void TapeLengthDisplay::draw(const DrawArgs& disp) {
 	if (tapeRecorder) {
-		text = TapeRecorder::TAPE_LENGTHS[(int) tapeRecorder->params[TapeRecorder::TAPE_LENGTH_PARAM].getValue()].name;
+		text = TapeRecorder::TAPE_LENGTHS[tapeRecorder->tapeLengthParam].name;
 	} else {
 		// widget without module
 		text = "MC 1";
@@ -554,7 +574,7 @@ TrackCountDisplay::TrackCountDisplay(Rect box, TapeRecorder* tapeRecorder) : Mod
 
 void TrackCountDisplay::draw(const DrawArgs& disp) {
 	if (tapeRecorder) {
-		text = createTrackCountText(tapeRecorder->params[TapeRecorder::TRACK_COUNT_PARAM].getValue());
+		text = createTrackCountText(tapeRecorder->trackCountParam);
 	} else {
 		// widget without module
 		text = createTrackCountText(1);
@@ -576,7 +596,7 @@ void TapeNameDisplay::draw(const DrawArgs& disp) {
 	if (tapeRecorder) {
 		text = tapeRecorder->tapeName;
 	} else {
-		text = TapeRecorder::INIT_TAPE_NAME;
+		text = TapeRecorder::INITIAL_TAPE_NAME;
 	}
 	drawText(disp, box);
 }
@@ -592,7 +612,7 @@ TapeNameMenuItem::TapeNameMenuItem(TapeRecorder* tapeRecorder) {
 	if (tapeRecorder) {
 		text = tapeRecorder->tapeName;
 	} else {
-		text = TapeRecorder::INIT_TAPE_NAME;
+		text = TapeRecorder::INITIAL_TAPE_NAME;
 	}
 }
 
@@ -640,7 +660,7 @@ Menu* LoopModeMenuItem::createChildMenu() {
 TrackCountValueItem::TrackCountValueItem(TapeRecorder* tapeRecorder, int trackCount, std::string trackCountText) : TapeRecorderMenuItem(tapeRecorder) {
 	this->trackCount = trackCount;
 	text = trackCountText;
-	rightText = CHECKMARK(tapeRecorder->params[TapeRecorder::TRACK_COUNT_PARAM].getValue() == trackCount);
+	rightText = CHECKMARK(tapeRecorder->trackCountParam == trackCount);
 }
 
 void TrackCountValueItem::onAction(const event::Action& e) {
@@ -652,15 +672,20 @@ void TrackCountValueItem::onAction(const event::Action& e) {
 TrackCountMenuItem::TrackCountMenuItem(TapeRecorder* tapeRecorder) : TapeRecorderMenuItem(tapeRecorder) {
 	text = "Track Count";
 	if (tapeRecorder) {
-		rightText = createTrackCountText(tapeRecorder->params[TapeRecorder::TRACK_COUNT_PARAM].getValue()) + " " + RIGHT_ARROW;
+		rightText = createTrackCountText(tapeRecorder->trackCountParam) + " " + RIGHT_ARROW;
 	}
 }
 
 Menu* TrackCountMenuItem::createChildMenu() {
 	Menu* menu = new Menu;
-	for (auto trackCount = 1; trackCount <= 4; ++trackCount) {
+	for (auto trackCount = 1; trackCount <= TapeRecorder::NUM_MAX_TRACKS; ++trackCount) {
 		if (trackCount == 3) {
+			// only 1, 2 or 4 tracks
 			continue;
+		}
+		if (trackCount == TapeRecorder::NUM_MAX_TRACKS && tapeRecorder && tapeRecorder->tapeLengthParam == TapeRecorder::NUM_TAPE_LENGTHS - 1) {
+			// AudioFile.h can't handle MC 120 with 4 tracks
+			break;
 		}
 		menu->addChild(new TrackCountValueItem(tapeRecorder, trackCount, createTrackCountText(trackCount)));
 	}
@@ -672,7 +697,7 @@ TapeLengthValueItem::TapeLengthValueItem(TapeRecorder* tapeRecorder, int tapeLen
 	this->tapeLength = tapeLength;
 	text = TapeRecorder::TAPE_LENGTHS[tapeLength].name;
 	if (tapeRecorder) {
-		rightText = CHECKMARK(tapeRecorder->params[TapeRecorder::TAPE_LENGTH_PARAM].getValue() == tapeLength);
+		rightText = CHECKMARK(tapeRecorder->tapeLengthParam == tapeLength);
 	}
 }
 
@@ -685,13 +710,17 @@ void TapeLengthValueItem::onAction(const event::Action& e) {
 TapeLengthMenuItem::TapeLengthMenuItem(TapeRecorder* tapeRecorder) : TapeRecorderMenuItem(tapeRecorder) {
 	text = "Tape Length";
 	if (tapeRecorder) {
-		rightText = TapeRecorder::TAPE_LENGTHS[(int) tapeRecorder->params[TapeRecorder::TAPE_LENGTH_PARAM].getValue()].name + " " + RIGHT_ARROW;
+		rightText = TapeRecorder::TAPE_LENGTHS[tapeRecorder->tapeLengthParam].name + " " + RIGHT_ARROW;
 	}
 }
 
 Menu* TapeLengthMenuItem::createChildMenu() {
 	Menu* menu = new Menu;
 	for (auto i = 0; i < TapeRecorder::NUM_TAPE_LENGTHS; ++i) {
+		if (i == TapeRecorder::NUM_TAPE_LENGTHS - 1 && tapeRecorder && tapeRecorder->trackCountParam == TapeRecorder::NUM_MAX_TRACKS) {
+			// AudioFile.h can't handle MC 120 with 4 tracks
+			break;
+		}
 		menu->addChild(new TapeLengthValueItem(tapeRecorder, i));
 	}
 	return menu;
@@ -739,7 +768,7 @@ EraseTapeMenuItem::EraseTapeMenuItem(TapeRecorder* tapeRecorder) : TapeRecorderM
 
 void EraseTapeMenuItem::onAction(const event::Action& e) {
 	if (tapeRecorder) {
-		tapeRecorder->eraseTape();
+		tapeRecorder->initTape(TapeRecorder::INIT_TAPE_ERASE);
 	}
 }
 
@@ -749,7 +778,6 @@ TapeRecorderWidget::TapeRecorderWidget(TapeRecorder* module) {
 	setModule(module);
 	setPanel("res/TapeRecorder.svg");
 	setWidthInHP(8);
-	setScrews(SCREW_TOP_LEFT, SCREW_TOP_RIGHT, NO_SCREW_BOTTOM_LEFT, SCREW_BOTTOM_RIGHT);
 
 	addParam(createParam<KnobBig>(Vec(      43,  42),   module, TapeRecorder::TEMPO_PARAM));
 	addParam(createParam<KnobSmallSnap>(Vec(10,  50),   module, TapeRecorder::BEATS_PER_BAR_PARAM));
@@ -825,13 +853,20 @@ void TapeRecorderWidget::contextMenu(Menu* menu) {
 }
 
 void TapeRecorderWidget::step() {
-	TapeRecorder* tapeRecorder = dynamic_cast<TapeRecorder*>(this->module);
+	TapeRecorder* tapeRecorder = dynamic_cast<TapeRecorder*>(module);
 	if (tapeRecorder) {
 		if (tapeRecorder->stripeIndex != stripeWidget->stripe) {
 			stripeWidget->setStripe(tapeRecorder->stripeIndex);
 		}
+		if (!tapeRecorder->warningString.empty()) {
+			osdialog_message(OSDIALOG_WARNING, OSDIALOG_OK, tapeRecorder->warningString.c_str());
+			tapeRecorder->warningString = "";
+		}
+		if (tapeRecorder->callInitTape != TapeRecorder::INIT_TAPE_NOOP) {
+			tapeRecorder->initTape(tapeRecorder->callInitTape);
+		}
 	}
-	ModuleWidgetWithScrews::step();
+	BaseModuleWidget::step();
 }
 
 Model* modelTapeRecorder = createModel<TapeRecorder, TapeRecorderWidget>("TapeRecorder");

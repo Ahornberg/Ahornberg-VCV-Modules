@@ -2,7 +2,6 @@
 
 CopyPastePreset::CopyPastePreset() { 
 	config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-	configScrewParams();
 
 	configButton(DO_COPY_PASTE_PARAM, "copy preset from the left and paste to the right");
 	configInput(LINK_CV_INPUT, "CV link");

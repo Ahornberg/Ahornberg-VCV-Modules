@@ -36,7 +36,6 @@ const std::vector<std::string> EqualDivision::INTERVAL_LABELS = {
 
 EqualDivision::EqualDivision() { 
 	config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-	configScrewParams();
 	configParam(FINE_PARAM, .97, 1.03, 1, "Fine", "%", 0, 100, -100);
 	configParam(STEPS_PARAM, 1, 99, INIT_STEP, "Equal Steps");
 	configSwitch(INTERVAL_PARAM, 0, 13, INIT_INTERVAL, "Interval", INTERVAL_LABELS);

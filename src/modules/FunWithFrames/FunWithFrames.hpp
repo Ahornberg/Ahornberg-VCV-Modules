@@ -1,13 +1,13 @@
 #include "../../Ahornberg.hpp"
 
-struct FunWithFrames : BaseModule {
+struct FunWithFrames : Module {
 	constexpr static int NUM_VALUE_IO = 4;
 	const static std::string TIME_TABLE_NAMES[];
 	float lastPitchChord[NUM_VALUE_IO];
 	bool pitchGate[NUM_VALUE_IO];
 	
 	enum ParamIds {
-		MAX_CHORD_SIZE_PARAM = NUM_MAX_SCREWS,
+		MAX_CHORD_SIZE_PARAM,
 		ENUMS(VALUE_CONVERT_MODE, NUM_VALUE_IO),
 		NUM_PARAMS
 	};

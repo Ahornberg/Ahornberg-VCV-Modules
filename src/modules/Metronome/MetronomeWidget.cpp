@@ -91,7 +91,6 @@ MetronomeWidget::MetronomeWidget(Metronome* module) {
 	setModule(module);
 	setPanel("res/Metronome.svg");
 	setWidthInHP(14);
-	setScrews(SCREW_TOP_LEFT, SCREW_TOP_RIGHT, SCREW_BOTTOM_LEFT, SCREW_BOTTOM_RIGHT);
 
 	Vec center = Vec(105, 160);
 	KnobRadioSwitch* knobRadioSwitch = dynamic_cast<KnobRadioSwitch*>(createParamCentered<KnobRadioSwitch>(center, module, Metronome::BPM_VALUE_PARAM));

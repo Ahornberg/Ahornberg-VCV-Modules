@@ -4,7 +4,6 @@
 
 MIDIOverAudio::MIDIOverAudio() { 
 	config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-	configScrewParams();
 	
 	for (auto i = 0; i < MIDI_OVER_AUDIO_MAX_DEVICES; ++i) {
 		configParam(TRIM_PARAM + i, -5, 5, 0, "Trim MIDI over Audio Port " + std::to_string(i + 1));

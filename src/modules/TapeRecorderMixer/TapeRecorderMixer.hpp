@@ -1,6 +1,6 @@
 #include "../../Ahornberg.hpp"
 
-struct TapeRecorderMixer : BaseModule {
+struct TapeRecorderMixer : Module {
 	const static std::string INIT_TRACK_NAME;
 	constexpr static int TRACK_NUMBER_BITMASK = 15;
 	constexpr static int LINK_BITMASK = 16;
@@ -13,7 +13,7 @@ struct TapeRecorderMixer : BaseModule {
 	constexpr static int NUM_MAX_TRACKS = 4;
 	
 	enum ParamIds {
-		RECORD_PARAM = NUM_MAX_SCREWS,
+		RECORD_PARAM,
 		BYPASS_INSERT_PARAM,
 		TAPE_DUCKING_PARAM,
 		TAPE_ERASE_PARAM,

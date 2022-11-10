@@ -10,7 +10,6 @@ using simd::float_4;
 extern Plugin* pluginInstance;
 
 extern Model* modelTracker;
-extern Model* modelMIDIPolyExpression;
 extern Model* modelTapeRecorder;
 extern Model* modelTapeRecorderMixer;
 extern Model* modelFlyingFader;
@@ -19,6 +18,8 @@ extern Model* modelCVFreqShift;
 extern Model* modelFunWithFrames;
 extern Model* modelMetronome;
 extern Model* modelHarmonizer;
+extern Model* modelMIDIController;
+extern Model* modelMIDIPolyExpression;
 extern Model* modelMIDIOverAudio;
 extern Model* modelCopyPastePreset;
 // extern Model* modelManual;
@@ -32,7 +33,6 @@ extern Model* modelCopyPastePreset;
 #include "util/Widgets.hpp"
 #include "util/Displays.hpp"
 #include "util/Drivers.hpp"
-#include "util/AudioFile.h"
 
 #ifndef NDEBUG
 #  include "test/Asserts.hpp"

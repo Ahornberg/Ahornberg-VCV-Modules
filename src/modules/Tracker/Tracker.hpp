@@ -1,8 +1,8 @@
 #include "../../Ahornberg.hpp"
 
-struct Tracker : BaseModule {
+struct Tracker : Module {
 	enum ParamIds {
-		NO_PARAM = NUM_MAX_SCREWS,
+		NO_PARAM,
 		NUM_PARAMS
 	};
 	enum InputIds {

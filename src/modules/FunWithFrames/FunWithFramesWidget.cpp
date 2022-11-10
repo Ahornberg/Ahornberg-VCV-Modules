@@ -4,7 +4,6 @@ FunWithFramesWidget::FunWithFramesWidget(FunWithFrames* module) {
 	setModule(module);
 	setPanel("res/FunWithFrames.svg");
 	setWidthInHP(6);
-	setScrews(SCREW_TOP_LEFT, NO_SCREW_TOP_RIGHT, NO_SCREW_BOTTOM_LEFT, SCREW_BOTTOM_RIGHT);
 
 	for (auto i = 0; i < FunWithFrames::NUM_VALUE_IO; ++i) {
 		addInput(createInput<InPort>(Vec(4, 79 + 40 * i), module, FunWithFrames::VALUE_INPUT + i));

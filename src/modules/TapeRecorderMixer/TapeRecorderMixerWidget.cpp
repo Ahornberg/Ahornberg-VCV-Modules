@@ -148,7 +148,6 @@ TapeRecorderMixerWidget::TapeRecorderMixerWidget(TapeRecorderMixer* module) {
 	setModule(module);
 	setPanel("res/TapeRecorderMixer.svg");
 	setWidthInHP(4);
-	setScrews(SCREW_TOP_LEFT, NO_SCREW_TOP_RIGHT, SCREW_BOTTOM_LEFT, SCREW_BOTTOM_RIGHT);
 
 	addInput(createInputCentered<InPort>(Vec(31 + 1, 14 + 1), module,  TapeRecorderMixer::AUDIO_INPUT));
 	addInput(createInputCentered<InPort>(Vec(15 + 14 - 1, 71 - 5), module,  TapeRecorderMixer::AUDIO_FX_RETURN));

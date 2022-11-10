@@ -1,6 +1,7 @@
+// #include <chrono>
 #include "TapeRecorder.hpp"
 
-const std::string TapeRecorder::INIT_TAPE_NAME = "My Magic Tape";
+const std::string TapeRecorder::INITIAL_TAPE_NAME = "My Magic Tape";
 const TapeLength TapeRecorder::TAPE_LENGTHS[] = {
 	{ 44100 * 60 *   1, "MC 1" },
 	{ 44100 * 60 *   3, "MC 3" },
@@ -14,10 +15,10 @@ const TapeLength TapeRecorder::TAPE_LENGTHS[] = {
 	{ 44100 * 60 *  90, "MC 90" },
 	{ 44100 * 60 * 120, "MC 120" }
 };
+const std::string TapeRecorder::AUDIO_FILE_DIR = "recordings";
 
 TapeRecorder::TapeRecorder() { 
 	config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-	configScrewParams();
 	configButton(PAUSE_PARAM, "Pause");
 	configButton(PLAY_FORWARDS_PARAM, "Play");
 	configButton(PLAY_BACKWARDS_PARAM, "Play Reverse");
@@ -34,8 +35,10 @@ TapeRecorder::TapeRecorder() {
 	configParam(LOOP_MODE_PARAM,           0,     1,   1, "Loop Mode");
 	configParam(WHEEL_LEFT_PARAM,        -12.4,  11.6, 0, "Left Wheel");
 	configParam(WHEEL_RIGHT_PARAM,       -11.9,  12.1, 0, "Right Wheel");
-	configParam(TAPE_LENGTH_PARAM,         0, NUM_TAPE_LENGTHS - 1, 0, "Tape Length");
-	configParam(TRACK_COUNT_PARAM,         1,    16,   1, "Tape Layout");
+	// configParam(TAPE_LENGTH_PARAM,         0, NUM_TAPE_LENGTHS - 1, 0, "Tape Length");
+	// configParam(TRACK_COUNT_PARAM,         1,    16,   1, "Tape Layout");
+	tapeLengthParam = 0;
+	trackCountParam = 1;
 	getParamQuantity(PAUSE_PARAM)->randomizeEnabled = false;
 	getParamQuantity(PLAY_FORWARDS_PARAM)->randomizeEnabled = false;
 	getParamQuantity(PLAY_BACKWARDS_PARAM)->randomizeEnabled = false;
@@ -44,8 +47,8 @@ TapeRecorder::TapeRecorder() {
 	getParamQuantity(LOOP_MODE_PARAM)->randomizeEnabled = false;
 	getParamQuantity(WHEEL_LEFT_PARAM)->randomizeEnabled = false;
 	getParamQuantity(WHEEL_RIGHT_PARAM)->randomizeEnabled = false;
-	getParamQuantity(TAPE_LENGTH_PARAM)->randomizeEnabled = false;
-	getParamQuantity(TRACK_COUNT_PARAM)->randomizeEnabled = false;
+	// getParamQuantity(TAPE_LENGTH_PARAM)->randomizeEnabled = false;
+	// getParamQuantity(TRACK_COUNT_PARAM)->randomizeEnabled = false;
 	configInput(AUDIO_INPUT, "Audio");
 	configInput(LOOP_START_INPUT, "Loop Start");
 	configInput(LOOP_END_INPUT, "Loop End");
@@ -58,32 +61,74 @@ TapeRecorder::TapeRecorder() {
 	configBypass(AUDIO_INPUT, AUDIO_OUTPUT);
 	configBypass(SPEED_INPUT, SPEED_OUTPUT);
 	configBypass(TRANSPORT_INPUT, TRANSPORT_OUTPUT);
-	tapeName = INIT_TAPE_NAME;
+	tapeName = INITIAL_TAPE_NAME;
 	stripeIndex = (int) (random::uniform() * 12);
 	displayDivider.setDivision(512);
 	changeTapeInterrupt = false;
 	tapeStoppedAndResetted = true;
-	audioBuffer = nullptr;
-	initTape();
+	// audioBuffer = nullptr;
+	// initTapeThread(INIT_TAPE_COMPLETE);
+	callInitTape = INIT_TAPE_NOOP;
+	initTape(INIT_TAPE_COMPLETE);
 }
 
 TapeRecorder::~TapeRecorder() {
-	delete audioBuffer;
+	// delete audioBuffer;
 }
 
-void TapeRecorder::initTape() {
+void TapeRecorder::initTape(InitTape what) {
+	callInitTape = INIT_TAPE_NOOP;
 	changeTapeInterrupt = true;
-	// DEBUG("length %d, type %d", (int) params[TAPE_LENGTH_PARAM].getValue(), (int) params[TRACK_COUNT_PARAM].getValue());
-	// while (!tapeStoppedAndResetted) {
-		
-	// }
-	// init
-	sizeAudioBuffer = TAPE_LENGTHS[(int) params[TAPE_LENGTH_PARAM].getValue()].value;
-	if (audioBuffer) {
-		delete audioBuffer;
+	// DEBUG("initTape what = %i", what);
+	if (what == INIT_TAPE_COMPLETE) {
+		if (!audioFilePath.empty()) {
+			bool loaded = false;
+			// APP->engine->yieldWorkers();
+			// mylock.lock();
+			DEBUG("onLoad %s", system::join(getAudioFileDir(), audioFilePath).c_str());
+			loaded = audioFile.load(system::join(getAudioFileDir(), audioFilePath));
+			// mylock.unlock();
+			if (loaded) {
+				if (audioFile.getNumChannels() > NUM_MAX_TRACKS) {
+					audioFile.setNumChannels(NUM_MAX_TRACKS);
+				}
+				trackCountParam = audioFile.getNumChannels();
+				bool truncationNeeded = true;
+				for (auto i = 0; i < NUM_TAPE_LENGTHS; ++i) {
+					if (TAPE_LENGTHS[i].value >= audioFile.getNumSamplesPerChannel()) {
+						audioFile.setNumSamplesPerChannel(TAPE_LENGTHS[i].value);
+						tapeLengthParam = i;
+						truncationNeeded = false;
+						break;
+					}
+				}
+				if (truncationNeeded) {
+					audioFile.setNumSamplesPerChannel(TAPE_LENGTHS[NUM_TAPE_LENGTHS - 1].value);
+					tapeLengthParam = NUM_TAPE_LENGTHS - 1;
+				}
+			} else {
+				warningString = "Tape Recorder is unable to load file " + audioFilePath;
+				tapeName = oldTapeName;
+				stripeIndex = oldStripeIndex;
+				audioFilePath = oldAudioFilePath;
+			}
+		}
+		if (audioFilePath.empty()) {
+			audioFile.setAudioBufferSize(trackCountParam, TAPE_LENGTHS[tapeLengthParam].value);
+		}
+	} else if (what == INIT_TAPE_TRACK_COUNT) {
+		audioFile.setNumChannels(trackCountParam);
+	} else if (what == INIT_TAPE_LENGTH) {
+		audioFile.setNumSamplesPerChannel(TAPE_LENGTHS[tapeLengthParam].value);
 	}
-	audioBuffer = new float[sizeAudioBuffer * (int) params[TRACK_COUNT_PARAM].getValue()];
-	eraseTape();
+	sizeAudioBuffer = audioFile.getNumSamplesPerChannel();
+	if (what == INIT_TAPE_ERASE) {
+		for (auto i = 0; i < sizeAudioBuffer; ++i) {
+			for (auto channel = 0; channel < audioFile.getNumChannels(); ++channel) {
+				audioFile.samples[channel][i] = 0.f;
+			}
+		}
+	}
 	playStatus = false;
 	cueStatus = false;
 	playForwardStatus = false;
@@ -120,14 +165,29 @@ void TapeRecorder::initTape() {
 		lastDistortionLevelValue[i] = 0;
 	}
 
-	dataFromJsonCalled = false;
+	// dataFromJsonCalled = false;
 	
+	// initThreadEnded = true;
 	changeTapeInterrupt = false;
+	// while (initThreadEnded) {
+		// // std::this_thread::sleep_for(std::chrono::nanoseconds(1));
+		// std::this_thread::sleep_for(std::chrono::milliseconds(10));
+		// DEBUG("initThreadEnded");
+	// }
 }
 
-void TapeRecorder::eraseTape() {
-	for (auto i = 0; i < sizeAudioBuffer; ++i) {
-		audioBuffer[i] = 0.f;
+void TapeRecorder::initTapeThread(InitTape what) {
+	// if (initThread.joinable()) {
+		// return;
+	// }
+	// std::thread initThread([=] {
+		// initTape(what);
+	// });
+	if (!changeTapeInterrupt) {
+		initThreadFuture = std::async([=] {
+			initTape(what);
+			// return true;
+		});
 	}
 }
 
@@ -296,6 +356,10 @@ void TapeRecorder::processAudioOutput(const ProcessArgs& args) {
 // process ****************************************************************
 
 void TapeRecorder::process(const ProcessArgs& args) {
+	// if (callInitTape != INIT_TAPE_NOOP) {
+		// initTapeThread(callInitTape);
+		// return;
+	// }
 	if (changeTapeInterrupt) {
 		params[PLAY_BACKWARDS_PARAM].setValue(0.);
 		params[CUE_BACKWARDS_PARAM].setValue(0.);
@@ -305,10 +369,14 @@ void TapeRecorder::process(const ProcessArgs& args) {
 		tapeStoppedAndResetted = true;
 		return;
 	} else {
+		// if (initThread.joinable()) {
+			// initThreadEnded = false;
+			// initThread.join();
+		// }
 		tapeStoppedAndResetted = false;
 	}
 
-	auto trackCount = (int) params[TRACK_COUNT_PARAM].getValue();
+	auto trackCount = trackCountParam;
 	// tape begin/end reached
 	if (audioBufferPosition <= 0) {
 		tapeStatus = TAPE_BEGIN;
@@ -366,7 +434,7 @@ void TapeRecorder::process(const ProcessArgs& args) {
 	processTempoOutput(args);
 	processTransportOutput();
 
-	tapeSpeed = args.sampleTime * args.sampleRate;//1.f;
+	tapeSpeed = 1.f;
 	
 	processSpeedInput(args);
 	
@@ -517,14 +585,14 @@ void TapeRecorder::process(const ProcessArgs& args) {
 		while (lastAudioBufferLocation < audioBufferLocation) {
 			++lastAudioBufferLocation;
 			if (playStatus) {
-				calcAudio(trackCount);
+				calcAudio(trackCount, 1.f - fractAudioBufferLocation);
 			}
 		}
 	} else {
 		while (lastAudioBufferLocation > audioBufferLocation) {
 			--lastAudioBufferLocation;
 			if (playStatus) {
-				calcAudio(trackCount);
+				calcAudio(trackCount, fractAudioBufferLocation);
 			}
 		}
 	}
@@ -532,9 +600,11 @@ void TapeRecorder::process(const ProcessArgs& args) {
 		outputs[AUDIO_OUTPUT].setChannels(trackCount);
 		for (auto i = 0; i < trackCount; ++i) {
 			if (playStatus) {
-				// TODO add interpolation on recording
-				outputs[AUDIO_OUTPUT].setVoltage(crossfade(audioBuffer[audioBufferLocation * trackCount + i], audioBuffer[(audioBufferLocation + 1) * trackCount + i], fractAudioBufferLocation), i);
-				// outputs[AUDIO_OUTPUT].setVoltage(audioBuffer[audioBufferLocation * trackCount + i], i);
+				if (tapeSpeed > 0) {
+					outputs[AUDIO_OUTPUT].setVoltage(crossfade(audioFile.samples[i][lastAudioBufferLocation - 1], audioFile.samples[i][lastAudioBufferLocation], fractAudioBufferLocation), i);
+				} else {
+					outputs[AUDIO_OUTPUT].setVoltage(crossfade(audioFile.samples[i][lastAudioBufferLocation], audioFile.samples[i][lastAudioBufferLocation + 1], fractAudioBufferLocation), i);
+				}
 			} else {
 				outputs[AUDIO_OUTPUT].setVoltage(inputs[AUDIO_INPUT].getVoltage(i), i);
 			}
@@ -542,7 +612,7 @@ void TapeRecorder::process(const ProcessArgs& args) {
 	}
 }
 
-void TapeRecorder::calcAudio(int trackCount) {
+void TapeRecorder::calcAudio(int trackCount, float fractAudioBufferLocation) {
 	for (auto i = 0; i < trackCount; ++i) {
 		float distortionLevel = inputs[AUDIO_INPUT].getVoltage(i + NUM_MAX_TRACKS * 2);
 		bool distortionOnInput = true;
@@ -554,7 +624,7 @@ void TapeRecorder::calcAudio(int trackCount) {
 			distortionLevel = 10;
 		}
 		distortionLevel = 10 - distortionLevel;
-		if (distortionLevel < 10 && audioBuffer[lastAudioBufferLocation * trackCount + i] > 0) {
+		if (distortionLevel < 10 && audioFile.samples[i][lastAudioBufferLocation] > 0) {
 			if (distortionLevel != lastDistortionLevelInput[i]) {
 				lastDistortionLevelInput[i] = distortionLevel;
 				distortionLevel = pow(2, distortionLevel * 0.65f + 0.6f);
@@ -576,30 +646,31 @@ void TapeRecorder::calcAudio(int trackCount) {
 		if (replaceLevel == 0) {
 			if (distortionLevel != 0) {
 				if (distortionOnInput) {
-					audioBuffer[lastAudioBufferLocation * trackCount + i] = tanh((audioBuffer[lastAudioBufferLocation * trackCount + i] + inputs[AUDIO_INPUT].getVoltage(i)) / distortionLevel) * distortionLevel;
+					audioFile.samples[i][lastAudioBufferLocation] = tanh((audioFile.samples[i][lastAudioBufferLocation] + crossfade(prevInputSample[i], inputs[AUDIO_INPUT].getVoltage(i), fractAudioBufferLocation)) / distortionLevel) * distortionLevel;
 				} else {
-					audioBuffer[lastAudioBufferLocation * trackCount + i] = tanh(audioBuffer[lastAudioBufferLocation * trackCount + i] / distortionLevel) * distortionLevel + inputs[AUDIO_INPUT].getVoltage(i);
+					audioFile.samples[i][lastAudioBufferLocation] = tanh(audioFile.samples[i][lastAudioBufferLocation] / distortionLevel) * distortionLevel + crossfade(prevInputSample[i], inputs[AUDIO_INPUT].getVoltage(i), fractAudioBufferLocation);
 				}
 			} else {
-				audioBuffer[lastAudioBufferLocation * trackCount + i] += inputs[AUDIO_INPUT].getVoltage(i);
+				audioFile.samples[i][lastAudioBufferLocation] += crossfade(prevInputSample[i], inputs[AUDIO_INPUT].getVoltage(i), fractAudioBufferLocation);
 			}
 		} else if (replaceLevel == 10) {
 			if (distortionOnInput) {
-				audioBuffer[lastAudioBufferLocation * trackCount + i] = tanh(inputs[AUDIO_INPUT].getVoltage(i) / distortionLevel) * distortionLevel;
+				audioFile.samples[i][lastAudioBufferLocation] = tanh(crossfade(prevInputSample[i], inputs[AUDIO_INPUT].getVoltage(i), fractAudioBufferLocation) / distortionLevel) * distortionLevel;
 			} else {
-				audioBuffer[lastAudioBufferLocation * trackCount + i] = inputs[AUDIO_INPUT].getVoltage(i);
+				audioFile.samples[i][lastAudioBufferLocation] = crossfade(prevInputSample[i], inputs[AUDIO_INPUT].getVoltage(i), fractAudioBufferLocation);
 			}
 		} else {
 			if (distortionLevel != 0) {
 				if (distortionOnInput) {
-					audioBuffer[lastAudioBufferLocation * trackCount + i] = tanh((audioBuffer[lastAudioBufferLocation * trackCount + i] + inputs[AUDIO_INPUT].getVoltage(i)) / distortionLevel) * distortionLevel * (10.f - replaceLevel) * 0.1f;
+					audioFile.samples[i][lastAudioBufferLocation] = tanh((audioFile.samples[i][lastAudioBufferLocation] + crossfade(prevInputSample[i], inputs[AUDIO_INPUT].getVoltage(i), fractAudioBufferLocation)) / distortionLevel) * distortionLevel * (10.f - replaceLevel) * 0.1f;
 				} else {
-					audioBuffer[lastAudioBufferLocation * trackCount + i] = tanh(audioBuffer[lastAudioBufferLocation * trackCount + i] / distortionLevel) * distortionLevel * (10.f - replaceLevel) * 0.1f + inputs[AUDIO_INPUT].getVoltage(i);
+					audioFile.samples[i][lastAudioBufferLocation] = tanh(audioFile.samples[i][lastAudioBufferLocation] / distortionLevel) * distortionLevel * (10.f - replaceLevel) * 0.1f + crossfade(prevInputSample[i], inputs[AUDIO_INPUT].getVoltage(i), fractAudioBufferLocation);
 				}
 			} else {
-				audioBuffer[lastAudioBufferLocation * trackCount + i] = audioBuffer[lastAudioBufferLocation * trackCount + i] * (10.f - replaceLevel) * 0.1f + inputs[AUDIO_INPUT].getVoltage(i);
+				audioFile.samples[i][lastAudioBufferLocation] = audioFile.samples[i][lastAudioBufferLocation] * (10.f - replaceLevel) * 0.1f + crossfade(prevInputSample[i], inputs[AUDIO_INPUT].getVoltage(i), fractAudioBufferLocation);
 			}
 		}
+		prevInputSample[i] = inputs[AUDIO_INPUT].getVoltage(i);
 	}
 }
 
@@ -619,16 +690,18 @@ void TapeRecorder::calcAudio(int trackCount) {
 // }
 
 void TapeRecorder::setTrackCount(int trackCount) {
-	if (params[TRACK_COUNT_PARAM].getValue() != trackCount) {
-		params[TRACK_COUNT_PARAM].setValue(trackCount);
-		initTape();
+	if (trackCountParam != trackCount) {
+		trackCountParam = trackCount;
+		// initTapeThread(INIT_TAPE_TRACK_COUNT);
+		initTape(INIT_TAPE_TRACK_COUNT);
 	}
 }
 
 void TapeRecorder::setTapeLength(int tapeLength) {
-	if (sizeof (*audioBuffer) / sizeof (float) != params[TRACK_COUNT_PARAM].getValue() * TAPE_LENGTHS[tapeLength].value) {
-		params[TAPE_LENGTH_PARAM].setValue(tapeLength);
-		initTape();
+	if (sizeAudioBuffer != TAPE_LENGTHS[tapeLength].value) {
+		tapeLengthParam = tapeLength;
+		// initTapeThread(INIT_TAPE_LENGTH);
+		initTape(INIT_TAPE_LENGTH);
 	}
 }
 
@@ -695,31 +768,78 @@ json_t* TapeRecorder::dataToJson() {
 	json_t* rootJ = json_object();
 	json_object_set_new(rootJ, "tape-name", json_string(tapeName.c_str()));
 	json_object_set_new(rootJ, "tape-stripe", json_integer(stripeIndex));
+	json_object_set_new(rootJ, "audio-file-path", json_string(audioFilePath.c_str()));
+	json_object_set_new(rootJ, "track-count", json_integer(trackCountParam));
+	json_object_set_new(rootJ, "tape-length", json_integer(tapeLengthParam));
 	return rootJ;
 }
 
 void TapeRecorder::dataFromJson(json_t* rootJ) {
-	json_t* tapeNameJ = json_object_get(rootJ, "tape-name");
-	if (tapeNameJ) {
-		tapeName = json_string_value(tapeNameJ);
+	if (!changeTapeInterrupt) {
+		json_t* tapeNameJ = json_object_get(rootJ, "tape-name");
+		if (tapeNameJ) {
+			oldTapeName = tapeName;
+			tapeName = json_string_value(tapeNameJ);
+		}
+		json_t* tapeStripeJ = json_object_get(rootJ, "tape-stripe");
+		if (tapeStripeJ) {
+			oldStripeIndex = stripeIndex;
+			stripeIndex = json_integer_value(tapeStripeJ);
+		}
+		json_t* audioFilePathJ = json_object_get(rootJ, "audio-file-path");
+		if (audioFilePathJ) {
+			oldAudioFilePath = audioFilePath;
+			audioFilePath = json_string_value(audioFilePathJ);
+		}
+		json_t* trackCountJ = json_object_get(rootJ, "track-count");
+		if (trackCountJ) {
+			oldTrackCountParam = trackCountParam;
+			trackCountParam = json_integer_value(trackCountJ);
+		}
+		json_t* tapeLengthJ = json_object_get(rootJ, "tape-length");
+		if (tapeLengthJ) {
+			oldTapeLengthParam = tapeLengthParam;
+			tapeLengthParam = json_integer_value(tapeLengthJ);
+		}
+		initTapeThread(INIT_TAPE_COMPLETE);
+		// initTape(INIT_TAPE_COMPLETE);
+		// callInitTape = INIT_TAPE_COMPLETE;
+		
+		// The currently loaded patch file path.
+		// APP->patch->path
 	}
-	json_t* tapeStripeJ = json_object_get(rootJ, "tape-stripe");
-	if (tapeStripeJ) {
-		stripeIndex = json_integer_value(tapeStripeJ);
-	}
-	initTape();
 }
 
 void TapeRecorder::onAdd(const AddEvent& e) {
-	// std::string path = system::join(createPatchStorageDirectory(), "wavetable.wav");
-	// Read file...
-	DEBUG("onAdd");
+	// initTape(INIT_TAPE_COMPLETE);
+	// DEBUG("onAdd");
 }
 
 void TapeRecorder::onSave(const SaveEvent& e) {
-	// std::string path = system::join(createPatchStorageDirectory(), "wavetable.wav");
-	// Write file...
-	DEBUG("onSave");
+	if (!changeTapeInterrupt) {
+		std::string audioSavePath;
+		if (!audioFilePath.empty()) {
+			audioSavePath = audioFilePath;
+		} else {
+			audioSavePath = std::to_string(id) + ".wav";
+		}
+		audioFile.save(system::join(getAudioFileDir(), audioSavePath), AudioFileFormat::Wave);
+		DEBUG("onSave %s", system::join(getAudioFileDir(), audioSavePath).c_str());
+	}
 }
 
+void TapeRecorder::onRemove(const RemoveEvent& e) {
+	// std::string path = system::join(createPatchStorageDirectory(), "wavetable.wav");
+	// Write file...
+	// DEBUG("onRemove");
+}
+
+// onSampleRateChange
+// onReset
+// onRandomize
+
+std::string TapeRecorder::getAudioFileDir() {
+	system::createDirectory(asset::user(AUDIO_FILE_DIR));
+	return asset::user(AUDIO_FILE_DIR);
+}
 

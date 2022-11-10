@@ -5,7 +5,6 @@ bool Harmonizer::FREQ_RATIOS_INITIALIZED = false;
 
 Harmonizer::Harmonizer() { 
 	config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-	configScrewParams();
 	configParam(VELOCITY_GLOBAL_MODULATION_PARAM,  0, 1, 0, "Velocity Modulation", "%", 0, 100);
 	configParam(PITCH_GLOBAL_MODULATION_PARAM,    -1, 1, 0, "Pitch Modulation", "%", 0, 100);
 	configInput(GATE_INPUT, "Gate");

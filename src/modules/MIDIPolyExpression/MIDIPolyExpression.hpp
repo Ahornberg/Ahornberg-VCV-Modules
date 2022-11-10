@@ -11,13 +11,13 @@ struct MIDIPolyExpressionData {
 	float oldGate;
 };
 
-struct MIDIPolyExpression : BaseModule {
+struct MIDIPolyExpression : Module {
 	constexpr static int MIN_MIDI_CHANNEL = 1;
 	constexpr static int MAX_MIDI_CHANNEL = 16;
 	constexpr static int SLEW_VALUE = 70;
 	constexpr static int INITIAL_SLEW_VALUE = 10000;
 	enum ParamIds {
-		MIDI_CHANNEL_FIRST_PARAM = NUM_MAX_SCREWS,
+		MIDI_CHANNEL_FIRST_PARAM,
 		MIDI_CHANNEL_COUNT_PARAM,
 		GATE_VELOCITY_MODE_PARAM,
 		DECAY_PARAM,

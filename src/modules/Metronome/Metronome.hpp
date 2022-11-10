@@ -1,13 +1,13 @@
 #include "../../Ahornberg.hpp"
 
-struct Metronome : BaseModule {
+struct Metronome : Module {
 	const static int BPM_VALUES[];
 	static std::vector<std::string> BPM_LABELS;
 	constexpr static int NUM_BPM_VALUES = 39;
 	constexpr static int INIT_BPM = 11;
 
 	enum ParamIds {
-		BPM_VALUE_PARAM = NUM_MAX_SCREWS,
+		BPM_VALUE_PARAM,
 		ENUMS(BPM_VALUE_BUTTON_PARAM, NUM_BPM_VALUES),
 		BPM_RESET_VALUE_PARAM,
 		PLAY_PARAM,

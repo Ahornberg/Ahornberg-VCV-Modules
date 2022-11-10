@@ -1,10 +1,10 @@
 #include "../../Ahornberg.hpp"
 
-struct FlyingFader : BaseModule {
+struct FlyingFader : Module {
 	const static std::string INIT_FADER_NAME;
 	
 	enum ParamIds {
-		FADER_PARAM = NUM_MAX_SCREWS,
+		FADER_PARAM,
 		CV_INPUT_WAS_CONNECTED,
 		FADER_VALUE_BEFORE_CONNECTED,
 		AUDIO_POLY_MODE,
