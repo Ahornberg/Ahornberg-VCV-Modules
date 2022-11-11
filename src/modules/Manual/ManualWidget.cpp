@@ -17,8 +17,8 @@ void ManualWidget::step() {
 		}
 		if (manualText && manualText != lastManualText && !manualText->manualTitle.empty()) {
 			lastManualText = manualText;
-			DEBUG("%s", manualText->manualTitle.c_str());
-			DEBUG("%s", manualText->manualContent.c_str());
+			// DEBUG("%s", manualText->manualTitle.c_str());
+			// DEBUG("%s", manualText->manualContent.c_str());
 		}
 	}
 	BaseModuleWidget::step();

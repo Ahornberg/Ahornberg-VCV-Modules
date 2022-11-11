@@ -45,7 +45,6 @@ void CueBackwardsSwitch::onButton(const event::Button& e) {
 	if (tapeRecorder && tapeRecorder->params[TapeRecorder::CUE_BACKWARDS_PARAM].getValue()) {
 		int mods = APP->window->getMods();
 		if ((mods & RACK_MOD_MASK) == RACK_MOD_CTRL) {
-			DEBUG("RACK_MOD_CTRL");
 			tapeRecorder->jumpToTapePosition(TapeRecorder::JUMP_BACKWARDS);
 			tapeRecorder->params[TapeRecorder::CUE_FORWARDS_PARAM].setValue(0.);
 			tapeRecorder->params[TapeRecorder::CUE_BACKWARDS_PARAM].setValue(0.);

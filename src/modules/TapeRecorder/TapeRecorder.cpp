@@ -85,7 +85,7 @@ void TapeRecorder::initTape(InitTape what) {
 			bool loaded = false;
 			// APP->engine->yieldWorkers();
 			// mylock.lock();
-			DEBUG("onLoad %s", system::join(getAudioFileDir(), audioFilePath).c_str());
+			// DEBUG("onLoad %s", system::join(getAudioFileDir(), audioFilePath).c_str());
 			loaded = audioFile.load(system::join(getAudioFileDir(), audioFilePath));
 			// mylock.unlock();
 			if (loaded) {
@@ -824,7 +824,7 @@ void TapeRecorder::onSave(const SaveEvent& e) {
 			audioSavePath = std::to_string(id) + ".wav";
 		}
 		audioFile.save(system::join(getAudioFileDir(), audioSavePath), AudioFileFormat::Wave);
-		DEBUG("onSave %s", system::join(getAudioFileDir(), audioSavePath).c_str());
+		// DEBUG("onSave %s", system::join(getAudioFileDir(), audioSavePath).c_str());
 	}
 }
 
