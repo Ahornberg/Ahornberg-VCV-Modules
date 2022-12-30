@@ -32,7 +32,7 @@ void MIDIPolyExpressionPanicMenuItem::onAction(const event::Action& e) {
 MIDIPolyExpressionWidget::MIDIPolyExpressionWidget(MIDIPolyExpression* module) {
 	setModule(module);
 	setPanel("res/MIDIPolyExpression.svg");
-	setWidthInHP(4);
+	setWidthInHP(2);
 
 	addParam(createParamCentered<KnobTinySnap>(Vec(15, 108), module, MIDIPolyExpression::MIDI_CHANNEL_FIRST_PARAM));
 	addParam(createParamCentered<KnobTinySnap>(Vec(15, 132), module, MIDIPolyExpression::MIDI_CHANNEL_COUNT_PARAM));
