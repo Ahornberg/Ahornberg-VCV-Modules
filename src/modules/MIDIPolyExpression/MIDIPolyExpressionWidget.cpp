@@ -1,53 +1,57 @@
 #include "MIDIPolyExpressionWidget.hpp"
 
-MIDIPolyExpressionGateVelocityModeMenuItem::MIDIPolyExpressionGateVelocityModeMenuItem(MIDIPolyExpression* midipolyExpression) {
-	this->midipolyExpression = midipolyExpression;
+MIDIPolyExpressionGateVelocityModeMenuItem::MIDIPolyExpressionGateVelocityModeMenuItem(MIDIPolyExpression* midiPolyExpression) {
+	this->midiPolyExpression = midiPolyExpression;
 	text = "Gate Velocity Mode";
-	if (midipolyExpression) {
-		rightText = CHECKMARK(midipolyExpression->params[MIDIPolyExpression::GATE_VELOCITY_MODE_PARAM].getValue());
+	if (midiPolyExpression) {
+		rightText = CHECKMARK(midiPolyExpression->params[MIDIPolyExpression::GATE_VELOCITY_MODE_PARAM].getValue());
 	}
 }
 
 void MIDIPolyExpressionGateVelocityModeMenuItem::onAction(const event::Action& e) {
-	if (midipolyExpression) {
-		if (midipolyExpression->params[MIDIPolyExpression::GATE_VELOCITY_MODE_PARAM].getValue()) {
-			midipolyExpression->params[MIDIPolyExpression::GATE_VELOCITY_MODE_PARAM].setValue(0);
+	if (midiPolyExpression) {
+		if (midiPolyExpression->params[MIDIPolyExpression::GATE_VELOCITY_MODE_PARAM].getValue()) {
+			midiPolyExpression->params[MIDIPolyExpression::GATE_VELOCITY_MODE_PARAM].setValue(0);
 		} else {
-			midipolyExpression->params[MIDIPolyExpression::GATE_VELOCITY_MODE_PARAM].setValue(1);			
+			midiPolyExpression->params[MIDIPolyExpression::GATE_VELOCITY_MODE_PARAM].setValue(1);			
 		}
 	}	
 }
 
-MIDIPolyExpressionPanicMenuItem::MIDIPolyExpressionPanicMenuItem(MIDIPolyExpression* midipolyExpression) {
-	this->midipolyExpression = midipolyExpression;
+MIDIPolyExpressionPanicMenuItem::MIDIPolyExpressionPanicMenuItem(MIDIPolyExpression* midiPolyExpression) {
+	this->midiPolyExpression = midiPolyExpression;
 	text = "Panic";
 }
 
 void MIDIPolyExpressionPanicMenuItem::onAction(const event::Action& e) {
-	if (midipolyExpression) {
-		midipolyExpression->onReset();
+	if (midiPolyExpression) {
+		midiPolyExpression->onReset();
 	}
 }
 
 MIDIPolyExpressionWidget::MIDIPolyExpressionWidget(MIDIPolyExpression* module) {
 	setModule(module);
 	setPanel("res/MIDIPolyExpression.svg");
-	setWidthInHP(2);
+	setWidthInHP(4);
 
 	addParam(createParamCentered<KnobTinySnap>(Vec(15, 108), module, MIDIPolyExpression::MIDI_CHANNEL_FIRST_PARAM));
 	addParam(createParamCentered<KnobTinySnap>(Vec(15, 132), module, MIDIPolyExpression::MIDI_CHANNEL_COUNT_PARAM));
 		
-	addParam(createParamCentered<KnobScrew>(Vec(8.3f, 215.25f), module, MIDIPolyExpression::VOLUME_SHAPE_PARAM));
+	addParam(createParamCentered<KnobScrew>(Vec(8.3f, 155.25f), module, MIDIPolyExpression::VOLUME_SHAPE_PARAM));
 	
-	addOutput(createOutputCentered<OutPort>(Vec(15, 234), module, MIDIPolyExpression::GATE_OUTPUT));
+	addOutput(createOutputCentered<OutPort>(Vec(15, 174), module, MIDIPolyExpression::GATE_OUTPUT));
 
-	addParam(createParamCentered<KnobScrew>(Vec(8.3f, 252.75f), module, MIDIPolyExpression::PITCH_SHAPE_PARAM));
+	addParam(createParamCentered<KnobScrew>(Vec(8.3f, 192.75f), module, MIDIPolyExpression::PITCH_SHAPE_PARAM));
 	
-	addOutput(createOutputCentered<OutPort>(Vec(15, 271.5f), module, MIDIPolyExpression::PITCH_OUTPUT));
-	addOutput(createOutputCentered<OutPort>(Vec(15, 302), module, MIDIPolyExpression::MODULATION_OUTPUT));
+	addOutput(createOutputCentered<OutPort>(Vec(15, 211.5f), module, MIDIPolyExpression::PITCH_OUTPUT));
+	addOutput(createOutputCentered<OutPort>(Vec(15, 236.5f), module, MIDIPolyExpression::NOTE_OUTPUT));
+	addOutput(createOutputCentered<OutPort>(Vec(15, 261.5f), module, MIDIPolyExpression::PITCHBEND_OUTPUT));
+
+	addOutput(createOutputCentered<OutPort>(Vec(15, 291), module, MIDIPolyExpression::MODULATION_OUTPUT));
 	
-	addParam(createParamCentered<KnobScrew>(Vec(30.f - 8.3f, 320.75f), module, MIDIPolyExpression::DECAY_PARAM));
-	addParam(createParamCentered<KnobScrew>(Vec(8.3f, 324.25f), module, MIDIPolyExpression::RELEASE_PARAM));
+	addParam(createParamCentered<KnobScrew>(Vec(8.3f, 310.0f), module, MIDIPolyExpression::DECAY_Y_PARAM));
+	addParam(createParamCentered<KnobScrew>(Vec(30.f - 8.3f, 320.75f), module, MIDIPolyExpression::RELEASE_PARAM));
+	addParam(createParamCentered<KnobScrew>(Vec(8.3f, 324.25f), module, MIDIPolyExpression::DECAY_PARAM));
 	
 	addOutput(createOutputCentered<OutPort>(Vec(15, 343), module, MIDIPolyExpression::VOLUME_OUTPUT));
 	
@@ -57,9 +61,9 @@ MIDIPolyExpressionWidget::MIDIPolyExpressionWidget(MIDIPolyExpression* module) {
 }
 
 void MIDIPolyExpressionWidget::contextMenu(Menu* menu) {
-	MIDIPolyExpression* midipolyExpression = dynamic_cast<MIDIPolyExpression*>(this->module);
-	menu->addChild(new MIDIPolyExpressionGateVelocityModeMenuItem(midipolyExpression));
-	menu->addChild(new MIDIPolyExpressionPanicMenuItem(midipolyExpression));
+	MIDIPolyExpression* midiPolyExpression = dynamic_cast<MIDIPolyExpression*>(this->module);
+	menu->addChild(new MIDIPolyExpressionGateVelocityModeMenuItem(midiPolyExpression));
+	menu->addChild(new MIDIPolyExpressionPanicMenuItem(midiPolyExpression));
 }
 
 Model* modelMIDIPolyExpression = createModel<MIDIPolyExpression, MIDIPolyExpressionWidget>("MIDIPolyExpression");

@@ -6,15 +6,15 @@ struct MIDIPolyExpressionWidget : BaseModuleWidget {
 };
 
 struct MIDIPolyExpressionGateVelocityModeMenuItem : MenuItem {
-	MIDIPolyExpression* midipolyExpression;
+	MIDIPolyExpression* midiPolyExpression;
 	
-	MIDIPolyExpressionGateVelocityModeMenuItem(MIDIPolyExpression* midipolyExpression);
+	MIDIPolyExpressionGateVelocityModeMenuItem(MIDIPolyExpression* midiPolyExpression);
 	void onAction(const event::Action& e) override;
 };
 
 struct MIDIPolyExpressionPanicMenuItem : MenuItem {
-	MIDIPolyExpression* midipolyExpression;
+	MIDIPolyExpression* midiPolyExpression;
 	
-	MIDIPolyExpressionPanicMenuItem(MIDIPolyExpression* midipolyExpression);
+	MIDIPolyExpressionPanicMenuItem(MIDIPolyExpression* midiPolyExpression);
 	void onAction(const event::Action& e) override;
 };

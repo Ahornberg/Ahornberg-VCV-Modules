@@ -24,6 +24,7 @@ struct MIDIPolyExpression : Module {
 		RELEASE_PARAM,
 		PITCH_SHAPE_PARAM,
 		VOLUME_SHAPE_PARAM,
+		DECAY_Y_PARAM,
 		NUM_PARAMS
 	};
 	enum InputIds {
@@ -34,6 +35,8 @@ struct MIDIPolyExpression : Module {
 		VOLUME_OUTPUT,
 		PITCH_OUTPUT,
 		MODULATION_OUTPUT,
+		NOTE_OUTPUT,
+		PITCHBEND_OUTPUT,
 		NUM_OUTPUTS
 	};
 	enum LightIds {
@@ -42,9 +45,11 @@ struct MIDIPolyExpression : Module {
 
 	MIDIPolyExpressionData envelopes[MAX_MIDI_CHANNEL];
 	midi::InputQueue midiInput;
-	dsp::ExponentialSlewLimiter pitchSlews[MAX_MIDI_CHANNEL];
+	// dsp::ExponentialSlewLimiter pitchSlews[MAX_MIDI_CHANNEL];
+	dsp::SlewLimiter pitchSlews[MAX_MIDI_CHANNEL];
 	dsp::ExponentialFilter modulationSlews[MAX_MIDI_CHANNEL];
-	dsp::ExponentialSlewLimiter volumeSlews[MAX_MIDI_CHANNEL];
+	// dsp::ExponentialSlewLimiter volumeSlews[MAX_MIDI_CHANNEL];
+	dsp::SlewLimiter volumeSlews[MAX_MIDI_CHANNEL];
 
 	MIDIPolyExpression();
 	void process(const ProcessArgs& args) override;

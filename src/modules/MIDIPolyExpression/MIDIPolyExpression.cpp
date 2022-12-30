@@ -10,10 +10,13 @@ MIDIPolyExpression::MIDIPolyExpression() {
 	configParam(RELEASE_PARAM,  0, 4, 0, "Release");
 	configParam(PITCH_SHAPE_PARAM,  0, 1, 0, "Pitch Shape");
 	configParam(VOLUME_SHAPE_PARAM,  0, 1, 0.2f, "Volume Shape");
+	configParam(DECAY_Y_PARAM,  0, 3, 0, "Decay increase on Y");
 	configOutput(GATE_OUTPUT, "Gate");
 	configOutput(VOLUME_OUTPUT, "Volume");
 	configOutput(PITCH_OUTPUT, "Pitch (1V/Octave)");
 	configOutput(MODULATION_OUTPUT, "Modulation");
+	configOutput(NOTE_OUTPUT, "Note Pitch (1V/Octave)");
+	configOutput(PITCHBEND_OUTPUT, "Pitch-Bend (1V/Octave)");
 	onReset();
 }
 
@@ -27,6 +30,8 @@ void MIDIPolyExpression::process(const ProcessArgs& args) {
 	outputs[GATE_OUTPUT].setChannels(channels);
 	outputs[VOLUME_OUTPUT].setChannels(channels);
 	outputs[PITCH_OUTPUT].setChannels(channels);
+	outputs[NOTE_OUTPUT].setChannels(channels);
+	outputs[PITCHBEND_OUTPUT].setChannels(channels);
 	outputs[MODULATION_OUTPUT].setChannels(channels);
 	for (auto i = 0; i < channels; ++i) {
 		auto channelWithOffset = i + channelOffset;
@@ -51,7 +56,7 @@ void MIDIPolyExpression::process(const ProcessArgs& args) {
 				volumeSlews[channelWithOffset].setRiseFall(SLEW_VALUE, SLEW_VALUE / ((params[RELEASE_PARAM].getValue() + 1) * (noteLength - 1.f) + (params[DECAY_PARAM].getValue() + 1) * (1.5f - noteLength)) / 2.);	
 			} else {
 				// Decay for short notes
-				volumeSlews[channelWithOffset].setRiseFall(SLEW_VALUE, SLEW_VALUE / (params[DECAY_PARAM].getValue() + 1));
+				volumeSlews[channelWithOffset].setRiseFall(SLEW_VALUE, SLEW_VALUE / (params[DECAY_PARAM].getValue() + envelopes[channelWithOffset].modulation * params[DECAY_Y_PARAM].getValue() + 1));
 			}				
 			envelopes[channelWithOffset].oldGate = envelopes[channelWithOffset].gate;	
 		} else if (envelopes[channelWithOffset].gate && envelopes[channelWithOffset].noteLength > args.sampleRate / 44) {
@@ -64,18 +69,26 @@ void MIDIPolyExpression::process(const ProcessArgs& args) {
 			envelopes[channelWithOffset].volume = 0;
 		}
 		if (params[GATE_VELOCITY_MODE_PARAM].getValue()) {
-			// W Gate Velocity Mode off
+			// W Gate Velocity Mode on
 			outputs[GATE_OUTPUT].setVoltage(envelopes[channelWithOffset].noteVolume, i);
 		} else {
-			// W Gate Velocity Mode on
+			// W Gate Velocity Mode off
 			outputs[GATE_OUTPUT].setVoltage(envelopes[channelWithOffset].gate * 10, i);
 		}
+		// Z
+		float volume = volumeSlews[channelWithOffset].process(args.sampleTime, envelopes[channelWithOffset].volume);
+		outputs[VOLUME_OUTPUT].setVoltage(volume, i);
 		// X
-		outputs[PITCH_OUTPUT].setVoltage(envelopes[channelWithOffset].notePitch + pitchSlews[channelWithOffset].process(args.sampleTime, envelopes[channelWithOffset].pitch), i);
+		float pitchbend = 0.f;
+		if (envelopes[channelWithOffset].gate || (volume > 0.f && !envelopes[channelWithOffset].gate)) {
+		// if (volume > 1e-37) {
+			pitchbend = pitchSlews[channelWithOffset].process(args.sampleTime, envelopes[channelWithOffset].pitch);
+		}
+		outputs[PITCH_OUTPUT].setVoltage(envelopes[channelWithOffset].notePitch + pitchbend, i);
+		outputs[NOTE_OUTPUT].setVoltage(envelopes[channelWithOffset].notePitch, i);
+		outputs[PITCHBEND_OUTPUT].setVoltage(pitchbend, i);
 		// Y
 		outputs[MODULATION_OUTPUT].setVoltage(modulationSlews[channelWithOffset].process(args.sampleTime, envelopes[channelWithOffset].modulation), i);
-		// Z
-		outputs[VOLUME_OUTPUT].setVoltage(volumeSlews[channelWithOffset].process(args.sampleTime, envelopes[channelWithOffset].volume), i);
 		envelopes[channelWithOffset].noteLength++;
 	}
 }
@@ -95,8 +108,8 @@ void MIDIPolyExpression::processMidiMessage(const midi::Message& msg) {
 		// note off
 		envelopes[channel].noteVolume = msg.getValue() / -12.7f;
 		envelopes[channel].gate = 0;
-	} else if (msg.getStatus() == 0xa) {
-		// poly aftertouch
+	} else if (msg.getStatus() == 0xa || (msg.getStatus() == 0xb && msg.getNote() == 11)) {
+		// poly aftertouch or CC 11
 		envelopes[channel].volume = msg.getValue() / 12.7f;
 	} else if (msg.getStatus() == 0xd) {
 		// channel aftertouch
