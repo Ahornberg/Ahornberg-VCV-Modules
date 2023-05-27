@@ -61,12 +61,18 @@ void MIDIPolyExpression::process(const ProcessArgs& args) {
 			envelopes[channelWithOffset].oldGate = envelopes[channelWithOffset].gate;	
 		} else if (envelopes[channelWithOffset].gate && envelopes[channelWithOffset].noteLength > args.sampleRate / 44) {
 			// Note on / Decay & Sustain
+			if (envelopes[channelWithOffset].volume - envelopes[channelWithOffset].oldVolume > 0.4) {
+				envelopes[channelWithOffset].volume -= 0.4;
+			} else if (envelopes[channelWithOffset].volume - envelopes[channelWithOffset].oldVolume < -0.4) {
+				envelopes[channelWithOffset].volume += 0.4;
+			}
 			pitchSlews[channelWithOffset].setRiseFall(SLEW_VALUE, SLEW_VALUE);
 			volumeSlews[channelWithOffset].setRiseFall(SLEW_VALUE, SLEW_VALUE);
 		}
 		if (!envelopes[channelWithOffset].gate) {
 			// prevent hanging notes
 			envelopes[channelWithOffset].volume = 0;
+			envelopes[channelWithOffset].oldVolume = 0;
 		}
 		if (params[GATE_VELOCITY_MODE_PARAM].getValue()) {
 			// W Gate Velocity Mode on
@@ -110,10 +116,22 @@ void MIDIPolyExpression::processMidiMessage(const midi::Message& msg) {
 		envelopes[channel].gate = 0;
 	} else if (msg.getStatus() == 0xa || (msg.getStatus() == 0xb && msg.getNote() == 11)) {
 		// poly aftertouch or CC 11
+		envelopes[channel].oldVolume = envelopes[channel].volume;
 		envelopes[channel].volume = msg.getValue() / 12.7f;
+		// if (envelopes[channel].volume - envelopes[channel].oldVolume > 0.2) {
+			// envelopes[channel].volume -= 0.2;
+		// } else if (envelopes[channel].volume - envelopes[channel].oldVolume < -0.2) {
+			// envelopes[channel].volume += 0.2;
+		// }
 	} else if (msg.getStatus() == 0xd) {
 		// channel aftertouch
+		envelopes[channel].oldVolume = envelopes[channel].volume;
 		envelopes[channel].volume = msg.getNote() / 12.7f;
+		// if (envelopes[channel].volume - envelopes[channel].oldVolume > 0.2) {
+			// envelopes[channel].volume -= 0.2;
+		// } else if (envelopes[channel].volume - envelopes[channel].oldVolume < -0.2) {
+			// envelopes[channel].volume += 0.2;
+		// }
 	} else if (msg.getStatus() == 0xe) {
 		// pitch bend
 		envelopes[channel].pitch = 4 * ((((uint16_t) msg.getValue() << 7) | msg.getNote()) - 8192) / 8191.f;
@@ -141,6 +159,7 @@ void MIDIPolyExpression::onReset() {
 		envelopes[i].noteVolume = 0;
 		envelopes[i].notePitch = 0;
 		envelopes[i].volume = 0;
+		envelopes[i].oldVolume = 0;
 		envelopes[i].pitch = 0;
 		envelopes[i].modulation = 0;
 		envelopes[i].gate = 0;

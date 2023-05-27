@@ -6,7 +6,7 @@ struct TopSideBarContainer : OpaqueWidget {
 	void draw(const DrawArgs& disp) override {
 		nvgBeginPath(disp.vg);
 		nvgRect(disp.vg, 0, 0, box.size.x, box.size.y);
-		nvgFillColor(disp.vg, nvgTransRGBA(COLOR_BLACK, 0x80));
+		nvgFillColor(disp.vg, nvgTransRGBA(COLOR_BLACK, 0xC0));
 		nvgFill(disp.vg);
 	}
 

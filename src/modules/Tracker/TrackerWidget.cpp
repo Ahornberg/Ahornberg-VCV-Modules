@@ -30,25 +30,25 @@ void TrackerScreen::draw(const DrawArgs& disp) {
 				nvgFillColor(disp.vg, COLOR_YELLOW);
 			}
 			
-			// nvgText(disp.vg, 10, i * 1.1875 - 2.25, (std::to_string(i / 10) + "---\u02DCOgOgOgOg").c_str(), NULL);
-			// nvgText(disp.vg, 10, i * 1.1875 - 2.25, (std::to_string(i / 10) + "---\u02DC\u02C7~\u02DCOgOgOgOg").c_str(), NULL);
-			// nvgText(disp.vg, 10, i * 1.1875 - 2.25, (std::to_string(i / 10) + "---vpfrOgOgOgOg").c_str(), NULL);
+			nvgText(disp.vg, 10, i * 1.1875 - 2.25, (std::to_string(i / 10) + "---\u02DCOgOgOgOg").c_str(), NULL);
+			nvgText(disp.vg, 10, i * 1.1875 - 2.25, (std::to_string(i / 10) + "---\u02DC\u02C7~\u02DCOgOgOgOg").c_str(), NULL);
+			nvgText(disp.vg, 10, i * 1.1875 - 2.25, (std::to_string(i / 10) + "---vpfrOgOgOgOg").c_str(), NULL);
 		}
 		nvgText(disp.vg, 10, 10, text.c_str(), NULL);
 	}
 }
 
 void TrackerScreen::onHoverScroll(const HoverScrollEvent& e) {
-	// if ((APP->window->getMods() & RACK_MOD_MASK) == RACK_MOD_CTRL) {
-		// // Increase zoom
-		// float zoomDelta = e.scrollDelta.y / 50 / 4;
-		// if (settings::invertZoom)
-			// zoomDelta *= -1;
-		// float zoom = dynamic_cast<ZoomWidget*>(getParent())->getZoom() * std::pow(2.f, zoomDelta);
-		// zoom = math::clamp(zoom, std::pow(2.f, -2), std::pow(2.f, 2));
-		// dynamic_cast<ZoomWidget*>(getParent())->setZoom(zoom);
-		// e.consume(this);
-	// }
+	if ((APP->window->getMods() & RACK_MOD_MASK) == RACK_MOD_CTRL) {
+		// Increase zoom
+		float zoomDelta = e.scrollDelta.y / 50 / 4;
+		if (settings::invertZoom)
+			zoomDelta *= -1;
+		float zoom = dynamic_cast<ZoomWidget*>(getParent())->getZoom() * std::pow(2.f, zoomDelta);
+		zoom = math::clamp(zoom, std::pow(2.f, -2), std::pow(2.f, 2));
+		dynamic_cast<ZoomWidget*>(getParent())->setZoom(zoom);
+		e.consume(this);
+	}
 
 	// if (e.isConsumed())
 		// return;
@@ -61,17 +61,17 @@ TrackerWidget::TrackerWidget(Tracker* module) {
 	setWidthInHP(12);
 	if (module) {
 		WindowManager::getInstance();
-		// if (APP->scene->browser->getFirstDescendantOfType<TrackerScreen>()) {
-			// DEBUG("found %f", 0.0);
-		// }
-		// trackerScreen = new TrackerScreen(Rect(0, 0, 180, 380), module);
-		// zoomWidget = new ZoomWidget;
-		// zoomWidget->setZoom(2.0);
-		// zoomWidget->setPosition(Vec(10, 40));
-		// zoomWidget->addChild(trackerScreen);
+		if (APP->scene->browser->getFirstDescendantOfType<TrackerScreen>()) {
+			DEBUG("found %f", 0.0);
+		}
+		trackerScreen = new TrackerScreen(Rect(0, 0, 180, 380), module);
+		zoomWidget = new ZoomWidget;
+		zoomWidget->setZoom(2.0);
+		zoomWidget->setPosition(Vec(10, 40));
+		zoomWidget->addChild(trackerScreen);
 		
-		// APP->scene->addChildBelow(zoomWidget, APP->scene->browser);
-		// trackerScreen->text = "?";
+		APP->scene->addChildBelow(zoomWidget, APP->scene->browser);
+		trackerScreen->text = "?";
 	}
 	trackerScreen = new TrackerScreen(Rect(0, 0, 180, 380), module);
 	trackerScreen->text = "?";
@@ -89,7 +89,7 @@ TrackerWidget::TrackerWidget(Tracker* module) {
 
 void TrackerWidget::step() {
 	if (module) {
-		//trackerScreen->text = std::to_string(zoomWidget->getZoom());
+		trackerScreen->text = std::to_string(zoomWidget->getZoom());
 	}
 }
 

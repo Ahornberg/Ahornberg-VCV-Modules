@@ -4,6 +4,7 @@ struct MIDIPolyExpressionData {
 	float noteVolume;
 	float notePitch;
 	float volume;
+	float oldVolume;
 	float noteLength;
 	float pitch;
 	float modulation;
