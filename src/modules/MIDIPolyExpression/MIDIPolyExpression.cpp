@@ -71,6 +71,14 @@ void MIDIPolyExpression::process(const ProcessArgs& args) {
 					// DEBUG("up %f", outputs[PITCH_OUTPUT].getVoltage(i) * 12.0);
 					envelopes[channelWithOffset].volume += 0.1;
 				}
+			} else {
+				if (envelopes[channelWithOffset].volume - envelopes[channelWithOffset].oldVolume > 0.4) {
+					// DEBUG("down %f", outputs[PITCH_OUTPUT].getVoltage(i) * 12.0);
+					envelopes[channelWithOffset].volume -= 0.4;
+				} else if (envelopes[channelWithOffset].volume - envelopes[channelWithOffset].oldVolume < -0.4) {
+					// DEBUG("up %f", outputs[PITCH_OUTPUT].getVoltage(i) * 12.0);
+					envelopes[channelWithOffset].volume += 0.4;
+				}				
 			}
 			pitchSlews[channelWithOffset].setRiseFall(SLEW_VALUE, SLEW_VALUE);
 			volumeSlews[channelWithOffset].setRiseFall(SLEW_VALUE, SLEW_VALUE);
