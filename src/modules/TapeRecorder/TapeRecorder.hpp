@@ -182,4 +182,5 @@ struct TapeRecorder : Module {
 	void onSave(const SaveEvent& e) override;
 	void onRemove(const RemoveEvent& e) override;
 	std::string getAudioFileDir();
+	bool isTapeEmpty();
 };
