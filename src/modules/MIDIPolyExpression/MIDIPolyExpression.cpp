@@ -61,10 +61,16 @@ void MIDIPolyExpression::process(const ProcessArgs& args) {
 			envelopes[channelWithOffset].oldGate = envelopes[channelWithOffset].gate;	
 		} else if (envelopes[channelWithOffset].gate && envelopes[channelWithOffset].noteLength > args.sampleRate / 44) {
 			// Note on / Decay & Sustain
-			if (envelopes[channelWithOffset].volume - envelopes[channelWithOffset].oldVolume > 0.4) {
-				envelopes[channelWithOffset].volume -= 0.4;
-			} else if (envelopes[channelWithOffset].volume - envelopes[channelWithOffset].oldVolume < -0.4) {
-				envelopes[channelWithOffset].volume += 0.4;
+			float pitchbendPos = abs(envelopes[channelWithOffset].pitch * 12.f);
+			pitchbendPos -= int(pitchbendPos);
+			if (pitchbendPos > 0.35 && pitchbendPos < 0.65) { 
+				if (envelopes[channelWithOffset].volume - envelopes[channelWithOffset].oldVolume > 0.1) {
+					// DEBUG("down %f", outputs[PITCH_OUTPUT].getVoltage(i) * 12.0);
+					envelopes[channelWithOffset].volume -= 0.1;
+				} else if (envelopes[channelWithOffset].volume - envelopes[channelWithOffset].oldVolume < -0.1) {
+					// DEBUG("up %f", outputs[PITCH_OUTPUT].getVoltage(i) * 12.0);
+					envelopes[channelWithOffset].volume += 0.1;
+				}
 			}
 			pitchSlews[channelWithOffset].setRiseFall(SLEW_VALUE, SLEW_VALUE);
 			volumeSlews[channelWithOffset].setRiseFall(SLEW_VALUE, SLEW_VALUE);
