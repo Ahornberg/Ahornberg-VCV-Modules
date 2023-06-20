@@ -517,14 +517,18 @@ void TapeRecorder::process(const ProcessArgs& args) {
 		if (loopStart < loopEnd) {
 			if (audioBufferPosition <= loopStartPosition && playStatus && !playForwardStatus) {
 				audioBufferPosition = loopEndPosition;
+				lastAudioBufferLocation = loopEndPosition;
 			} else if (audioBufferPosition > loopEndPosition && playStatus && playForwardStatus) {
 				audioBufferPosition = loopStartPosition;
+				lastAudioBufferLocation = loopStartPosition;
 			}
 		} else if (loopStart > loopEnd) {
 			if (audioBufferPosition <= loopEndPosition && playStatus && !playForwardStatus) {
 				audioBufferPosition = loopStartPosition;
+				lastAudioBufferLocation = loopStartPosition;
 			} else if (audioBufferPosition > loopStartPosition && playStatus && playForwardStatus) {
 				audioBufferPosition = loopEndPosition;
+				lastAudioBufferLocation = loopEndPosition;
 			}
 		}
 	}
