@@ -82,13 +82,13 @@ void TapeRecorder::initTape(InitTape what) {
 			// std::this_thread::sleep_for(std::chrono::duration<double>(100e-6));
 	callInitTape = INIT_TAPE_NOOP;
 	changeTapeInterrupt = true;
-	DEBUG("initTape what = %i", what);
+	// DEBUG("initTape what = %i", what);
 	if (what == INIT_TAPE_COMPLETE) {
 		if (!audioFilePath.empty()) {
 			bool loaded = false;
 			// APP->engine->yieldWorkers();
 			// mylock.lock();
-			DEBUG("onLoad %s", system::join(getPatchStorageDirectory(), audioFilePath).c_str());
+			// DEBUG("onLoad %s", system::join(getPatchStorageDirectory(), audioFilePath).c_str());
 			
 			loaded = audioFile.load(system::join(getPatchStorageDirectory(), audioFilePath));
 			// mylock.unlock();
