@@ -1,5 +1,6 @@
 // #include <chrono>
 #include "TapeRecorder.hpp"
+// #include <thread>
 
 const std::string TapeRecorder::INITIAL_TAPE_NAME = "My Magic Tape";
 const TapeLength TapeRecorder::TAPE_LENGTHS[] = {
@@ -68,8 +69,9 @@ TapeRecorder::TapeRecorder() {
 	tapeStoppedAndResetted = true;
 	// audioBuffer = nullptr;
 	// initTapeThread(INIT_TAPE_COMPLETE);
+	audioFilePath = "";
 	callInitTape = INIT_TAPE_NOOP;
-	initTape(INIT_TAPE_COMPLETE);
+	initTapeThread(INIT_TAPE_COMPLETE);
 }
 
 TapeRecorder::~TapeRecorder() {
@@ -77,16 +79,18 @@ TapeRecorder::~TapeRecorder() {
 }
 
 void TapeRecorder::initTape(InitTape what) {
+			// std::this_thread::sleep_for(std::chrono::duration<double>(100e-6));
 	callInitTape = INIT_TAPE_NOOP;
 	changeTapeInterrupt = true;
-	// DEBUG("initTape what = %i", what);
+	DEBUG("initTape what = %i", what);
 	if (what == INIT_TAPE_COMPLETE) {
 		if (!audioFilePath.empty()) {
 			bool loaded = false;
 			// APP->engine->yieldWorkers();
 			// mylock.lock();
-			// DEBUG("onLoad %s", audioFilePath.c_str());
-			loaded = audioFile.load(audioFilePath);
+			DEBUG("onLoad %s", system::join(getPatchStorageDirectory(), audioFilePath).c_str());
+			
+			loaded = audioFile.load(system::join(getPatchStorageDirectory(), audioFilePath));
 			// mylock.unlock();
 			if (loaded) {
 				if (audioFile.getNumChannels() > NUM_MAX_TRACKS) {
@@ -184,10 +188,10 @@ void TapeRecorder::initTapeThread(InitTape what) {
 		// initTape(what);
 	// });
 	if (!changeTapeInterrupt) {
-		initThreadFuture = std::async([=] {
+		// initThreadFuture = std::async([=] {
 			initTape(what);
 			// return true;
-		});
+		// });
 	}
 }
 
@@ -692,16 +696,16 @@ void TapeRecorder::calcAudio(int trackCount, float fractAudioBufferLocation) {
 void TapeRecorder::setTrackCount(int trackCount) {
 	if (trackCountParam != trackCount) {
 		trackCountParam = trackCount;
-		// initTapeThread(INIT_TAPE_TRACK_COUNT);
-		initTape(INIT_TAPE_TRACK_COUNT);
+		initTapeThread(INIT_TAPE_TRACK_COUNT);
+		// initTape(INIT_TAPE_TRACK_COUNT);
 	}
 }
 
 void TapeRecorder::setTapeLength(int tapeLength) {
 	if (sizeAudioBuffer != TAPE_LENGTHS[tapeLength].value) {
 		tapeLengthParam = tapeLength;
-		// initTapeThread(INIT_TAPE_LENGTH);
-		initTape(INIT_TAPE_LENGTH);
+		initTapeThread(INIT_TAPE_LENGTH);
+		// initTape(INIT_TAPE_LENGTH);
 	}
 }
 
@@ -768,9 +772,10 @@ json_t* TapeRecorder::dataToJson() {
 	json_t* rootJ = json_object();
 	json_object_set_new(rootJ, "tape-name", json_string(tapeName.c_str()));
 	json_object_set_new(rootJ, "tape-stripe", json_integer(stripeIndex));
-	// json_object_set_new(rootJ, "audio-file-path", json_string(audioFilePath.c_str()));
+	// json_object_set_new(rootJ, "audio-file-path", audioFilePath.c_str()));
 	if (!isTapeEmpty()) {
-		json_object_set_new(rootJ, "audio-file-path", json_string(system::join(createPatchStorageDirectory(), "tape.wav").c_str()));
+		// audioFilePath = "tape.wav";
+		json_object_set_new(rootJ, "audio-file-path", json_string("tape.wav"));
 	}
 	json_object_set_new(rootJ, "track-count", json_integer(trackCountParam));
 	json_object_set_new(rootJ, "tape-length", json_integer(tapeLengthParam));
