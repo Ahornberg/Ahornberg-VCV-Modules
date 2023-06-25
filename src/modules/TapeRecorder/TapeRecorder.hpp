@@ -91,6 +91,7 @@ struct TapeRecorder : Module {
 	bool tapeStoppedAndResetted;
 	AudioFile<float> audioFile;
 	// std::mutex mylock;
+	bool loadFromPreset;
 	std::string audioFilePath;
 	std::string oldAudioFilePath;
 	std::string warningString;
@@ -182,5 +183,7 @@ struct TapeRecorder : Module {
 	void onSave(const SaveEvent& e) override;
 	void onRemove(const RemoveEvent& e) override;
 	std::string getAudioFileDir();
+	void saveAudioFile(std::string path);
+	void loadAudioFile(std::string path);
 	bool isTapeEmpty();
 };

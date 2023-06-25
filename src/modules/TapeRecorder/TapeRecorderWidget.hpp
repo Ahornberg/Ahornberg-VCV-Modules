@@ -230,4 +230,7 @@ struct TapeRecorderWidget : BaseModuleWidget {
 	TapeRecorderWidget(TapeRecorder* module);
 	void contextMenu(Menu* menu) override;
 	void step() override;
+	void loadActionCustom(std::string filename) override;
+	void saveDialogCustom() override;
+	void saveTemplateCustom() override;
 };

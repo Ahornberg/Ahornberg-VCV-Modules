@@ -69,7 +69,9 @@ TapeRecorder::TapeRecorder() {
 	tapeStoppedAndResetted = true;
 	// audioBuffer = nullptr;
 	// initTapeThread(INIT_TAPE_COMPLETE);
+	// audioFile.shouldLogErrorsToConsole(false);
 	audioFilePath = "";
+	loadFromPreset = false;
 	callInitTape = INIT_TAPE_NOOP;
 	initTapeThread(INIT_TAPE_COMPLETE);
 }
@@ -89,8 +91,11 @@ void TapeRecorder::initTape(InitTape what) {
 			// APP->engine->yieldWorkers();
 			// mylock.lock();
 			// DEBUG("onLoad %s", system::join(getPatchStorageDirectory(), audioFilePath).c_str());
-			
-			loaded = audioFile.load(system::join(getPatchStorageDirectory(), audioFilePath));
+			if (loadFromPreset) {
+				loaded = audioFile.load(audioFilePath);
+			} else {
+				loaded = audioFile.load(system::join(getPatchStorageDirectory(), audioFilePath));
+			}
 			// mylock.unlock();
 			if (loaded) {
 				if (audioFile.getNumChannels() > NUM_MAX_TRACKS) {
@@ -111,7 +116,7 @@ void TapeRecorder::initTape(InitTape what) {
 					tapeLengthParam = NUM_TAPE_LENGTHS - 1;
 				}
 			} else {
-				warningString = "Tape Recorder is unable to load file " + audioFilePath;
+				// warningString = "Tape Recorder is unable to load file " + audioFilePath;
 				tapeName = oldTapeName;
 				stripeIndex = oldStripeIndex;
 				audioFilePath = oldAudioFilePath;
@@ -813,7 +818,10 @@ void TapeRecorder::dataFromJson(json_t* rootJ) {
 			oldTapeLengthParam = tapeLengthParam;
 			tapeLengthParam = json_integer_value(tapeLengthJ);
 		}
-		initTapeThread(INIT_TAPE_COMPLETE);
+		if (!loadFromPreset) {
+			initTapeThread(INIT_TAPE_COMPLETE);
+		}
+		loadFromPreset = false;
 		// initTape(INIT_TAPE_COMPLETE);
 		// callInitTape = INIT_TAPE_COMPLETE;
 		
@@ -825,6 +833,7 @@ void TapeRecorder::dataFromJson(json_t* rootJ) {
 void TapeRecorder::onAdd(const AddEvent& e) {
 	// audioFilePath = system::join(createPatchStorageDirectory(), "tape.wav");
 	// initTape(INIT_TAPE_COMPLETE);
+	loadFromPreset = true;
 	// DEBUG("onAdd");
 }
 
@@ -859,6 +868,27 @@ void TapeRecorder::onRemove(const RemoveEvent& e) {
 std::string TapeRecorder::getAudioFileDir() {
 	system::createDirectory(asset::user(AUDIO_FILE_DIR));
 	return asset::user(AUDIO_FILE_DIR);
+}
+
+void TapeRecorder::saveAudioFile(std::string path) {
+	if (isTapeEmpty()) {
+		system::remove(path);
+	} else {
+		audioFile.setBitDepth(32);
+		audioFile.save(path, AudioFileFormat::Wave);
+	}
+}
+
+void TapeRecorder::loadAudioFile(std::string path) {
+	if (!path.empty()) {
+		audioFilePath = path;
+		// DEBUG("beforeLoad %s", path.c_str());
+		loadFromPreset = true;
+		initTapeThread(INIT_TAPE_COMPLETE);
+		// DEBUG("afterLoad %s", path.c_str());
+	} else {
+		initTapeThread(TapeRecorder::INIT_TAPE_ERASE);
+	}
 }
 
 bool TapeRecorder::isTapeEmpty() {

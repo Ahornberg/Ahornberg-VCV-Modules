@@ -52,7 +52,7 @@ bool BaseModuleWidget::isBypassed() {
 }
 
 // Create ModulePresetPathItems for each patch in a directory.
-static void appendPresetItems(ui::Menu* menu, WeakPtr<ModuleWidget> moduleWidget, std::string presetDir) {
+static void appendPresetItems(ui::Menu* menu, WeakPtr<BaseModuleWidget> moduleWidget, std::string presetDir) {
 	bool hasPresets = false;
 	// Note: This is not cached, so opening this menu each time might have a bit of latency.
 	if (system::isDirectory(presetDir)) {
@@ -80,7 +80,7 @@ static void appendPresetItems(ui::Menu* menu, WeakPtr<ModuleWidget> moduleWidget
 					if (!moduleWidget)
 						return;
 					try {
-						moduleWidget->loadAction(path);
+						moduleWidget->loadActionCustom(path);
 					}
 					catch (Exception& e) {
 						osdialog_message(OSDIALOG_WARNING, OSDIALOG_OK, e.what());
@@ -256,7 +256,7 @@ void BaseModuleWidget::createCustomContextMenu() {
 	ui::Menu* menu = createMenu();
 	assert(model);
 
-	WeakPtr<ModuleWidget> weakThis = this;
+	WeakPtr<BaseModuleWidget> weakThis = this;
 
 	// Brand and module name
 	menu->addChild(createMenuLabel(model->name));
@@ -284,19 +284,19 @@ void BaseModuleWidget::createCustomContextMenu() {
 		menu->addChild(createMenuItem("Open", "", [=]() {
 			if (!weakThis)
 				return;
-			weakThis->loadDialog();
+			weakThis->loadDialogCustom();
 		}));
 
 		menu->addChild(createMenuItem("Save as", "", [=]() {
 			if (!weakThis)
 				return;
-			weakThis->saveDialog();
+			weakThis->saveDialogCustom();
 		}));
 
 		menu->addChild(createMenuItem("Save template", "", [=]() {
 			if (!weakThis)
 				return;
-			weakThis->saveTemplateDialog();
+			weakThis->saveTemplateDialogCustom();
 		}));
 
 		menu->addChild(createMenuItem("Clear template", "", [=]() {
@@ -379,5 +379,59 @@ void BaseModuleWidget::createCustomContextMenu() {
 	}, false, true));
 
 	appendContextMenu(menu);
+}
+
+void BaseModuleWidget::loadDialogCustom() {
+	std::string presetDir = model->getUserPresetDirectory();
+	system::createDirectories(presetDir);
+
+	// Delete directories if empty
+	DEFER({
+		try {
+			system::remove(presetDir);
+			system::remove(system::getDirectory(presetDir));
+		}
+		catch (Exception& e) {
+			// Ignore exceptions if directory cannot be removed.
+		}
+	});
+
+	osdialog_filters* filters = osdialog_filters_parse(PRESET_FILTERS);
+	DEFER({osdialog_filters_free(filters);});
+
+	char* pathC = osdialog_file(OSDIALOG_OPEN, presetDir.c_str(), NULL, filters);
+	if (!pathC) {
+		// No path selected
+		return;
+	}
+	DEFER({std::free(pathC);});
+
+	try {
+		loadActionCustom(pathC);
+	}
+	catch (Exception& e) {
+		osdialog_message(OSDIALOG_WARNING, OSDIALOG_OK, e.what());
+	}
+}
+
+void BaseModuleWidget::loadActionCustom(std::string filename) {
+	loadAction(filename);
+}
+
+void BaseModuleWidget::saveDialogCustom() {
+	saveDialog();
+}
+
+void BaseModuleWidget::saveTemplateCustom() {
+	saveTemplate();
+}
+
+void BaseModuleWidget::saveTemplateDialogCustom() {
+	if (hasTemplate()) {
+		std::string message = string::f("Overwrite default preset for %s?", model->getFullName().c_str());
+		if (!osdialog_message(OSDIALOG_INFO, OSDIALOG_OK_CANCEL, message.c_str()))
+			return;
+	}
+	saveTemplateCustom();
 }
 

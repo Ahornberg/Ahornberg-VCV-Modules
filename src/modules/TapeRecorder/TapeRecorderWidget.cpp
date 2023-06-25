@@ -767,7 +767,7 @@ EraseTapeMenuItem::EraseTapeMenuItem(TapeRecorder* tapeRecorder) : TapeRecorderM
 
 void EraseTapeMenuItem::onAction(const event::Action& e) {
 	if (tapeRecorder) {
-		tapeRecorder->initTape(TapeRecorder::INIT_TAPE_ERASE);
+		tapeRecorder->initTapeThread(TapeRecorder::INIT_TAPE_ERASE);
 	}
 }
 
@@ -862,10 +862,84 @@ void TapeRecorderWidget::step() {
 			tapeRecorder->warningString = "";
 		}
 		if (tapeRecorder->callInitTape != TapeRecorder::INIT_TAPE_NOOP) {
-			tapeRecorder->initTape(tapeRecorder->callInitTape);
+			tapeRecorder->initTapeThread(tapeRecorder->callInitTape);
 		}
 	}
 	BaseModuleWidget::step();
+}
+
+void TapeRecorderWidget::loadActionCustom(std::string filename) {
+	// history::ModuleChange
+	history::ModuleChange* h = new history::ModuleChange;
+	h->name = "load module preset";
+	h->moduleId = module->id;
+	h->oldModuleJ = toJson();
+
+	try {
+		load(filename);
+		// load audio
+		std::string audioFilename = system::join(
+		system::getDirectory(filename), system::getStem(filename) + ".wav");
+		if (system::exists(audioFilename)) {
+			dynamic_cast<TapeRecorder*>(module)->loadAudioFile(audioFilename);
+		} else {
+			dynamic_cast<TapeRecorder*>(module)->loadAudioFile("");
+		}
+	}
+	catch (Exception& e) {
+		delete h;
+		throw;
+	}
+
+	// TODO We can use `moduleJ` here instead to save a toJson() call.
+	h->newModuleJ = toJson();
+	APP->history->push(h);
+}
+
+void TapeRecorderWidget::saveDialogCustom() {
+	std::string presetDir = model->getUserPresetDirectory();
+	system::createDirectories(presetDir);
+
+	// Delete directories if empty
+	DEFER({
+		try {
+			system::remove(presetDir);
+			system::remove(system::getDirectory(presetDir));
+		}
+		catch (Exception& e) {
+			// Ignore exceptions if directory cannot be removed.
+		}
+	});
+
+	osdialog_filters* filters = osdialog_filters_parse(PRESET_FILTERS);
+	DEFER({osdialog_filters_free(filters);});
+
+	char* pathC = osdialog_file(OSDIALOG_SAVE, presetDir.c_str(), "Untitled.vcvm", filters);
+	if (!pathC) {
+		// No path selected
+		return;
+	}
+	DEFER({std::free(pathC);});
+
+	std::string path = pathC;
+	// Automatically append .vcvm extension
+	if (system::getExtension(path) != ".vcvm")
+		path += ".vcvm";
+	
+	// save audio
+	dynamic_cast<TapeRecorder*>(module)->saveAudioFile(system::join(
+		system::getDirectory(path), system::getStem(path) + ".wav"));
+	// save template
+	save(path);
+}
+
+void TapeRecorderWidget::saveTemplateCustom() {
+	// save audio
+	std::string presetDir = model->getUserPresetDirectory();
+	system::createDirectories(presetDir);
+	dynamic_cast<TapeRecorder*>(module)->saveAudioFile(system::join(presetDir, "template.wav"));
+	// save template	
+	saveTemplate();
 }
 
 Model* modelTapeRecorder = createModel<TapeRecorder, TapeRecorderWidget>("TapeRecorder");

@@ -1,3 +1,4 @@
+static const char PRESET_FILTERS[] = "VCV Rack module preset (.vcvm):vcvm";
 static const char SELECTION_FILTERS[] = "VCV Rack module selection (.vcvs):vcvs";
 
 struct SizedTransparentWidget : TransparentWidget {
@@ -19,4 +20,9 @@ struct BaseModuleWidget : ModuleWidget {
 	void loadSelection(std::string path);
 	void onButton(const ButtonEvent& e) override;
 	virtual void createCustomContextMenu();
+	void loadDialogCustom();
+	virtual void loadActionCustom(std::string filename);
+	virtual void saveDialogCustom();
+	virtual void saveTemplateCustom();
+	void saveTemplateDialogCustom();
 };
