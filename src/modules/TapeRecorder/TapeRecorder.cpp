@@ -31,8 +31,10 @@ TapeRecorder::TapeRecorder() {
 	configParam(BEATS_PER_BAR_PARAM,       1,    48,   4, "Beats / Bar");
 	configParam(LOOP_START_PARAM,          0,    99,   0, "Loop Start on Bar");
 	configParam(LOOP_END_PARAM,            0,    99,   0, "Loop End on Bar");
-	// configParam(LOOP_START_BUTTON_PARAM,   0,     1,   0, "Loop Start on Tape Position");
-	// configParam(LOOP_END_BUTTON_PARAM,     0,     1,   0, "Loop End on Tape Position");
+	// configParam(LOOP_START_FRACT_PARAM,    0,    99,   0, "Loop Start on Bar");
+	// configParam(LOOP_END_FRACT_PARAM,      0,    99,   0, "Loop End on Bar");
+	configParam(LOOP_START_BUTTON_PARAM,   0,     1,   0, "Loop Start on Tape Position");
+	configParam(LOOP_END_BUTTON_PARAM,     0,     1,   0, "Loop End on Tape Position");
 	configParam(LOOP_MODE_PARAM,           0,     1,   1, "Loop Mode");
 	configParam(WHEEL_LEFT_PARAM,        -12.4,  11.6, 0, "Left Wheel");
 	configParam(WHEEL_RIGHT_PARAM,       -11.9,  12.1, 0, "Right Wheel");
@@ -487,16 +489,23 @@ void TapeRecorder::process(const ProcessArgs& args) {
 			beatsPulse.trigger();
 		}
 		beat = newBeat;
-		// if (params[LOOP_START_BUTTON_PARAM].getValue() == 1.0f) {
+		if (params[LOOP_START_BUTTON_PARAM].getValue() == 1.0f) {
 			// loopStartPosition = audioBufferPosition;
-		// } else {
-			loopStartPosition = (args.sampleRate * loopStart * 60 * params[BEATS_PER_BAR_PARAM].getValue()) / params[TEMPO_PARAM].getValue();
-		// }
-		// if (params[LOOP_END_BUTTON_PARAM].getValue() == 1.0f) {
+			loopStart = audioBufferPosition * params[TEMPO_PARAM].getValue() / (args.sampleRate * 60.f * params[BEATS_PER_BAR_PARAM].getValue());
+			// params[LOOP_START_PARAM].snapEnabled = false;
+			params[LOOP_START_PARAM].setValue(loopStart);			params[LOOP_START_BUTTON_PARAM].setValue(0);
+		} //else {
+		loopStartPosition = (args.sampleRate * loopStart * 60.f * params[BEATS_PER_BAR_PARAM].getValue()) / params[TEMPO_PARAM].getValue();
+		//}
+		if (params[LOOP_END_BUTTON_PARAM].getValue() == 1.0f) {
 			// loopEndPosition = audioBufferPosition;
-		// } else {
-			loopEndPosition = (args.sampleRate * loopEnd * 60 * params[BEATS_PER_BAR_PARAM].getValue()) / params[TEMPO_PARAM].getValue();
-		// }
+			loopEnd = audioBufferPosition * params[TEMPO_PARAM].getValue() / (args.sampleRate * 60.f * params[BEATS_PER_BAR_PARAM].getValue());
+			// params[LOOP_END_PARAM].snapEnabled = false;
+			params[LOOP_END_PARAM].setValue(loopEnd);
+			params[LOOP_END_BUTTON_PARAM].setValue(0);
+		} //else {
+		loopEndPosition = (args.sampleRate * loopEnd * 60.f * params[BEATS_PER_BAR_PARAM].getValue()) / params[TEMPO_PARAM].getValue();
+		//}
 	}
 	if (params[LOOP_MODE_PARAM].getValue() > 0) {
 		if (loopStart < loopEnd) {

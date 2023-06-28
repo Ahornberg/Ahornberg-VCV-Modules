@@ -449,15 +449,15 @@ void TapePositionDisplay::drawText(const DrawArgs& disp) {
 		nvgFontSize(disp.vg, 8);
 
 		textPos = Vec(4, 28);
-		// if (loopStartOnTapePosition) {
-			// nvgFillColor(disp.vg, textColorRed);
-		// } else 
+		if ((int) loopStart != loopStart) {
+			nvgFillColor(disp.vg, textColorRed);
+		} else 
 		if (loopStartConnected) {
 			nvgFillColor(disp.vg, textColorDark);
 		} else {
 			nvgFillColor(disp.vg, textColorLight);
 		}
-		text = std::to_string(loopStart);
+		text = std::to_string((int) loopStart);
 		if (loopStart < 100) {
 			text = " " + text;
 		} 
@@ -467,15 +467,15 @@ void TapePositionDisplay::drawText(const DrawArgs& disp) {
 		nvgText(disp.vg, textPos.x, textPos.y, text.c_str(), NULL);
 		
 		textPos = Vec(46, 28);
-		// if (loopEndOnTapePosition) {
-			// nvgFillColor(disp.vg, textColorRed);
-		// } else 
+		if ((int) loopEnd != loopEnd) {
+			nvgFillColor(disp.vg, textColorRed);
+		} else 
 		if (loopEndConnected) {
 			nvgFillColor(disp.vg, textColorDark);
 		} else {
 			nvgFillColor(disp.vg, textColorLight);
 		}
-		text = std::to_string(loopEnd);
+		text = std::to_string((int) loopEnd);
 		if (loopEnd < 100) {
 			text = " " + text;
 		} 
@@ -813,8 +813,8 @@ TapeRecorderWidget::TapeRecorderWidget(TapeRecorder* module) {
 	cueForwardsSwitch->tapeRecorder = module;
 	addParam(cueForwardsSwitch);
 	
-	// addParam(createParam<RoundSwitchRed>(Vec(18, 126), module, TapeRecorder::LOOP_START_BUTTON_PARAM));
-	// addParam(createParam<RoundSwitchRed>(Vec(54, 126), module, TapeRecorder::LOOP_END_BUTTON_PARAM));
+	addParam(createParam<RoundSwitchRed>(Vec(18, 126), module, TapeRecorder::LOOP_START_BUTTON_PARAM));
+	addParam(createParam<RoundSwitchRed>(Vec(54, 126), module, TapeRecorder::LOOP_END_BUTTON_PARAM));
 	
 	addInput(createInput<InPort>(Vec(84,  62), module, TapeRecorder::SPEED_INPUT));
 	addInput(createInput<InPort>(Vec(94, 122), module, TapeRecorder::LOOP_END_INPUT));

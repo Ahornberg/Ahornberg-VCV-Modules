@@ -81,12 +81,12 @@ struct TapePositionDisplay : Display {
 	double tapePosition;
 	int beatsPerBar;
 	int loopMode;
-	int loopStart;
-	int loopEnd;
+	float loopStart;
+	float loopEnd;
 	bool loopStartConnected;
 	bool loopEndConnected;
-	bool loopStartOnTapePosition;
-	bool loopEndOnTapePosition;
+	// bool loopStartOnTapePosition;
+	// bool loopEndOnTapePosition;
 	bool playStatus;
 	bool cueStatus;
 	bool playForwardStatus;

@@ -28,11 +28,13 @@ struct TapeRecorder : Module {
 		BEATS_PER_BAR_PARAM,
 		LOOP_START_PARAM,
 		LOOP_END_PARAM,
-		// LOOP_START_BUTTON_PARAM,
-		// LOOP_END_BUTTON_PARAM,
 		LOOP_MODE_PARAM,
 		WHEEL_LEFT_PARAM,
 		WHEEL_RIGHT_PARAM,
+		LOOP_START_BUTTON_PARAM,
+		LOOP_END_BUTTON_PARAM,
+		// LOOP_START_FRACT_PARAM,
+		// LOOP_END_FRACT_PARAM,
 		// TAPE_LENGTH_PARAM,
 		// TRACK_COUNT_PARAM,
 		NUM_PARAMS
@@ -123,8 +125,8 @@ struct TapeRecorder : Module {
 	bool cueStatus;
 	bool playForwardStatus;
 	bool cueForwardStatus;
-	int loopStart;
-	int loopEnd;
+	float loopStart;
+	float loopEnd;
 	int beat;
 	int bar;
 	int oldLoopStartParam;
