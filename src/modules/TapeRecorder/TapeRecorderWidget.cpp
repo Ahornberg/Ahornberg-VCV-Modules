@@ -261,11 +261,11 @@ void KnobWheel::onDragMove(const event::DragMove& e) {
 		delta *= -0.024f;
 		// Drag slower if mod is held
 		if ((mods & RACK_MOD_MASK) == RACK_MOD_CTRL) {
-			delta /= 3.f;
+			delta /= 10.f;
 		}
 		// Drag even slower if mod+shift is held
 		if ((mods & RACK_MOD_MASK) == (RACK_MOD_CTRL | GLFW_MOD_SHIFT)) {
-			delta /= 9.f;
+			delta /= 100.f;
 		}			
 		module->wheelMovement = delta;
 		return;
@@ -356,7 +356,7 @@ void TapePositionDisplay::drawText(const DrawArgs& disp) {
 		// loopEndConnected = (tapeRecorder->inputs[TapeRecorder::LOOP_INPUT].isConnected() && tapeRecorder->inputs[TapeRecorder::LOOP_INPUT].getChannels() > 1);
 		loopEnd = tapeRecorder->loopEnd;
 		beatsPerBar = tapeRecorder->params[TapeRecorder::BEATS_PER_BAR_PARAM].getValue();
-		tapePosition = tapeRecorder->tapePosition;
+		tapePosition = tapeRecorder->tapePosition + 0.5 / beatsPerBar;
 		playForwardStatus = tapeRecorder->playForwardStatus;
 		playStatus = tapeRecorder->playStatus;
 		cueForwardStatus = tapeRecorder->cueForwardStatus;

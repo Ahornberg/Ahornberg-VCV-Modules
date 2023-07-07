@@ -5,6 +5,7 @@ SOURCES += $(wildcard src/util/*.cpp)
 SOURCES += $(wildcard src/test/*.cpp)
 SOURCES += $(wildcard src/modules/*.cpp)
 SOURCES += $(wildcard src/modules/*/*.cpp)
+SOURCES += $(wildcard src/modules/*/*/*.cpp)
 DISTRIBUTABLES += $(wildcard LICENSE*) res
 DISTRIBUTABLES += presets
 DISTRIBUTABLES += selections

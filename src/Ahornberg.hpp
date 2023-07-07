@@ -12,6 +12,7 @@ extern Plugin* pluginInstance;
 extern Model* modelTracker;
 extern Model* modelTapeRecorder;
 extern Model* modelTapeRecorderMixer;
+extern Model* modelTapeInspector;
 extern Model* modelFlyingFader;
 extern Model* modelEqualDivision;
 extern Model* modelCVFreqShift;

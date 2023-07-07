@@ -9,6 +9,7 @@ void init(Plugin* plugin) {
 	pluginInstance->addModel(modelTracker);
 	pluginInstance->addModel(modelTapeRecorder);
 	pluginInstance->addModel(modelTapeRecorderMixer);
+	pluginInstance->addModel(modelTapeInspector);
 	pluginInstance->addModel(modelFlyingFader);
 	pluginInstance->addModel(modelEqualDivision);
 	pluginInstance->addModel(modelCVFreqShift);
