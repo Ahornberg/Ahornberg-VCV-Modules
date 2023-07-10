@@ -33,6 +33,13 @@ As long as loop start and loop end show the same value, loop mode is turned off.
 #### Loop inputs
 Loop start and loop end points can be changed by providing a CV signal (1/12 Volts per Bar). This signal will be added to the corresponding knob value.
 
+[![Tape Inspector](TapeInspector.png)
+
+How to use it:
+
+[![Tape Inspector Manual](https://img.youtube.com/vi/x_GyofitdlM/0.jpg)](https://www.youtube.com/watch?v=x_GyofitdlM)
+
+
 ## Flying Fader
 
 A motorized volume fader.
