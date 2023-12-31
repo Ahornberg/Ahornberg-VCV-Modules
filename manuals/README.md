@@ -50,7 +50,7 @@ How to use it (click on the image below to wacht the video):
 
 [![Flying Fader Manual](https://img.youtube.com/vi/gYIOpFdwcMU/0.jpg)](https://www.youtube.com/watch?v=gYIOpFdwcMU)
 
-How to correctly control a fader on the [MindMeld MixMaster](https://library.vcvrack.com/MindMeldModular/MixMaster) by using the CV-Scale Mode "MindMeld MixMaster":
+How to correctly control a fader on the [MindMeld MixMaster](https://library.vcvrack.com/MindMeldModular/MixMaster) by using the CV-Scale Mode "MindMeld MixMaster" (click on the image below to wacht the video):
 
 [![Flying Fader Manual](https://img.youtube.com/vi/RYbj7irqB9g/0.jpg)](https://www.youtube.com/watch?v=RYbj7irqB9g)
 
