@@ -37,7 +37,7 @@ Loop start and loop end points can be changed by providing a CV signal (1/12 Vol
 
 How to use it:
 
-[![Tape Inspector Manual](https://img.youtube.com/vi/x_GyofitdlM/0.jpg)](https://www.youtube.com/watch?v=x_GyofitdlM)
+Video [![Tape Inspector Manual](https://img.youtube.com/vi/x_GyofitdlM/0.jpg)](https://www.youtube.com/watch?v=x_GyofitdlM)
 
 
 ## Flying Fader
