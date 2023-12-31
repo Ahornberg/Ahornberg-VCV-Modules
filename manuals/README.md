@@ -6,7 +6,7 @@ An emulation of a [Microcassette](https://en.wikipedia.org/wiki/Microcassette) r
 
 ![Tape Recorder](TapeRecorder.png)
 
-How to use it:
+How to use it  (click on the image below to wacht the video):
 
 [![Tape Recorder Manual](https://img.youtube.com/vi/4BYcD7gmuQo/0.jpg)](https://www.youtube.com/watch?v=4BYcD7gmuQo)
 ### Transport
