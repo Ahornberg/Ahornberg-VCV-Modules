@@ -6,7 +6,7 @@ An emulation of a [Microcassette](https://en.wikipedia.org/wiki/Microcassette) r
 
 ![Tape Recorder](TapeRecorder.png)
 
-How to use it  (click on the image below to wacht the video):
+How to use it  (click on the image below to watch the video):
 
 [![Tape Recorder Manual](https://img.youtube.com/vi/4BYcD7gmuQo/0.jpg)](https://www.youtube.com/watch?v=4BYcD7gmuQo)
 ### Transport
@@ -35,7 +35,7 @@ Loop start and loop end points can be changed by providing a CV signal (1/12 Vol
 
 [![Tape Inspector](TapeInspector.png)
 
-How to use it (click on the image below to wacht the video):
+How to use it (click on the image below to watch the video):
 
 [![Tape Inspector Manual](https://img.youtube.com/vi/x_GyofitdlM/0.jpg)](https://www.youtube.com/watch?v=x_GyofitdlM)
 
@@ -46,11 +46,11 @@ A motorized volume fader.
 
 ![Flying Fader](FlyingFader.png)
 
-How to use it (click on the image below to wacht the video):
+How to use it (click on the image below to watch the video):
 
 [![Flying Fader Manual](https://img.youtube.com/vi/gYIOpFdwcMU/0.jpg)](https://www.youtube.com/watch?v=gYIOpFdwcMU)
 
-How to correctly control a fader on the [MindMeld MixMaster](https://library.vcvrack.com/MindMeldModular/MixMaster) by using the CV-Scale Mode "MindMeld MixMaster" (click on the image below to wacht the video):
+How to correctly control a fader on the [MindMeld MixMaster](https://library.vcvrack.com/MindMeldModular/MixMaster) by using the CV-Scale Mode "MindMeld MixMaster" (click on the image below to watch the video):
 
 [![Flying Fader Manual](https://img.youtube.com/vi/RYbj7irqB9g/0.jpg)](https://www.youtube.com/watch?v=RYbj7irqB9g)
 
@@ -107,7 +107,7 @@ So it is a linear frequency shift, of course only on the base frequency, not on 
 
 This module complements the Harmonizer module.
 
-How to use it (click on the image below to wacht the video):
+How to use it (click on the image below to watch the video):
 
 [![CV-Frequency Shift Manual](https://img.youtube.com/vi/Yk5vrDa_Sio/0.jpg)](https://www.youtube.com/watch?v=Yk5vrDa_Sio)
 
@@ -132,7 +132,7 @@ A virtual rebuild of a vintage electronic metronome.
 
 ![Metronome](Metronome.png)
 
-How to use it (click on the image below to wacht the video):
+How to use it (click on the image below to watch the video):
 
 [![Metronome Manual](https://img.youtube.com/vi/NcPUyekx2pQ/0.jpg)](https://www.youtube.com/watch?v=NcPUyekx2pQ)
 
@@ -142,7 +142,7 @@ A virtual rebuild of a vintage electronic metronome.
 
 ![Harmonizer](Harmonizer.png)
 
-How to use it (click on the image below to wacht the video):
+How to use it (click on the image below to watch the video):
 
 [![Harmonizer Manual](https://img.youtube.com/vi/6k2-fbuGoeU/0.jpg)](https://www.youtube.com/watch?v=6k2-fbuGoeU)
 
@@ -158,19 +158,19 @@ A way to send out MIDI data from the VCV Host module.
 
 ![MIDI Over Audio](MIDIOverAudio.png)
 
-How to use it with Native Instruments Maschine VST (click on the image below to wacht the video):
+How to use it with Native Instruments Maschine VST (click on the image below to watch the video):
 
 [![MIDI Over Audio Manual](https://img.youtube.com/vi/LxzyxB9K1DA/0.jpg)](https://www.youtube.com/watch?v=LxzyxB9K1DA)
 
-How to use it with KXStudio Carla VST (click on the image below to wacht the video):
+How to use it with KXStudio Carla VST (click on the image below to watch the video):
 
 [![MIDI Over Audio Manual](https://img.youtube.com/vi/vvWQOpMmVxU/0.jpg)](https://www.youtube.com/watch?v=vvWQOpMmVxU)
 
-How to use it with Mutools MUX VST (click on the image below to wacht the video):
+How to use it with Mutools MUX VST (click on the image below to watch the video):
 
 [![MIDI Over Audio Manual](https://img.youtube.com/vi/WPzz-9QrGzs/0.jpg)](https://www.youtube.com/watch?v=WPzz-9QrGzs)
 
-How to use it with a DAW (click on the image below to wacht the video):
+How to use it with a DAW (click on the image below to watch the video):
 
 [![MIDI Over Audio Manual](https://img.youtube.com/vi/WBo8ULCoSwc/0.jpg)](https://www.youtube.com/watch?v=WBo8ULCoSwc)
 
@@ -180,7 +180,7 @@ Copy-paste a preset from the module on the left side to the modules on the right
 
 ![Copy Paste Preset](CopyPastePreset.png)
 
-How to use it (click on the image below to wacht the video):
+How to use it (click on the image below to watch the video):
 
 [![Copy Paste Preset Manual](https://img.youtube.com/vi/JhS7cuWsmcw/0.jpg)](https://www.youtube.com/watch?v=JhS7cuWsmcw)
 
