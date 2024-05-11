@@ -152,6 +152,10 @@ MIDI MPE to CV.
 
 ![MIDI Poly Expression](MIDIPolyExpression.png)
 
+How to use it (click on the image below to watch the video):
+
+[![MIDI Poly Expression Manual](https://img.youtube.com/vi/Y1sApUcgx44/0.jpg)](https://www.youtube.com/watch?v=Y1sApUcgx44)
+
 ## MIDI Over Audio
 
 A way to send out MIDI data from the VCV Host module.
