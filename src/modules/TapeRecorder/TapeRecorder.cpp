@@ -96,7 +96,9 @@ void TapeRecorder::initTape(InitTape what) {
 			if (loadFromPreset) {
 				loaded = audioFile.load(audioFilePath);
 			} else {
-				loaded = audioFile.load(system::join(getPatchStorageDirectory(), audioFilePath));
+				if (id >= 0) {
+					loaded = audioFile.load(system::join(getPatchStorageDirectory(), audioFilePath));
+				}
 			}
 			// mylock.unlock();
 			if (loaded) {

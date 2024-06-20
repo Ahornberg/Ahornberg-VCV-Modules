@@ -14,10 +14,12 @@ void init(Plugin* plugin) {
 	pluginInstance->addModel(modelEqualDivision);
 	pluginInstance->addModel(modelCVFreqShift);
 	pluginInstance->addModel(modelFunWithFrames);
+	pluginInstance->addModel(modelMoreFunWithFrames);
 	pluginInstance->addModel(modelMetronome);
 	pluginInstance->addModel(modelHarmonizer);
 	pluginInstance->addModel(modelMIDIController);
 	pluginInstance->addModel(modelMIDIPolyExpression);
+	pluginInstance->addModel(modelXGlide);
 	pluginInstance->addModel(modelMIDIOverAudio);
 	pluginInstance->addModel(modelCopyPastePreset);
 	// pluginInstance->addModel(modelManual);
