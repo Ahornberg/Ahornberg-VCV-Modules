@@ -3,6 +3,7 @@
 struct XGlideChannelMapping {
 	float volume;
 	float pitch;
+	float modulation;
 	int channelOut;
 	int glideTarget;
 	float oldVolume;
@@ -24,11 +25,13 @@ struct XGlide : Module {
 		VOLUME_INPUT,
 		PITCH_INPUT,
 		PEDAL_INPUT,
+		MODULATION_INPUT,
 		NUM_INPUTS
 	};
 	enum OutputIds {
 		VOLUME_OUTPUT,
 		PITCH_OUTPUT,
+		MODULATION_OUTPUT,
 		NUM_OUTPUTS
 	};
 	enum LightIds {

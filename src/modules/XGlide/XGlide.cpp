@@ -24,20 +24,26 @@ XGlide::XGlide() {
 	configInput(VOLUME_INPUT, "Volume");
 	configInput(PITCH_INPUT, "Pitch (1V/Octave)");
 	configInput(PEDAL_INPUT, "Pedal/Gate");
+	configInput(MODULATION_INPUT, "Modulation");
 	configOutput(VOLUME_OUTPUT, "Volume");
 	configOutput(PITCH_OUTPUT, "Pitch (1V/Octave)");
+	configOutput(MODULATION_OUTPUT, "Modulation");
 	isResetChannelMapping = false;
 	resetChannelMapping();
 }
 
 void XGlide::process(const ProcessArgs& args) {
-	if (inputs[VOLUME_INPUT].isConnected() && inputs[PITCH_INPUT].isConnected()) {
+	if (inputs[VOLUME_INPUT].isConnected() &&
+			((inputs[PITCH_INPUT].isConnected() && outputs[PITCH_OUTPUT].isConnected()) ||
+			(inputs[MODULATION_INPUT].isConnected() && outputs[MODULATION_OUTPUT].isConnected()))) {
 		int usedChannels = inputs[VOLUME_INPUT].getChannels();
 		outputs[VOLUME_OUTPUT].setChannels(usedChannels);
 		outputs[PITCH_OUTPUT].setChannels(usedChannels);
+		outputs[MODULATION_OUTPUT].setChannels(usedChannels);
 		for (auto i = 0; i < usedChannels; ++i) {
 			channelMapping[i].volume = clamp(inputs[VOLUME_INPUT].getVoltage(i), 0.f, 100.f);
 			channelMapping[i].pitch = clamp(inputs[PITCH_INPUT].getVoltage(i), -100.f, 100.f);
+			channelMapping[i].modulation = clamp(inputs[MODULATION_INPUT].getVoltage(i), -100.f, 100.f);
 		}
 		for (auto i = 0; i < usedChannels; ++i) {
 			if (channelMapping[i].volume > 0) {
@@ -70,12 +76,11 @@ void XGlide::process(const ProcessArgs& args) {
 			}
 			if (glideTarget == NO_GLIDE) {
 				outputs[PITCH_OUTPUT].setVoltage(channelMapping[i].pitch, channel);
+				outputs[MODULATION_OUTPUT].setVoltage(channelMapping[i].modulation, channel);
 			} else {
-				float pitchSource = channelMapping[i].pitch;
-				float pitchTarget = channelMapping[glideTarget].pitch;
-				float pitchDiff = pitchTarget - pitchSource;
 				float glideAmount = channelMapping[glideTarget].volume / (channelMapping[i].volume + channelMapping[glideTarget].volume);
-				outputs[PITCH_OUTPUT].setVoltage(pitchSource + pitchDiff * glideAmount, channel);
+				outputs[PITCH_OUTPUT].setVoltage(channelMapping[i].pitch + (channelMapping[glideTarget].pitch - channelMapping[i].pitch) * glideAmount, channel);
+				outputs[MODULATION_OUTPUT].setVoltage(channelMapping[i].modulation + (channelMapping[glideTarget].modulation - channelMapping[i].modulation) * glideAmount, channel);
 			}
 		}		
 	} else {
@@ -182,6 +187,7 @@ void XGlide::resetChannelMapping() {
 		for (auto i = 0; i < MAX_CHANNELS; ++i) {
 			channelMapping[i].volume = 0;
 			channelMapping[i].pitch = 0;
+			channelMapping[i].modulation = 0;
 			channelMapping[i].channelOut = i;
 			channelMapping[i].glideTarget = NO_GLIDE;
 			channelMapping[i].oldVolume = 0;
