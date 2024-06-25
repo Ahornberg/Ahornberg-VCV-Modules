@@ -156,6 +156,30 @@ How to use it (click on the image below to watch the video):
 
 [![MIDI Poly Expression Manual](https://img.youtube.com/vi/Y1sApUcgx44/0.jpg)](https://www.youtube.com/watch?v=Y1sApUcgx44)
 
+## X-Glide
+
+Cross-glide between 2 notes.
+
+![X-Glide](xglide_for_linnstrument.png)
+
+This module needs polyphonic input to work. The transition from one pitch to another is proportional to the difference between volume of note one and volume of note two. 
+
+### Note Range
+
+With the 2 knobs you can select the lower limit (left knob) and the upper limit (right knob). In between, cross-glide from one note to another will happen.
+
+When the value of the left knob equals the value of the right knob or is larger than the value of the right knob, the note range is inverted and the red light between the 2 knobs goes on. Now there are 2 note ranges, one from the bottom (C0) to the value of the right knob, and another note range from the value of the left knob up to the top (G10).
+
+### Interval Range
+
+With these 2 knobs you can select the smallest interval (left knob) and the largest interval (right knob) in semitones, where coss-glide will be applied.
+
+When the value of the left knob equals the value of the right knob or is larger than the value of the right knob, the interval range is inverted and the red light between the 2 knobs goes on. Now there are 2 interval ranges, one from 0 semitones up to the value of the right knob, and another interval range from the value of the left knob up to 127 semitones.
+
+### Pedal / Gate
+
+When the input "Pedal / Gate" is connected, cross-glide only works on a high gate value.
+
 ## MIDI Over Audio
 
 A way to send out MIDI data from the VCV Host module.
