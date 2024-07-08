@@ -12,9 +12,6 @@ TapeAudioDisplay::TapeAudioDisplay(Rect box, TapeInspector *tapeInspector) : Dis
 }
 
 void TapeAudioDisplay::drawText(const DrawArgs& disp) {
-	// TODO "Tape Inspector - Expander For Tape Recorder" when not connected
-	// TODO lines for beats, bars, loop points
-	// maybe input for time and volume
 	if (tapeInspector && tapeInspector->tapeRecorder && !tapeInspector->tapeRecorder->changeTapeInterrupt) {
 		TapeRecorder* tapeRecorder = tapeInspector->tapeRecorder;
 		int audioBufferPosition = tapeRecorder->audioBufferPosition;
@@ -26,8 +23,31 @@ void TapeAudioDisplay::drawText(const DrawArgs& disp) {
 		nvgMiterLimit(disp.vg, 2.f);
 		nvgStrokeWidth(disp.vg, 1.0f);
 		nvgScissor(disp.vg, 2, 2, DISPLAY_WIDTH - 4, DISPLAY_HEIGHT - 4);
-		// bars and beats
 		double beatsPerBar60 = tapeRecorder->params[TapeRecorder::BEATS_PER_BAR_PARAM].getValue() * 60.0;
+		// loop range
+		float loopStart = tapeRecorder->params[TapeRecorder::LOOP_START_PARAM].getValue();
+		float loopEnd = tapeRecorder->params[TapeRecorder::LOOP_END_PARAM].getValue();
+		if (loopStart > loopEnd) {
+			loopEnd = loopStart;
+			loopStart = tapeRecorder->params[TapeRecorder::LOOP_END_PARAM].getValue();
+		}
+		for (int i = audioBufferPosition - (DISPLAY_HEIGHT / 2.0) / time; i <= audioBufferPosition + (DISPLAY_HEIGHT / 2.0) / time; i += step) {
+			if (i < 0) {
+				continue;
+			}
+			if (i >= tapeRecorder->sizeAudioBuffer) {
+				break;
+			}
+			double tapePosition = (tapeInspector->sampleTime * i * tapeRecorder->params[TapeRecorder::TEMPO_PARAM].getValue()) / beatsPerBar60;
+			if (tapePosition >= loopStart && tapePosition <= loopEnd) {
+				nvgStrokeColor(disp.vg, COLOR_GREY);
+				nvgBeginPath(disp.vg);
+				nvgMoveTo(disp.vg, 0,  DISPLAY_HEIGHT / 2.0 - time * (i - audioBufferPosition) - 0.5);
+				nvgLineTo(disp.vg, DISPLAY_WIDTH,  DISPLAY_HEIGHT / 2.0 - time * (i - audioBufferPosition) - 0.5);
+				nvgStroke(disp.vg);
+			}
+		}
+		// bars and beats
 		int bar = 0;
 		int beat = 0;
 		for (int i = audioBufferPosition - (DISPLAY_HEIGHT / 2.0) / time; i <= audioBufferPosition + (DISPLAY_HEIGHT / 2.0) / time; i += step) {
@@ -40,15 +60,19 @@ void TapeAudioDisplay::drawText(const DrawArgs& disp) {
 			double tapePosition = (tapeInspector->sampleTime * i * tapeRecorder->params[TapeRecorder::TEMPO_PARAM].getValue()) / beatsPerBar60;
 			int newBar = (int) tapePosition;
 			int newBeat = (int) ((tapePosition - bar) * tapeRecorder->params[TapeRecorder::BEATS_PER_BAR_PARAM].getValue());
+			bool inLoop = false;
+			if (tapePosition >= loopStart && tapePosition <= loopEnd) {
+				inLoop = true;
+			}
 			if (newBar != bar || tapePosition == 0) {
-				nvgStrokeColor(disp.vg, COLOR_GREY);
+				nvgStrokeColor(disp.vg, inLoop ? COLOR_BLACK : COLOR_GREY);
 				nvgBeginPath(disp.vg);
 				nvgMoveTo(disp.vg, 0,  DISPLAY_HEIGHT / 2.0 - time * (i - audioBufferPosition) - 0.5);
 				nvgLineTo(disp.vg, DISPLAY_WIDTH,  DISPLAY_HEIGHT / 2.0 - time * (i - audioBufferPosition) - 0.5);
 				nvgStroke(disp.vg);
 				bar = newBar;
 			} else if ((newBeat > 0 && newBeat != beat) || tapePosition == 0) {
-				nvgStrokeColor(disp.vg, COLOR_GREY);
+				nvgStrokeColor(disp.vg, inLoop ? COLOR_BLACK : COLOR_GREY);
 				nvgBeginPath(disp.vg);
 				nvgMoveTo(disp.vg, DISPLAY_WIDTH / 2.0,  DISPLAY_HEIGHT / 2.0 - time * (i - audioBufferPosition) - 0.5);
 				nvgLineTo(disp.vg, DISPLAY_WIDTH,  DISPLAY_HEIGHT / 2.0 - time * (i - audioBufferPosition) - 0.5);
@@ -89,7 +113,8 @@ void TapeAudioDisplay::drawText(const DrawArgs& disp) {
 		nvgRotate(disp.vg, (-90 * NVG_PI) / 180);
 		nvgFillColor(disp.vg, textColorLight);
 		nvgFontSize(disp.vg, 10);
-		nvgText(disp.vg, -204, 32, "tape inspector", NULL);
+		nvgText(disp.vg, -204, 24, "tape inspector", NULL);
+		nvgText(disp.vg, -261.4, 40, "expander for tape recorder", NULL);
 	}
 }
 
