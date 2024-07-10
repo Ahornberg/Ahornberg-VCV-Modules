@@ -52,7 +52,7 @@ void MotorizedFader::onDragStart(const event::DragStart& e) {
 		APP->window->cursorLock();
 		ParamQuantity* paramQuantity = getParamQuantity();
 		if (paramQuantity && flyingFader) {
-			oldValue = paramQuantity->getSmoothValue();
+			oldValue = paramQuantity->getValue();
 			oldFaderValueBeforeConnected = flyingFader->params[FlyingFader::FADER_VALUE_BEFORE_CONNECTED].getValue();
 			flyingFader->faderDragged = true;
 		}
@@ -64,7 +64,7 @@ void MotorizedFader::onDragEnd(const event::DragEnd& e) {
 		ParamQuantity* paramQuantity = getParamQuantity();
 		if (paramQuantity && flyingFader) {
 			flyingFader->faderDragged = false;
-			float newValue = paramQuantity->getSmoothValue();
+			float newValue = paramQuantity->getValue();
 			float newFaderValueBeforeConnected = flyingFader->params[FlyingFader::FADER_VALUE_BEFORE_CONNECTED].getValue();
 			if (oldValue != newValue) {
 				// Push ParamChange history action
