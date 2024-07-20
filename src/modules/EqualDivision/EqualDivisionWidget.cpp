@@ -28,7 +28,7 @@ void IntervalDisplay::drawText(const DrawArgs& disp) {
 
 EqualDivisionWidget::EqualDivisionWidget(EqualDivision* module) {
 	setModule(module);
-	setPanel("res/EqualDivision.svg");
+	setPanel("res/EqualDivision.svg", "res/EqualDivision-dark.svg");
 	setWidthInHP(6);
 
 	addParam(createParam<KnobBig>(      Vec(             46.5,  47), module, EqualDivision::FINE_PARAM));

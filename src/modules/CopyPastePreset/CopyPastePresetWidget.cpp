@@ -2,7 +2,7 @@
 
 CopyPastePresetWidget::CopyPastePresetWidget(CopyPastePreset* module) {
 	setModule(module);
-	setPanel("res/CopyPastePreset.svg");
+	setPanel("res/CopyPastePreset.svg", "res/CopyPastePreset-dark.svg");
 	setWidthInHP(2);
 	waitCounter = WAIT_COUNTER;
 	

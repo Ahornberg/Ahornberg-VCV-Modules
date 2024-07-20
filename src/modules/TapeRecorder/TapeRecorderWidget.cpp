@@ -36,8 +36,8 @@ void TransportCueSwitch::step() {
 }
 
 CueBackwardsSwitch::CueBackwardsSwitch() {
-	addFrame("res/switches/CueBackwards_off.svg");
-	addFrame("res/switches/CueBackwards_on.svg");
+	addFrame("res/switches/CueBackwards_off.svg", "res/switches/CueBackwards_off-dark.svg");
+	addFrame("res/switches/CueBackwards_on.svg", "res/switches/CueBackwards_on-dark.svg");
 }
 
 void CueBackwardsSwitch::onButton(const event::Button& e) {
@@ -59,8 +59,8 @@ void CueBackwardsSwitch::onButton(const event::Button& e) {
 }
 
 CueForwardsSwitch::CueForwardsSwitch() {
-	addFrame("res/switches/CueForwards_off.svg");
-	addFrame("res/switches/CueForwards_on.svg");
+	addFrame("res/switches/CueForwards_off.svg", "res/switches/CueForwards_off-dark.svg");
+	addFrame("res/switches/CueForwards_on.svg", "res/switches/CueForwards_on-dark.svg");
 }
 
 void CueForwardsSwitch::onButton(const event::Button& e) {
@@ -82,8 +82,8 @@ void CueForwardsSwitch::onButton(const event::Button& e) {
 }
 
 PlayBackwardsSwitch::PlayBackwardsSwitch() {
-	addFrame("res/switches/PlayBackwards_off.svg");
-	addFrame("res/switches/PlayBackwards_on.svg");
+	addFrame("res/switches/PlayBackwards_off.svg", "res/switches/PlayBackwards_off-dark.svg");
+	addFrame("res/switches/PlayBackwards_on.svg", "res/switches/PlayBackwards_on-dark.svg");
 }
 
 void PlayBackwardsSwitch::onButton(const event::Button& e) {
@@ -94,8 +94,8 @@ void PlayBackwardsSwitch::onButton(const event::Button& e) {
 }
 
 PlayForwardsSwitch::PlayForwardsSwitch() {
-	addFrame("res/switches/PlayForwards_off.svg");
-	addFrame("res/switches/PlayForwards_on.svg");
+	addFrame("res/switches/PlayForwards_off.svg", "res/switches/PlayForwards_off-dark.svg");
+	addFrame("res/switches/PlayForwards_on.svg", "res/switches/PlayForwards_on-dark.svg");
 }
 
 void PlayForwardsSwitch::onButton(const event::Button& e) {
@@ -775,7 +775,7 @@ void EraseTapeMenuItem::onAction(const event::Action& e) {
 	
 TapeRecorderWidget::TapeRecorderWidget(TapeRecorder* module) {
 	setModule(module);
-	setPanel("res/TapeRecorder.svg");
+	setPanel("res/TapeRecorder.svg", "res/TapeRecorder-dark.svg");
 	setWidthInHP(8);
 
 	addParam(createParam<KnobBig>(Vec(      43,  42),   module, TapeRecorder::TEMPO_PARAM));

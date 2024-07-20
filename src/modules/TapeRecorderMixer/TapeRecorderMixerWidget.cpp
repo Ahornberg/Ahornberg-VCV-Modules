@@ -69,9 +69,9 @@ void VolumeDisplay::drawText(const DrawArgs& disp) {
 }
 
 RoundSwitchMediumLink::RoundSwitchMediumLink() {
-	addFrame("res/switches/RoundMedium_unlinked.svg");
-	addFrame("res/switches/RoundMedium_linked_to_right.svg");
-	addFrame("res/switches/RoundMedium_unlinked_linked_from_left.svg");
+	addFrame("res/switches/RoundMedium_unlinked.svg", "res/switches/RoundMedium_unlinked-dark.svg");
+	addFrame("res/switches/RoundMedium_linked_to_right.svg", "res/switches/RoundMedium_linked_to_right-dark.svg");
+	addFrame("res/switches/RoundMedium_unlinked_linked_from_left.svg", "res/switches/RoundMedium_unlinked_linked_from_left-dark.svg");
 }
 
 void RoundSwitchMediumLink::step() {
@@ -146,7 +146,7 @@ void ChangeInputMuteModeMenuItem::onAction(const event::Action& e) {
 
 TapeRecorderMixerWidget::TapeRecorderMixerWidget(TapeRecorderMixer* module) {
 	setModule(module);
-	setPanel("res/TapeRecorderMixer.svg");
+	setPanel("res/TapeRecorderMixer.svg", "res/TapeRecorderMixer-dark.svg");
 	setWidthInHP(4);
 
 	addInput(createInputCentered<InPort>(Vec(31 + 1, 14 + 1), module,  TapeRecorderMixer::AUDIO_INPUT));

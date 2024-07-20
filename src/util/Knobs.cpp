@@ -1,54 +1,52 @@
 #include "../Ahornberg.hpp"
 
 BasicKnob::BasicKnob() {
+	sw = new ThemedSvgWidget;
+	tw->addChild(sw);
 	minAngle = -.8f * M_PI;
 	maxAngle = .8f * M_PI;
 	speed = 0.5f;
 	shadow->hide();
 }
 
-void BasicKnob::setSvg(const std::string& filename) {
-	SvgKnob::setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, filename)));
-}	
+void BasicKnob::setSvg(const std::string& filename, const std::string& filenameDark) {
+	// if (SvgKnob::svg == sw->svg)
+		// return;
+	
+	dynamic_cast<ThemedSvgWidget*>(sw)->setSvg(
+		APP->window->loadSvg(asset::plugin(pluginInstance, filename)),
+		APP->window->loadSvg(asset::plugin(pluginInstance, filenameDark))
+	);
+	tw->box.size = sw->box.size;
+	fb->box.size = sw->box.size;
+	box.size = sw->box.size;
+	
+	shadow->box.size = sw->box.size;
+	// Move shadow downward by 10%
+	shadow->box.pos = math::Vec(0, sw->box.size.y * 0.10);
+	// shadow->box = shadow->box.grow(math::Vec(2, 2));
+
+	fb->setDirty();
+}
+
+void BasicKnob::step() {
+	if (previousPreferDarkPanels != settings::preferDarkPanels) {
+		fb->setDirty();
+		previousPreferDarkPanels = settings::preferDarkPanels;
+	}
+	SvgKnob::step();
+}
 
 KnobScrew::KnobScrew() {
-	BasicKnob::setSvg("res/knobs/ScrewWithDot.svg");
+	BasicKnob::setSvg("res/knobs/ScrewWithDot.svg", "res/knobs/ScrewWithDot-dark.svg");
 }
 
 KnobScrewSnap::KnobScrewSnap() {
 	snap = true;
 }
 
-KnobScrewMountModule::KnobScrewMountModule() {
-	minAngle = -5 * M_PI;
-	maxAngle = 5 * M_PI;
-	speed = 0.1f;
-	shadow->show();
-	shadow->box.pos = Vec(0, 0);
-	shadow->blurRadius = 3;
-	BasicKnob::setSvg("res/knobs/Screw.svg");
-	manualTitle = "Screw";
-	manualContent = "This is a Screw.";
-}
-
-void KnobScrewMountModule::onChange(const event::Change& e) {
-	BasicKnob::onChange(e);
-	if (module) {
-		if (!module->params[param].getValue()) {
-			hide();
-		}
-		shadow->box.pos = Vec(0, 10 - module->params[param].getValue() * 2);
-	}
-}
-
-void KnobScrewMountModule::onButton(const ButtonEvent& e) {
-	if (e.action == GLFW_PRESS && e.button == GLFW_MOUSE_BUTTON_LEFT && (e.mods & RACK_MOD_MASK) == 0) {
-		BasicKnob::onButton(e);
-	}
-}
-
 KnobTiny::KnobTiny() {
-	BasicKnob::setSvg("res/knobs/Tiny.svg");
+	BasicKnob::setSvg("res/knobs/Tiny.svg", "res/knobs/Tiny-dark.svg");
 }
 
 KnobTinySnap::KnobTinySnap() {
@@ -56,7 +54,7 @@ KnobTinySnap::KnobTinySnap() {
 }
 
 KnobSmall::KnobSmall() {
-	BasicKnob::setSvg("res/knobs/Small.svg");
+	BasicKnob::setSvg("res/knobs/Small.svg", "res/knobs/Small-dark.svg");
 }
 
 KnobSmallSnap::KnobSmallSnap() {
@@ -68,11 +66,11 @@ KnobSmallSnapFast::KnobSmallSnapFast() {
 }
 
 KnobBig::KnobBig() {
-	BasicKnob::setSvg("res/knobs/Big.svg");
+	BasicKnob::setSvg("res/knobs/Big.svg", "res/knobs/Big-dark.svg");
 }
 
 KnobLarge::KnobLarge() {
-	BasicKnob::setSvg("res/knobs/Large.svg");
+	BasicKnob::setSvg("res/knobs/Large.svg", "res/knobs/Large-dark.svg");
 	minAngle = -0.95f * M_PI;
 	maxAngle = 0.95f * M_PI;
 	snap = true;

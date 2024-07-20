@@ -120,7 +120,7 @@ void TapeAudioDisplay::drawText(const DrawArgs& disp) {
 
 TapeInspectorWidget::TapeInspectorWidget(TapeInspector* module) {
 	setModule(module);
-	setPanel("res/TapeInspector.svg");
+	setPanel("res/TapeInspector.svg", "res/TapeInspector-dark.svg");
 	setWidthInHP(4);
 
 	addParam(createParamCentered<KnobSmall>(Vec(40, 30), module, TapeInspector::TIME_PARAM));

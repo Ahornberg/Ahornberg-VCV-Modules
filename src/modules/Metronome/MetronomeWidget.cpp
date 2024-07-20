@@ -21,7 +21,6 @@ void TempoDisplay::drawText(const DrawArgs& disp) {
 BpmDisplay::BpmDisplay(Vec pos, int bpmIndex) {
 	box.pos = pos;
 	fontPath = asset::plugin(pluginInstance, FONT_SERIF_BOLD);
-	textColor = COLOR_BLACK;
 	this->bpmIndex = bpmIndex;
 }
 
@@ -31,7 +30,7 @@ void BpmDisplay::draw(const DrawArgs& disp) {
 		nvgBeginPath(disp.vg);
 		nvgFontSize(disp.vg, 9);
 		nvgFontFaceId(disp.vg, font->handle);
-		nvgFillColor(disp.vg, textColor);
+		nvgFillColor(disp.vg, settings::preferDarkPanels ? COLOR_WHITE : COLOR_BLACK);
 		nvgTextAlign(disp.vg, NVG_ALIGN_CENTER);
 		if (bpmIndex == 22 || bpmIndex == 37) {
 			nvgText(disp.vg, -1, 2.5f, string::f("%d", Metronome::BPM_VALUES[bpmIndex]).c_str(), NULL);
@@ -89,7 +88,7 @@ void KnobRadioSwitch::onChange(const event::Change& e) {
 
 MetronomeWidget::MetronomeWidget(Metronome* module) {
 	setModule(module);
-	setPanel("res/Metronome.svg");
+	setPanel("res/Metronome.svg", "res/Metronome-dark.svg");
 	setWidthInHP(14);
 
 	Vec center = Vec(105, 160);

@@ -1,4 +1,4 @@
-struct Display : SizedTransparentWidget, ManualText {
+struct Display : SizedTransparentWidget {
 	std::string fontPath;
 	NVGcolor backgroundColor;
 	NVGcolor borderColor;

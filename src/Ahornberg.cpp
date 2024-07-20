@@ -22,5 +22,4 @@ void init(Plugin* plugin) {
 	pluginInstance->addModel(modelXGlide);
 	pluginInstance->addModel(modelMIDIOverAudio);
 	pluginInstance->addModel(modelCopyPastePreset);
-	// pluginInstance->addModel(modelManual);
 }

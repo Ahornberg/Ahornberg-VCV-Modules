@@ -1,5 +1,18 @@
 #include "../Ahornberg.hpp"
 
+void ThemedSvgWidget::setSvg(std::shared_ptr<window::Svg> svg, std::shared_ptr<window::Svg> svgDark) {
+	this->svg = svg;
+	this->svgDark = svgDark;
+	// assumed that svgDark has the same size as svg
+	wrap();
+}
+
+void ThemedSvgWidget::draw(const DrawArgs& args) {
+	if (!svg)
+		return;
+	window::svgDraw(args.vg, settings::preferDarkPanels ? svgDark->handle : svg->handle);
+}
+
 SizedTransparentWidget::SizedTransparentWidget(Rect box) {
 	this->box = box;
 }
@@ -33,8 +46,11 @@ struct ModuleWidget::Internal {
 	widget::Widget* panel = NULL;
 };
 
-void BaseModuleWidget::setPanel(const std::string& filename) {
-	ModuleWidget::setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, filename)));
+void BaseModuleWidget::setPanel(const std::string& filename, const std::string& filenameDark) {
+	ModuleWidget::setPanel(createPanel(
+		asset::plugin(pluginInstance, filename),
+		asset::plugin(pluginInstance, filenameDark)
+	));
 }
 
 void BaseModuleWidget::setWidthInHP(int hp) {

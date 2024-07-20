@@ -2,7 +2,7 @@
 
 XGlideWidget::XGlideWidget(XGlide* module) {
 	setModule(module);
-	setPanel("res/XGlide.svg");
+	setPanel("res/XGlide.svg", "res/XGlide-dark.svg");
 	setWidthInHP(4);
 
 	addParam(createParamCentered<KnobTinySnap>(Vec(15, 68), module, XGlide::MIN_NOTE_PARAM));

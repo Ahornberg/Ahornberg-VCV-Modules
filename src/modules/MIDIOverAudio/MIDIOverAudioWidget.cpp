@@ -53,7 +53,7 @@ MIDIOverAudioWidget::MIDIOverAudioWidget(MIDIOverAudio* module) {
 	// } else {
 		// setPanel("res/MIDIOverAudio_disabled.svg");
 	// }
-	setPanel("res/MIDIOverAudio.svg");
+	setPanel("res/MIDIOverAudio.svg", "res/MIDIOverAudio-dark.svg");
 	setWidthInHP(2);
 
 	for (auto i = 0; i < MIDI_OVER_AUDIO_MAX_DEVICES; ++i) {

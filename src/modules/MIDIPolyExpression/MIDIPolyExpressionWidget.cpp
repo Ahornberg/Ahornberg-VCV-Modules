@@ -31,7 +31,7 @@ void MIDIPolyExpressionPanicMenuItem::onAction(const event::Action& e) {
 
 MIDIPolyExpressionWidget::MIDIPolyExpressionWidget(MIDIPolyExpression* module) {
 	setModule(module);
-	setPanel("res/MIDIPolyExpression.svg");
+	setPanel("res/MIDIPolyExpression.svg", "res/MIDIPolyExpression-dark.svg");
 	setWidthInHP(2);
 
 	addParam(createParamCentered<KnobTinySnap>(Vec(15, 108), module, MIDIPolyExpression::MIDI_CHANNEL_FIRST_PARAM));
@@ -55,7 +55,7 @@ MIDIPolyExpressionWidget::MIDIPolyExpressionWidget(MIDIPolyExpression* module) {
 	
 	addOutput(createOutputCentered<OutPort>(Vec(15, 343), module, MIDIPolyExpression::VOLUME_OUTPUT));
 	
-	MidiButton* midiButton = createWidgetCentered<MidiButtonSmall>(Vec(15, 62));
+	MidiButtonSmall* midiButton = createWidgetCentered<MidiButtonSmall>(Vec(15, 62));
 	midiButton->setMidiPort(module ? &module->midiInput : NULL);
 	addChild(midiButton);
 }

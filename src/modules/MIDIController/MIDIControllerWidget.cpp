@@ -13,7 +13,7 @@ void MIDIControllerPanicMenuItem::onAction(const event::Action& e) {
 
 MIDIControllerWidget::MIDIControllerWidget(MIDIController* module) {
 	setModule(module);
-	setPanel("res/MIDIController.svg");
+	setPanel("res/MIDIController.svg", "res/MIDIController-dark.svg");
 	setWidthInHP(4);
 
 	addParam(createParamCentered<KnobTiny>(Vec(15, 108), module, MIDIController::MOVEMENT_ADJUST_PARAM));
@@ -24,11 +24,11 @@ MIDIControllerWidget::MIDIControllerWidget(MIDIController* module) {
 
 	addOutput(createOutputCentered<OutPort>(Vec(45, 271.5f), module, MIDIController::TEST_OUTPUT));
 
-	MidiButton* midiInButton = createWidgetCentered<MidiButtonSmall>(Vec(15, 62));
+	MidiButtonSmall* midiInButton = createWidgetCentered<MidiButtonSmall>(Vec(15, 62));
 	midiInButton->setMidiPort(module ? &module->midiInput : NULL);
 	addChild(midiInButton);
 	
-	MidiButton* midiOutButton = createWidgetCentered<MidiButtonSmall>(Vec(45, 62));
+	MidiButtonSmall* midiOutButton = createWidgetCentered<MidiButtonSmall>(Vec(45, 62));
 	midiOutButton->setMidiPort(module ? &module->midiOutput : NULL);
 	addChild(midiOutButton);
 }

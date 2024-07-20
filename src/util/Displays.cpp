@@ -4,7 +4,7 @@ Display::Display(Rect box) : SizedTransparentWidget(box) {
 	fontPath = asset::plugin(pluginInstance, FONT_SEGMENT_14);
 	backgroundColor = COLOR_BLACK;
 	borderColor = COLOR_GREY;
-	textColorLight = COLOR_YELLOW;
+	// textColorLight = COLOR_YELLOW;
 	textColorDark = COLOR_GREEN_DARK;
 	textColorRed = COLOR_RED;
 }
@@ -29,6 +29,7 @@ void Display::drawLayer(const DrawArgs& disp, int layer) {
 			std::shared_ptr<Font> font = APP->window->loadFont(fontPath);
 			if (font && font->handle >= 0) {
 				// init font
+				textColorLight = settings::preferDarkPanels ? COLOR_WHITE : COLOR_YELLOW;
 				nvgFontSize(disp.vg, 10);
 				nvgFontFaceId(disp.vg, font->handle);
 				nvgTextLetterSpacing(disp.vg, 1);

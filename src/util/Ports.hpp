@@ -1,8 +1,8 @@
 constexpr static float AUDIO_MUTE_SLEW = 350;
 
-struct BasicPort : SvgPort, ManualText {
+struct BasicPort : ThemedSvgPort {
 	BasicPort();
-	void setSvg(const std::string& filename);
+	void setSvg(const std::string& filename, const std::string& filenameDark);
 };
 
 struct InPort : BasicPort {

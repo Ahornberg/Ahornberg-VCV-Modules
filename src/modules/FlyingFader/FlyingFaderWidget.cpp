@@ -134,7 +134,6 @@ void TextOnFaderModule::drawText(const Widget::DrawArgs& disp, Rect box) {
 FaderNameDisplay::FaderNameDisplay(FlyingFader* flyingFader, Rect box) : SizedTransparentWidget(box) {
 	this->flyingFader = flyingFader;
 	fontPath = asset::plugin(pluginInstance, FONT_HANDWRITE);
-	textColor = COLOR_BLACK;
 	//text = FlyingFader::INIT_FADER_NAME;
 	fontSize = 16;
 	textAlign = NVG_ALIGN_CENTER;
@@ -143,6 +142,7 @@ FaderNameDisplay::FaderNameDisplay(FlyingFader* flyingFader, Rect box) : SizedTr
 }
 
 void FaderNameDisplay::draw(const DrawArgs& disp) {
+	textColor = settings::preferDarkPanels ? COLOR_WHITE : COLOR_BLACK;
 	drawText(disp, box);
 }
 
@@ -164,7 +164,7 @@ void FaderNameMenuItem::onChange(const event::Change& e) {
 
 FlyingFaderWidget::FlyingFaderWidget(FlyingFader* module) {
 	setModule(module);
-	setPanel("res/FlyingFader.svg");
+	setPanel("res/FlyingFader.svg", "res/FlyingFader-dark.svg");
 	setWidthInHP(4);
 	//faderCapColorIndex = 0;
 

@@ -4,22 +4,25 @@ BasicPort::BasicPort() {
 	shadow->hide();
 }
 
-void BasicPort::setSvg(const std::string& filename) {
-	SvgPort::setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, filename)));
+void BasicPort::setSvg(const std::string& filename, const std::string& filenameDark) {
+	ThemedSvgPort::setSvg(
+		APP->window->loadSvg(asset::plugin(pluginInstance, filename)),
+		APP->window->loadSvg(asset::plugin(pluginInstance, filenameDark))
+	);
 }	
 
 InPort::InPort() {
-	InPort::setSvg("res/ports/In.svg");
+	InPort::setSvg("res/ports/In.svg", "res/ports/In-dark.svg");
 }	
 
 InPortSmall::InPortSmall() {
-	InPortSmall::setSvg("res/ports/InSmall.svg");
+	InPortSmall::setSvg("res/ports/InSmall.svg", "res/ports/InSmall-dark.svg");
 }	
 
 OutPort::OutPort() {
-	OutPort::setSvg("res/ports/Out.svg");
+	OutPort::setSvg("res/ports/Out.svg", "res/ports/Out-dark.svg");
 }	
 
 OutPortSmall::OutPortSmall() {
-	OutPortSmall::setSvg("res/ports/OutSmall.svg");
+	OutPortSmall::setSvg("res/ports/OutSmall.svg", "res/ports/OutSmall-dark.svg");
 }	

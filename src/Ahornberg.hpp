@@ -25,15 +25,13 @@ extern Model* modelMIDIPolyExpression;
 extern Model* modelXGlide;
 extern Model* modelMIDIOverAudio;
 extern Model* modelCopyPastePreset;
-// extern Model* modelManual;
 
-#include "util/Manuals.hpp"
 #include "util/Colors.hpp"
+#include "util/Widgets.hpp"
 #include "util/Fonts.hpp"
 #include "util/Ports.hpp"
 #include "util/Knobs.hpp"
 #include "util/Switches.hpp"
-#include "util/Widgets.hpp"
 #include "util/Displays.hpp"
 #include "util/Drivers.hpp"
 

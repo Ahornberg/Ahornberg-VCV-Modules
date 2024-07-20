@@ -9,7 +9,7 @@ void MultiplierKnob::onChange(const event::Change& e) {
 
 CVFreqShiftWidget::CVFreqShiftWidget(CVFreqShift* module) {
 	setModule(module);
-	setPanel("res/CVFreqShift.svg");
+	setPanel("res/CVFreqShift.svg", "res/CVFreqShift-dark.svg");
 	setWidthInHP(6);
 
 	MultiplierKnob* multiplierKnob = dynamic_cast<MultiplierKnob*>(createParam<MultiplierKnob>(Vec(10, 50), module, CVFreqShift::FREQUENCY_RANGE_PARAM));

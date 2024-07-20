@@ -2,7 +2,7 @@
 
 FunWithFramesWidget::FunWithFramesWidget(FunWithFrames* module) {
 	setModule(module);
-	setPanel("res/FunWithFrames.svg");
+	setPanel("res/FunWithFrames.svg", "res/FunWithFrames-dark.svg");
 	setWidthInHP(6);
 
 	for (auto i = 0; i < FunWithFrames::NUM_VALUE_IO; ++i) {

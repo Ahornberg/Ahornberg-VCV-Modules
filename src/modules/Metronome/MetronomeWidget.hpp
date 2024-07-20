@@ -10,7 +10,6 @@ struct TempoDisplay : Display {
 
 struct BpmDisplay : TransparentWidget {
 	std::string fontPath;
-	NVGcolor textColor;
 	int bpmIndex;
 
 	BpmDisplay(Vec pos, int bpmIndex);

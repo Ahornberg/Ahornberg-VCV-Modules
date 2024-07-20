@@ -1,8 +1,11 @@
 constexpr static float PLUS_6_DB = 1.41253757f;
 
-struct BasicKnob : SvgKnob, ManualText {
+struct BasicKnob : SvgKnob {
+	bool previousPreferDarkPanels;
+	
 	BasicKnob();
-	void setSvg(const std::string& filename);
+	void setSvg(const std::string& filename, const std::string& filenameDark);
+	void step() override;
 };
 
 struct KnobScrew : BasicKnob {
@@ -11,15 +14,6 @@ struct KnobScrew : BasicKnob {
 
 struct KnobScrewSnap : KnobScrew {
 	KnobScrewSnap();
-};
-
-struct KnobScrewMountModule : BasicKnob {
-	Module* module;
-	int param;
-
-	KnobScrewMountModule();
-	void onChange(const event::Change& e) override;
-	void onButton(const ButtonEvent& e) override;
 };
 
 struct KnobTiny : BasicKnob {
@@ -50,7 +44,7 @@ struct KnobLarge : BasicKnob {
 	KnobLarge();
 };
 
-struct BasicSlider : SvgSlider, ManualText {
+struct BasicSlider : SvgSlider {
 	void setBackgroundSvg(const std::string& filename);
 	void setHandleSvg(const std::string& filename);
 };
