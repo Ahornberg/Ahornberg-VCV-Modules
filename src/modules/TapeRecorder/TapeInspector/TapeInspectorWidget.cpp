@@ -7,6 +7,13 @@ const NVGcolor TapeAudioDisplay::TAPE_TEXT_COLORS[] = {
 	COLOR_BROWN
 };
 
+const NVGcolor TapeAudioDisplay::TAPE_TEXT_COLORS_DARK[] = {
+	COLOR_GREY_LIGHT,
+	COLOR_RED,
+	COLOR_BLUE,
+	COLOR_YELLOW
+};
+
 TapeAudioDisplay::TapeAudioDisplay(Rect box, TapeInspector *tapeInspector) : Display(box) {
 	this->tapeInspector = tapeInspector;
 }
@@ -40,7 +47,7 @@ void TapeAudioDisplay::drawText(const DrawArgs& disp) {
 			}
 			double tapePosition = (tapeInspector->sampleTime * i * tapeRecorder->params[TapeRecorder::TEMPO_PARAM].getValue()) / beatsPerBar60;
 			if (tapePosition >= loopStart && tapePosition <= loopEnd) {
-				nvgStrokeColor(disp.vg, COLOR_GREY);
+				nvgStrokeColor(disp.vg, COLOR_GREY_DARK);
 				nvgBeginPath(disp.vg);
 				nvgMoveTo(disp.vg, 0,  DISPLAY_HEIGHT / 2.0 - time * (i - audioBufferPosition) - 0.5);
 				nvgLineTo(disp.vg, DISPLAY_WIDTH,  DISPLAY_HEIGHT / 2.0 - time * (i - audioBufferPosition) - 0.5);
@@ -65,14 +72,14 @@ void TapeAudioDisplay::drawText(const DrawArgs& disp) {
 				inLoop = true;
 			}
 			if (newBar != bar || tapePosition == 0) {
-				nvgStrokeColor(disp.vg, inLoop ? COLOR_BLACK : COLOR_GREY);
+				nvgStrokeColor(disp.vg, inLoop ? COLOR_BLACK : COLOR_GREY_DARK);
 				nvgBeginPath(disp.vg);
 				nvgMoveTo(disp.vg, 0,  DISPLAY_HEIGHT / 2.0 - time * (i - audioBufferPosition) - 0.5);
 				nvgLineTo(disp.vg, DISPLAY_WIDTH,  DISPLAY_HEIGHT / 2.0 - time * (i - audioBufferPosition) - 0.5);
 				nvgStroke(disp.vg);
 				bar = newBar;
 			} else if ((newBeat > 0 && newBeat != beat) || tapePosition == 0) {
-				nvgStrokeColor(disp.vg, inLoop ? COLOR_BLACK : COLOR_GREY);
+				nvgStrokeColor(disp.vg, inLoop ? COLOR_BLACK : COLOR_GREY_DARK);
 				nvgBeginPath(disp.vg);
 				nvgMoveTo(disp.vg, DISPLAY_WIDTH / 2.0,  DISPLAY_HEIGHT / 2.0 - time * (i - audioBufferPosition) - 0.5);
 				nvgLineTo(disp.vg, DISPLAY_WIDTH,  DISPLAY_HEIGHT / 2.0 - time * (i - audioBufferPosition) - 0.5);
@@ -83,7 +90,7 @@ void TapeAudioDisplay::drawText(const DrawArgs& disp) {
 		}
 		// audio
 		for (int channel = 0; channel < tapeRecorder->trackCountParam; ++channel) {
-			nvgStrokeColor(disp.vg, TAPE_TEXT_COLORS[channel]);
+			nvgStrokeColor(disp.vg, settings::preferDarkPanels ? TAPE_TEXT_COLORS_DARK[channel] : TAPE_TEXT_COLORS[channel]);
 			nvgBeginPath(disp.vg);
 			bool first = true;
 			for (int i = audioBufferPosition - (DISPLAY_HEIGHT / 2.0) / time; i <= audioBufferPosition + (DISPLAY_HEIGHT / 2.0) / time; i += step) {

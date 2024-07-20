@@ -47,7 +47,7 @@ struct PlayForwardsSwitch : TransportSwitch {
 	void onButton(const event::Button& e) override;
 };
 
-struct KnobWheel : SvgKnob {
+struct KnobWheel : BasicKnob {
 	const static int SMEARED_WHEELS_DISTRIBUTION[];
 	
 	TapeRecorder* module;
@@ -57,11 +57,11 @@ struct KnobWheel : SvgKnob {
 	GLFWcursor* cursorHand;
 	constexpr static int NUM_SMEARED_WHEELS = 32;
 	widget::TransformWidget* smearedWheelsTransform[NUM_SMEARED_WHEELS];
-	widget::SvgWidget* smearedWheelsSvg[NUM_SMEARED_WHEELS];
+	ThemedSvgWidget* smearedWheelsSvg[NUM_SMEARED_WHEELS];
 	float smearedWheelsAngle[NUM_SMEARED_WHEELS];
 	
 	KnobWheel();
-	void setSvgSmeared (std::shared_ptr<Svg> svg);
+	void setSvgSmeared(std::shared_ptr<Svg> svg, std::shared_ptr<Svg> svgDark);
 	float distance(Vec* p1, Vec* p2);
 	float calcTouchedWheelForce(float distance, float maxDistance, int mods);
 	void onHover(const event::Hover& e) override;
@@ -73,7 +73,7 @@ struct KnobWheel : SvgKnob {
 	void onDragMove(const event::DragMove& e) override;
 	void onDoubleClick(const event::DoubleClick& e) override;
 	void onChange(const event::Change& e) override;
-	// void draw(const DrawArgs& args) override;
+	// void step() override;
 };
 
 struct TapePositionDisplay : Display {

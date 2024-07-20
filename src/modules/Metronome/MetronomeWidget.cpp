@@ -30,7 +30,7 @@ void BpmDisplay::draw(const DrawArgs& disp) {
 		nvgBeginPath(disp.vg);
 		nvgFontSize(disp.vg, 9);
 		nvgFontFaceId(disp.vg, font->handle);
-		nvgFillColor(disp.vg, settings::preferDarkPanels ? COLOR_WHITE : COLOR_BLACK);
+		nvgFillColor(disp.vg, settings::preferDarkPanels ? COLOR_GREY_LIGHT : COLOR_BLACK);
 		nvgTextAlign(disp.vg, NVG_ALIGN_CENTER);
 		if (bpmIndex == 22 || bpmIndex == 37) {
 			nvgText(disp.vg, -1, 2.5f, string::f("%d", Metronome::BPM_VALUES[bpmIndex]).c_str(), NULL);

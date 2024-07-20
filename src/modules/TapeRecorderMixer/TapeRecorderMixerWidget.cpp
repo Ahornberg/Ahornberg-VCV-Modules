@@ -44,7 +44,7 @@ void VolumeDisplay::drawText(const DrawArgs& disp) {
 		textPos = Vec(2, 25.5);
 		for (auto i = 0; i < 24; ++i) {
 			if (tapeRecorderMixer && tapeRecorderMixer->params[TapeRecorderMixer::MUTE_PARAM].getValue()) {
-				nvgFillColor(disp.vg, COLOR_GREY);
+				nvgFillColor(disp.vg, COLOR_GREY_DARK);
 			} else {
 				if (i > 15) {
 					nvgFillColor(disp.vg, nvgRGB(0xff, 0x00, 0x00));
@@ -60,7 +60,7 @@ void VolumeDisplay::drawText(const DrawArgs& disp) {
 			nvgText(disp.vg, textPos.x, textPos.y, std::string(1, 97 + i).c_str(), NULL);
 		}
 		if (tapeRecorderMixer && tapeRecorderMixer->params[TapeRecorderMixer::MUTE_PARAM].getValue()) {
-			nvgFillColor(disp.vg, COLOR_GREY);
+			nvgFillColor(disp.vg, COLOR_GREY_DARK);
 		} else {
 			nvgFillColor(disp.vg, COLOR_WHITE);
 		}

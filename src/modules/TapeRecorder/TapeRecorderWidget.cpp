@@ -146,10 +146,13 @@ KnobWheel::KnobWheel() {
 	for (auto i = 0; i < NUM_SMEARED_WHEELS; ++i) {
 		smearedWheelsTransform[i] = new widget::TransformWidget;
 		fb->addChild(smearedWheelsTransform[i]);
-		smearedWheelsSvg[i] = new widget::SvgWidget;
+		smearedWheelsSvg[i] = new ThemedSvgWidget;
 		smearedWheelsTransform[i]->addChild(smearedWheelsSvg[i]);
 	}
-	setSvgSmeared(APP->window->loadSvg(asset::plugin(pluginInstance, "res/knobs/Wheel.svg")));
+	setSvgSmeared(
+		APP->window->loadSvg(asset::plugin(pluginInstance, "res/knobs/Wheel.svg")),
+		APP->window->loadSvg(asset::plugin(pluginInstance, "res/knobs/Wheel-dark.svg"))
+	);
 	minAngle = -6.f * M_PI;
 	maxAngle = 6.f * M_PI;
 	shadow->opacity = 0.f;
@@ -158,9 +161,9 @@ KnobWheel::KnobWheel() {
 	cursorHand = glfwCreateStandardCursor(GLFW_HAND_CURSOR);
 }
 
-void KnobWheel::setSvgSmeared (std::shared_ptr<Svg> svg) {
+void KnobWheel::setSvgSmeared(std::shared_ptr<Svg> svg, std::shared_ptr<Svg> svgDark) {
 	for (auto i = 0; i < NUM_SMEARED_WHEELS; ++i) {
-		smearedWheelsSvg[i]->setSvg(svg);
+		smearedWheelsSvg[i]->setSvg(svg, svgDark);
 		smearedWheelsTransform[i]->box.size = smearedWheelsSvg[i]->box.size;
 	}
 	tw->box.size = smearedWheelsSvg[0]->box.size;
@@ -313,18 +316,13 @@ void KnobWheel::onChange(const event::Change& e) {
 	Knob::onChange(e);
 }
 
-// void KnobWheel::draw(const DrawArgs& args) {
-	// tw->identity();
-	// // Rotate SVG
-	// math::Vec center = sw->box.getCenter();
-	// tw->translate(center);
-	// for (auto i = 0; i < NUM_SMEARED_WHEELS; ++i) {
-		// tw->rotate(smearedWheelsAngle[i]);
-		// Widget::draw(args);
+// void KnobWheel::step() {
+	// if (previousPreferDarkPanels != settings::preferDarkPanels) {
+		// fb->setDirty();
+		// previousPreferDarkPanels = settings::preferDarkPanels;
 	// }
-	// tw->translate(center.neg());
+	// SvgKnob::step();
 // }
-
 
 // Displays *******************************************************************
 
