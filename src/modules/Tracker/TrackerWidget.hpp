@@ -12,7 +12,7 @@ struct TrackerScreen : SizedTransparentWidget {
 };
 
 struct TrackerWidget : BaseModuleWidget {
-	ZoomWidget* zoomWidget;
+	// ZoomWidget* zoomWidget;
 	TrackerScreen* trackerScreen;
 	
 	TrackerWidget(Tracker* module);

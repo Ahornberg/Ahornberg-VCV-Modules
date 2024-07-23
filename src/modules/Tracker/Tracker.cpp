@@ -2,7 +2,9 @@
 
 Tracker::Tracker() { 
 	config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-	configParam(NO_PARAM, 0, 1, 0, "Frequency", "Hz");
+	// configParam(NO_PARAM, 0, 1, 0, "Frequency", "Hz");
+	configParam(CURRENT_PATTERN_PARAM, 0, 1, 0, "Frequency", "Hz");
+	configParam(CURRENT_LINE_PARAM, 0, 1, 0, "Frequency", "Hz");
 	// configParam(FREQUENCY_MODULATION_AMOUNT_PARAM, 0, 1, 0, "Frequency Modulation");
 	// configParam<FrequencyRanges>(FREQUENCY_RANGE_PARAM, 0, 8, 4, "Frequency Range", "Hz");
 }
