@@ -5,11 +5,13 @@ struct MIDIPolyExpressionData {
 	float notePitch;
 	float volume;
 	float oldVolume;
+	float volumeMsb;
 	float noteLength;
 	float pitch;
 	float modulation;
 	float gate;
 	float oldGate;
+	bool volumeMsbSet;
 };
 
 struct MIDIPolyExpression : Module {

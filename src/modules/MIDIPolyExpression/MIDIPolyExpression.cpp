@@ -128,24 +128,30 @@ void MIDIPolyExpression::processMidiMessage(const midi::Message& msg) {
 		// note off
 		envelopes[channel].noteVolume = msg.getValue() / -12.7f;
 		envelopes[channel].gate = 0;
-	} else if (msg.getStatus() == 0xa || (msg.getStatus() == 0xb && msg.getNote() == 11)) {
-		// poly aftertouch or CC 11
+	} else if (msg.getStatus() == 0xa) {
+		// poly aftertouch
 		envelopes[channel].oldVolume = envelopes[channel].volume;
 		envelopes[channel].volume = msg.getValue() / 12.7f;
-		// if (envelopes[channel].volume - envelopes[channel].oldVolume > 0.2) {
-			// envelopes[channel].volume -= 0.2;
-		// } else if (envelopes[channel].volume - envelopes[channel].oldVolume < -0.2) {
-			// envelopes[channel].volume += 0.2;
-		// }
+	} else if (msg.getStatus() == 0xb && msg.getNote() == 11) {
+		// CC 11
+		envelopes[channel].oldVolume = envelopes[channel].volume;
+		envelopes[channel].volume = msg.getValue() / 12.7f;
+		envelopes[channel].volumeMsb = envelopes[channel].volume;
+		envelopes[channel].volumeMsbSet = true;
+	} else if (msg.getStatus() == 0xb && msg.getNote() == 43) {
+		// LSB for 14 bit MIDI on CC 11
+		if (envelopes[channel].volumeMsbSet) {
+			envelopes[channel].volume += msg.getValue() / (12.7f * 128);
+			envelopes[channel].volumeMsbSet = false;
+		} else {
+			// no explicit MSB before LSB
+			envelopes[channel].oldVolume = envelopes[channel].volume;
+			envelopes[channel].volume = envelopes[channel].volumeMsb + msg.getValue() / (12.7f * 128);
+		}
 	} else if (msg.getStatus() == 0xd) {
 		// channel aftertouch
 		envelopes[channel].oldVolume = envelopes[channel].volume;
 		envelopes[channel].volume = msg.getNote() / 12.7f;
-		// if (envelopes[channel].volume - envelopes[channel].oldVolume > 0.2) {
-			// envelopes[channel].volume -= 0.2;
-		// } else if (envelopes[channel].volume - envelopes[channel].oldVolume < -0.2) {
-			// envelopes[channel].volume += 0.2;
-		// }
 	} else if (msg.getStatus() == 0xe) {
 		// pitch bend
 		envelopes[channel].pitch = 4 * ((((uint16_t) msg.getValue() << 7) | msg.getNote()) - 8192) / 8191.f;
@@ -174,10 +180,12 @@ void MIDIPolyExpression::onReset() {
 		envelopes[i].notePitch = 0;
 		envelopes[i].volume = 0;
 		envelopes[i].oldVolume = 0;
+		envelopes[i].volumeMsb = 0;
 		envelopes[i].pitch = 0;
 		envelopes[i].modulation = 0;
 		envelopes[i].gate = 0;
 		envelopes[i].oldGate = 0;
+		envelopes[i].volumeMsbSet = false;
 		pitchSlews[i].setRiseFall(INITIAL_SLEW_VALUE, SLEW_VALUE);
 		pitchSlews[i].reset();
 		modulationSlews[i].reset();
