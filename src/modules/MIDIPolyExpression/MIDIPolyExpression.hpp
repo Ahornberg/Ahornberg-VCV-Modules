@@ -12,6 +12,7 @@ struct MIDIPolyExpressionData {
 	float gate;
 	float oldGate;
 	bool volumeMsbSet;
+	// bool volumeLsbSet;
 };
 
 struct MIDIPolyExpression : Module {
@@ -43,6 +44,7 @@ struct MIDIPolyExpression : Module {
 		NUM_OUTPUTS
 	};
 	enum LightIds {
+		VOLUME_14_BIT_LIGHT,
 		NUM_LIGHTS
 	};
 
@@ -53,6 +55,7 @@ struct MIDIPolyExpression : Module {
 	dsp::ExponentialFilter modulationSlews[MAX_MIDI_CHANNEL];
 	// dsp::ExponentialSlewLimiter volumeSlews[MAX_MIDI_CHANNEL];
 	dsp::SlewLimiter volumeSlews[MAX_MIDI_CHANNEL];
+	bool volume14BitMode;
 
 	MIDIPolyExpression();
 	void process(const ProcessArgs& args) override;

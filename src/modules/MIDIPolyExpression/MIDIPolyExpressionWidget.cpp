@@ -54,6 +54,7 @@ MIDIPolyExpressionWidget::MIDIPolyExpressionWidget(MIDIPolyExpression* module) {
 	addParam(createParamCentered<KnobScrew>(Vec(8.3f, 324.25f), module, MIDIPolyExpression::DECAY_PARAM));
 	
 	addOutput(createOutputCentered<OutPort>(Vec(15, 343), module, MIDIPolyExpression::VOLUME_OUTPUT));
+	addChild(createLightCentered<SmallLight<GreenLight>>(Vec(5, 355), module, MIDIPolyExpression::VOLUME_14_BIT_LIGHT));
 	
 	MidiButtonSmall* midiButton = createWidgetCentered<MidiButtonSmall>(Vec(15, 62));
 	midiButton->setMidiPort(module ? &module->midiInput : NULL);

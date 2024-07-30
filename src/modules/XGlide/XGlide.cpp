@@ -28,6 +28,9 @@ XGlide::XGlide() {
 	configOutput(VOLUME_OUTPUT, "Volume");
 	configOutput(PITCH_OUTPUT, "Pitch (1V/Octave)");
 	configOutput(MODULATION_OUTPUT, "Modulation");
+	configBypass(VOLUME_INPUT, VOLUME_OUTPUT);
+	configBypass(PITCH_INPUT, PITCH_OUTPUT);
+	configBypass(MODULATION_INPUT, MODULATION_OUTPUT);
 	isResetChannelMapping = false;
 	resetChannelMapping();
 }
