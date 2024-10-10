@@ -18,6 +18,24 @@ void MIDIPolyExpressionGateVelocityModeMenuItem::onAction(const event::Action& e
 	}	
 }
 
+MIDIPolyExpressionPreservePitchAfterNoteoffMenuItem::MIDIPolyExpressionPreservePitchAfterNoteoffMenuItem(MIDIPolyExpression* midiPolyExpression) {
+	this->midiPolyExpression = midiPolyExpression;
+	text = "Preserve Pitch after Note-Off";
+	if (midiPolyExpression) {
+		rightText = CHECKMARK(midiPolyExpression->params[MIDIPolyExpression::PRESERVE_PITCH_AFTER_NOTEOFF_PARAM].getValue());
+	}
+}
+
+void MIDIPolyExpressionPreservePitchAfterNoteoffMenuItem::onAction(const event::Action& e) {
+	if (midiPolyExpression) {
+		if (midiPolyExpression->params[MIDIPolyExpression::PRESERVE_PITCH_AFTER_NOTEOFF_PARAM].getValue()) {
+			midiPolyExpression->params[MIDIPolyExpression::PRESERVE_PITCH_AFTER_NOTEOFF_PARAM].setValue(0);
+		} else {
+			midiPolyExpression->params[MIDIPolyExpression::PRESERVE_PITCH_AFTER_NOTEOFF_PARAM].setValue(1);			
+		}
+	}	
+}
+
 MIDIPolyExpressionPanicMenuItem::MIDIPolyExpressionPanicMenuItem(MIDIPolyExpression* midiPolyExpression) {
 	this->midiPolyExpression = midiPolyExpression;
 	text = "Panic";
@@ -64,6 +82,7 @@ MIDIPolyExpressionWidget::MIDIPolyExpressionWidget(MIDIPolyExpression* module) {
 void MIDIPolyExpressionWidget::contextMenu(Menu* menu) {
 	MIDIPolyExpression* midiPolyExpression = dynamic_cast<MIDIPolyExpression*>(this->module);
 	menu->addChild(new MIDIPolyExpressionGateVelocityModeMenuItem(midiPolyExpression));
+	menu->addChild(new MIDIPolyExpressionPreservePitchAfterNoteoffMenuItem(midiPolyExpression));
 	menu->addChild(new MIDIPolyExpressionPanicMenuItem(midiPolyExpression));
 }
 

@@ -11,6 +11,7 @@ MIDIPolyExpression::MIDIPolyExpression() {
 	configParam(PITCH_SHAPE_PARAM,  0, 1, 0, "Pitch Shape");
 	configParam(VOLUME_SHAPE_PARAM,  0, 1, 0.2f, "Volume Shape");
 	configParam(DECAY_Y_PARAM,  0, 3, 0, "Decay increase on Y");
+	configParam(PRESERVE_PITCH_AFTER_NOTEOFF_PARAM,  0, 1, 0, "Preserve Pitch after Note-Off");
 	configOutput(GATE_OUTPUT, "Gate");
 	configOutput(VOLUME_OUTPUT, "Volume");
 	configOutput(PITCH_OUTPUT, "Pitch (1V/Octave)");
@@ -99,11 +100,11 @@ void MIDIPolyExpression::process(const ProcessArgs& args) {
 		}
 		// Z
 		float volume = volumeSlews[channelWithOffset].process(args.sampleTime, envelopes[channelWithOffset].volume);
-		outputs[VOLUME_OUTPUT].setVoltage(volume, i);
+		outputs[VOLUME_OUTPUT].setVoltage(pow(volume, 1.3) * 0.5, i);
+		//outputs[VOLUME_OUTPUT].setVoltage(volume, i);
 		// X
 		float pitchbend = 0.f;
-		if (envelopes[channelWithOffset].gate || (volume > 0.f && !envelopes[channelWithOffset].gate)) {
-		// if (volume > 1e-37) {
+		if (params[PRESERVE_PITCH_AFTER_NOTEOFF_PARAM].getValue() || envelopes[channelWithOffset].gate || volume > 0.f) {
 			pitchbend = pitchSlews[channelWithOffset].process(args.sampleTime, envelopes[channelWithOffset].pitch);
 		}
 		outputs[PITCH_OUTPUT].setVoltage(envelopes[channelWithOffset].notePitch + pitchbend, i);

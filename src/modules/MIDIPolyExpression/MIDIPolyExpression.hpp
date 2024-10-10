@@ -18,7 +18,7 @@ struct MIDIPolyExpressionData {
 struct MIDIPolyExpression : Module {
 	constexpr static int MIN_MIDI_CHANNEL = 1;
 	constexpr static int MAX_MIDI_CHANNEL = 16;
-	constexpr static int SLEW_VALUE = 70;
+	constexpr static int SLEW_VALUE = 40;
 	constexpr static int INITIAL_SLEW_VALUE = 10000;
 	enum ParamIds {
 		MIDI_CHANNEL_FIRST_PARAM,
@@ -29,6 +29,7 @@ struct MIDIPolyExpression : Module {
 		PITCH_SHAPE_PARAM,
 		VOLUME_SHAPE_PARAM,
 		DECAY_Y_PARAM,
+		PRESERVE_PITCH_AFTER_NOTEOFF_PARAM,
 		NUM_PARAMS
 	};
 	enum InputIds {

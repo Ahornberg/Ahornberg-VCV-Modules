@@ -12,6 +12,13 @@ struct MIDIPolyExpressionGateVelocityModeMenuItem : MenuItem {
 	void onAction(const event::Action& e) override;
 };
 
+struct MIDIPolyExpressionPreservePitchAfterNoteoffMenuItem : MenuItem {
+	MIDIPolyExpression* midiPolyExpression;
+	
+	MIDIPolyExpressionPreservePitchAfterNoteoffMenuItem(MIDIPolyExpression* midiPolyExpression);
+	void onAction(const event::Action& e) override;
+};
+
 struct MIDIPolyExpressionPanicMenuItem : MenuItem {
 	MIDIPolyExpression* midiPolyExpression;
 	
