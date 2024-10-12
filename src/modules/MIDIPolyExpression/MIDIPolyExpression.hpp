@@ -12,7 +12,6 @@ struct MIDIPolyExpressionData {
 	float gate;
 	float oldGate;
 	bool volumeMsbSet;
-	// bool volumeLsbSet;
 };
 
 struct MIDIPolyExpression : Module {
@@ -51,10 +50,8 @@ struct MIDIPolyExpression : Module {
 
 	MIDIPolyExpressionData envelopes[MAX_MIDI_CHANNEL];
 	midi::InputQueue midiInput;
-	// dsp::ExponentialSlewLimiter pitchSlews[MAX_MIDI_CHANNEL];
 	dsp::SlewLimiter pitchSlews[MAX_MIDI_CHANNEL];
 	dsp::ExponentialFilter modulationSlews[MAX_MIDI_CHANNEL];
-	// dsp::ExponentialSlewLimiter volumeSlews[MAX_MIDI_CHANNEL];
 	dsp::SlewLimiter volumeSlews[MAX_MIDI_CHANNEL];
 	bool volume14BitMode;
 

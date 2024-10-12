@@ -18,7 +18,6 @@ MIDIPolyExpression::MIDIPolyExpression() {
 	configOutput(MODULATION_OUTPUT, "Modulation");
 	configOutput(NOTE_OUTPUT, "Note Pitch (1V/Octave)");
 	configOutput(PITCHBEND_OUTPUT, "Pitch-Bend (1V/Octave)");
-	// configLight(VOLUME_14_BIT_LIGHT, "14 bit pressure data");
 	onReset();
 }
 
@@ -65,23 +64,21 @@ void MIDIPolyExpression::process(const ProcessArgs& args) {
 		} else if (envelopes[channelWithOffset].gate && envelopes[channelWithOffset].noteLength > args.sampleRate / 44) {
 			// Note on / Decay & Sustain
 			float pitchbendPos = abs(envelopes[channelWithOffset].pitch * 12.f);
-			pitchbendPos -= int(pitchbendPos);
-			if (pitchbendPos > 0.35 && pitchbendPos < 0.65) { 
-				if (envelopes[channelWithOffset].volume - envelopes[channelWithOffset].oldVolume > 0.1) {
-					// DEBUG("down %f", outputs[PITCH_OUTPUT].getVoltage(i) * 12.0);
-					envelopes[channelWithOffset].volume -= 0.1;
-				} else if (envelopes[channelWithOffset].volume - envelopes[channelWithOffset].oldVolume < -0.1) {
-					// DEBUG("up %f", outputs[PITCH_OUTPUT].getVoltage(i) * 12.0);
-					envelopes[channelWithOffset].volume += 0.1;
+			if (envelopes[channelWithOffset].volume < 10) {
+				pitchbendPos -= int(pitchbendPos);
+				if (pitchbendPos > 0.35 && pitchbendPos < 0.65) { 
+					if (envelopes[channelWithOffset].volume - envelopes[channelWithOffset].oldVolume > 0.1) {
+						envelopes[channelWithOffset].volume -= 0.1;
+					} else if (envelopes[channelWithOffset].volume - envelopes[channelWithOffset].oldVolume < -0.1) {
+						envelopes[channelWithOffset].volume += 0.1;
+					}
+				} else {
+					if (envelopes[channelWithOffset].volume - envelopes[channelWithOffset].oldVolume > 0.4) {
+						envelopes[channelWithOffset].volume -= 0.4;
+					} else if (envelopes[channelWithOffset].volume - envelopes[channelWithOffset].oldVolume < -0.4) {
+						envelopes[channelWithOffset].volume += 0.4;
+					}				
 				}
-			} else {
-				if (envelopes[channelWithOffset].volume - envelopes[channelWithOffset].oldVolume > 0.4) {
-					// DEBUG("down %f", outputs[PITCH_OUTPUT].getVoltage(i) * 12.0);
-					envelopes[channelWithOffset].volume -= 0.4;
-				} else if (envelopes[channelWithOffset].volume - envelopes[channelWithOffset].oldVolume < -0.4) {
-					// DEBUG("up %f", outputs[PITCH_OUTPUT].getVoltage(i) * 12.0);
-					envelopes[channelWithOffset].volume += 0.4;
-				}				
 			}
 			pitchSlews[channelWithOffset].setRiseFall(SLEW_VALUE, SLEW_VALUE);
 			volumeSlews[channelWithOffset].setRiseFall(SLEW_VALUE, SLEW_VALUE);
@@ -101,7 +98,6 @@ void MIDIPolyExpression::process(const ProcessArgs& args) {
 		// Z
 		float volume = volumeSlews[channelWithOffset].process(args.sampleTime, envelopes[channelWithOffset].volume);
 		outputs[VOLUME_OUTPUT].setVoltage(pow(volume, 1.3) * 0.5, i);
-		//outputs[VOLUME_OUTPUT].setVoltage(volume, i);
 		// X
 		float pitchbend = 0.f;
 		if (params[PRESERVE_PITCH_AFTER_NOTEOFF_PARAM].getValue() || envelopes[channelWithOffset].gate || volume > 0.f) {
@@ -182,7 +178,6 @@ void MIDIPolyExpression::processMidiMessage(const midi::Message& msg) {
 				shapedMicrotones= std::min((microtones - 0.5f) * (1.f - params[PITCH_SHAPE_PARAM].getValue()) + 0.5f, microtones / (1.f - params[PITCH_SHAPE_PARAM].getValue()));
 			}
 			envelopes[channel].pitch = (semitones + shapedMicrotones + 0.5f) / 12.f;
-			//DEBUG(" %i, %f", semitones, microtones - shapedMicrotones);
 		}
 	} else if (msg.getStatus() == 0xb && (msg.getNote() == 1 || msg.getNote() == 74)) {
 		// modulation
@@ -202,7 +197,6 @@ void MIDIPolyExpression::onReset() {
 		envelopes[i].gate = 0;
 		envelopes[i].oldGate = 0;
 		envelopes[i].volumeMsbSet = false;
-		// envelopes[i].volumeLsbSet = false;
 		pitchSlews[i].setRiseFall(INITIAL_SLEW_VALUE, SLEW_VALUE);
 		pitchSlews[i].reset();
 		modulationSlews[i].reset();
